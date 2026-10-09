@@ -529,14 +529,54 @@ recalcularlo:
 respuesta y ahorra tener que buscar el mayor. Pero conviene saber qué es dato y qué es
 resumen, para no tratar un resumen como si fuera información nueva.
 
-### La confianza: dónde aporta y dónde no
+### Cómo se calcula la confianza (y qué NO es)
+
+**No es «el mayor menos los otros».** Esa operación da otra cosa —el *margen*, cuánto
+gana el primero— y no es lo que devuelve el servidor. Lo que devuelve es la **entropía
+normalizada**:
+
+```
+confidence = 1 − H(p) / ln(n)
+
+H(p) = −Σ pᵢ · ln(pᵢ)     (entropía de Shannon del reparto)
+n                          (número de opciones)
+```
+
+Con el ejemplo de la gravedad del incidente, cuyas probabilidades son
+`0.0088, 0.0089, 0.1651, 0.8172`:
+
+```
+H(p)      = −(0.0088·ln0.0088 + 0.0089·ln0.0089 + 0.1651·ln0.1651 + 0.8172·ln0.8172)
+          = 0.5460
+ln(4)     = 1.3863
+H/ln(4)   = 0.3939          ← entropía normalizada: 0 = un pico, 1 = reparto plano
+confianza = 1 − 0.3939 = 0.6061
+```
+
+*(El manual dice 0.605 y la cuenta da 0.606 porque el JSON publicado lleva las
+probabilidades redondeadas a 4 decimales; con las completas sale 0.605.)*
+
+Se ve mejor en los extremos, que es donde se entiende qué mide:
+
+| reparto | H(p) | confianza | qué significa |
+|---|---|---|---|
+| todo en una opción | 0 | **1.000** | no dudó nada |
+| 70 / 30 | 0.61 | 0.559 | prefiere una, con reservas |
+| empate a dos | 0.69 | 0.500 | dos opciones indistinguibles |
+| empate a cuatro | 1.39 | **0.000** | no tiene ni idea |
+
+**Y por eso la confianza y la probabilidad son distintas.** La probabilidad dice *qué
+prefiere*; la confianza dice *cuánto se lo cree*, mirando **todo** el reparto y no solo
+el ganador.
+
+### Dónde aporta y dónde no
 
 Aquí hay un caso que merece la pena porque **depende del tipo**:
 
-- **En `boolean`, la confianza no aporta NADA.** Con dos opciones, la probabilidad ya
-  determina la confianza por completo. Comprobado: con `p = 0.534130` la confianza
-  calculada con una fórmula de una línea da `0.003364`, y es exactamente la que devuelve
-  el servidor. Si tienes la probabilidad, la confianza es un cálculo de más.
+- **En `boolean`, la confianza no aporta NADA.** Con dos opciones (n=2, `ln(2)`) la
+  confianza queda determinada por la probabilidad: no hay información nueva. Comprobado:
+  con `p = 0.534130` la fórmula da `0.003364`, y es exactamente lo que devuelve el
+  servidor. Si tienes la probabilidad, la confianza es un cálculo de más.
 - **En `choice`, sí aporta.** Dos casos con la probabilidad mayor **casi igual** dan
   confianzas distintas, porque el reparto del resto cambia:
 

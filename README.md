@@ -11,16 +11,32 @@ equipo**, sin entrenar nada y sin cargar un segundo modelo.
 
 ![Arquitectura de AIOM: un modelo, dos formas de preguntar](docs/arquitectura.png)
 
-Los gráficos del estudio se generan con **matplotlib** (`graficos.py`) y el diagrama con
-`diagrama.py`, todo en SVG con el texto como texto y colores fijos, para que se vea igual
-en GitHub en tema claro y en oscuro. Las leyendas van **fuera del área del gráfico**, no
-encima de las barras.
-
 La pieza que lo hace posible no es el modelo: es **el endpoint**. llama.cpp de serie
 solo sabe generar texto; el backend
 [`parallel-decision`](https://github.com/thecodacus/llama.cpp/tree/parallel-decision)
 añade uno que **puntúa las opciones en lugar de redactar**. Por eso el modo de decisión
 no gasta tokens: no es que escriba poco, es que **no pasa por el bucle de generación**.
+
+## Empezar
+
+Dos pasos: **levantar el servidor** y **preguntar**. El servidor es un `llama-server`
+con el backend de decisión; el resto es este repositorio.
+
+```bash
+# 1. el servidor (una terminal aparte; tarda en cargar el modelo)
+llama-server -m modelo.gguf -ngl 99 -fa on -c 32768 --decision-seqs 64 --port 8096
+
+# 2. preguntar (desde la carpeta del repositorio)
+python preguntar.py ejemplos/1_opciones.txt
+```
+
+`--decision-seqs` **no es opcional**: sin él el endpoint de decisión no existe.
+
+**[→ Cómo levantar el servidor paso a paso, y qué hacer si falla](docs/ARRANCAR.md)**
+
+No hace falta instalar nada para usar el cliente: **solo la biblioteca estándar de
+Python 3.10+**. El detalle de cómo se construyó y compiló el backend está en
+[`CREDITOS.md`](CREDITOS.md).
 
 ## Las dos formas de preguntar (y el respaldo)
 
@@ -151,7 +167,7 @@ python bench_modos.py && python rendimiento.py && python verificar.py --estricto
 | documento | qué hay |
 |---|---|
 | **[docs/MANUAL.md](docs/MANUAL.md)** | **empieza aquí**: el manual de uso, de cero, con un ejemplo de cada tipo (opciones, niveles, sí/no), cómo se hacen varias preguntas a la vez y cómo se escribe en formato tipado |
-| [docs/ARRANCAR.md](docs/ARRANCAR.md) | cómo levantar el servidor tú mismo, paso a paso, y ejecutar las pruebas |
+| [docs/ARRANCAR.md](docs/ARRANCAR.md) | cómo levantar el servidor tú mismo, paso a paso, y qué hacer si no arranca |
 | [CREDITOS.md](CREDITOS.md) | **de quién es cada pieza**, con commit exacto, licencias y el SHA256 del modelo |
 | [docs/ESTUDIO.md](docs/ESTUDIO.md) | el estudio: con qué hardware se midió, cómo se construyó, los resultados completos, las lecciones y los límites |
 | [docs/DETALLE.md](docs/DETALLE.md) | las 154 preguntas una por una: opciones, qué se esperaba, qué eligió cada modo y el reparto de probabilidad |
@@ -160,87 +176,55 @@ python bench_modos.py && python rendimiento.py && python verificar.py --estricto
 
 ## Estructura
 
+**Lo que se usa** (esto es todo lo que hace falta para preguntar):
+
 ```
 preguntar.py         LA PUERTA DE ENTRADA: escribes en lenguaje natural y deduce el
                      tipo por la cabecera; una o varias preguntas en una petición
-aiom.py              cliente y servidor HTTP (los tres modos)
-
-# --- los benchmarks del estudio (producen results/) ---
-bench_modos.py       los 3 modos sobre 90 casos, 30 de cada tipo  -> results/modos.json
-bench_multi.py       preguntas encadenadas: N preguntas al mismo caso -> multi.json
-bench_cascada.py     el escalado 1, 5, 10 y 15 preguntas, con candado anti-duplicados
-bench.py             caudal y latencia frente a concurrencia      -> bench.json
-bench_s1mb.py        el benchmark público S1MB (102 suites); su crudo lo consume
-                     s1mb_official.py (no se versiona: 6,5 MB, se regenera)
-bench_public.py      mide contra datasets públicos, base de lo anterior
-s1mb_official.py     puntuación OFICIAL de S1MB sobre las predicciones
-test_official.py     comprueba s1mb_official.py contra los ejemplos de SCORING.md
-calibrate.py         corrige la calibración con temperature scaling
-snapshot.py          reúne las métricas internas                  -> internos.json
-
-# --- los conjuntos de casos con verdad de referencia ---
-casos_modos.py       90 casos con verdad de referencia
-casos_multi.py       14 casos con 4-5 preguntas encadenadas
-casos_cascada.py     fondo de 15 preguntas por caso, para el escalado
-dataset.py           consultas etiquetadas del benchmark de caudal
-dataset_stress.py    set adversario: donde se rompe el modo decisión
-ejemplos_typesafe.py los tres ejemplos de TypeSafe, en su formato
-
-# --- generadores de documentación ---
-rendimiento.py       -> docs/ESTUDIO.md y los gráficos
-entorno.py           -> la parte de hardware y decisiones de docs/ESTUDIO.md
-graficos.py          los gráficos con matplotlib (estilo único, leyendas fuera del área)
-detalle.py           -> docs/DETALLE.md
-razones.py           por qué se espera cada respuesta, por tipo de pregunta
-reports.py           consolida results/                     -> docs/METRICAS.md
-diagrama.py          -> docs/arquitectura.svg y .png: el diagrama de arquitectura
-metrics.py           toda la estadística en un sitio: Wilson, balanceada, ECE, Brier
-verificar.py         enlaces, gráficos y cifras: comprueba que los documentos cuadren
-                     con results/ (ninguna cifra se queda vieja sin avisar)
-
-catalogs/            dos catálogos de ejemplo, listos para usar:
+aiom.py              el cliente y el servidor HTTP (los tres modos)
+catalogs/            dos catálogos listos para usar:
                        iot.json      operación de campo (el que se usa por defecto)
                        soporte.json  triage de tickets, con los mismos ejemplos que
                                      publica TypeSafe, para comparar respuesta a respuesta
                      se elige con la variable AIOM_CATALOG o el argumento del script
-ejemplos/            cinco casos de ejemplo para preguntar.py, sobre correos de soporte
+ejemplos/            cinco casos de ejemplo, sobre correos de soporte
                      (uno por tipo de pregunta, y uno con las tres de golpe)
-docs/                la documentación (ver arriba)
-docs/arquitectura.svg  el diagrama de arquitectura (editable) y su PNG para el README
-results/             lo medido (json) y los gráficos; es la evidencia de las cifras
 ```
 
-## Reproducir
+**Lo que produjo los resultados** — no hace falta para usar el proyecto; está aquí
+porque los números de la documentación salen de ahí y cualquiera puede auditarlos:
 
-El estudio completo se rehace con estos comandos (hace falta el servidor arriba, ver
-[`docs/ARRANCAR.md`](docs/ARRANCAR.md)):
+```
+# benchmarks (escriben en results/)
+bench_modos.py       90 casos, 3 modos      bench_multi.py    preguntas encadenadas
+bench_cascada.py     escalado 1/5/10/15     bench.py          caudal vs concurrencia
+bench_s1mb.py        benchmark público S1MB  s1mb_official.py su puntuación oficial
+calibrate.py         temperature scaling     snapshot.py      métricas internas
 
-```bash
-python bench_modos.py   --out results/modos.json    # 90 casos, 3 modos
-python bench_multi.py   --out results/multi.json    # 64 preguntas encadenadas
-python bench_cascada.py --reps 10 --out results/cascada.json   # escalado 1/5/10/15
-python snapshot.py                                  # métricas internas
-python reports.py                                   # -> docs/METRICAS.md
-python rendimiento.py                               # -> docs/ESTUDIO.md + gráficos
-python detalle.py                                   # -> docs/DETALLE.md
-python verificar.py --estricto                      # ¿cuadran los documentos con los datos?
+# los conjuntos de casos con verdad de referencia
+casos_modos.py  casos_multi.py  casos_cascada.py  dataset.py  dataset_stress.py
+
+# generadores de los documentos y los gráficos
+rendimiento.py -> ESTUDIO.md   detalle.py -> DETALLE.md   reports.py -> METRICAS.md
+entorno.py  graficos.py  razones.py  diagrama.py  metrics.py  verificar.py
 ```
 
-Los benchmarks públicos son aparte y tardan bastante más:
+`results/` guarda lo medido (json) y los gráficos: **es la evidencia de cada cifra** que
+aparece en los documentos.
 
-```bash
-python bench_s1mb.py        # S1MB, 102 suites -> results/s1mb_crudo.json (6,5 MB)
-python s1mb_official.py     # puntuación oficial -> results/s1mb_oficial.json
-python test_official.py     # comprueba el evaluador contra los ejemplos de SCORING.md
-```
+## Los números que verás
 
-`verificar.py` comprueba que las tablas de este README **sigan coincidiendo con
-`results/`**: si vuelves a medir y se te olvida actualizar una cifra, lo dice.
+Los resultados del estudio —tiempos, acierto, confianza— están en
+[`docs/ESTUDIO.md`](docs/ESTUDIO.md), [`docs/METRICAS.md`](docs/METRICAS.md) y
+[`docs/DETALLE.md`](docs/DETALLE.md). **Son informativos**: describen lo que dio este
+montaje en esta máquina, no son un requisito para usar los modos.
 
-> **Antes de medir:** el terminal de esta máquina lanza cada comando **dos veces**, así
-> que dos benchmarks pueden correr a la vez, encolarse en el servidor y contaminarse los
-> tiempos. `bench_cascada.py` lo evita con un candado atómico (`.cascada.lock`): la
-> segunda instancia se retira sola.
+Si quieres repetirlos tú, los scripts están arriba y `verificar.py` comprueba que las
+tablas sigan cuadrando con `results/`. Hace falta el servidor levantado.
+
+> **Si los repites:** el terminal de esta máquina lanza cada comando **dos veces**, así
+> que dos benchmarks pueden correr a la vez y contaminarse los tiempos.
+> `bench_cascada.py` lo evita con un candado atómico (`.cascada.lock`).
 
 ## Requisitos
 

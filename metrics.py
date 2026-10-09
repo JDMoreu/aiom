@@ -19,11 +19,35 @@ Definiciones:
                        Solo informa si la tarea tiene errores que repartir.
   Brier                error cuadratico medio de la probabilidad.
   tabla fiabilidad     por tramo de confianza, cuanto se acierta de verdad.
+  confianza            1 - H(p)/ln(n): la entropia normalizada del reparto de
+                       probabilidades. NO es "el mayor menos los otros" (eso seria el
+                       margen, 2*p_max-1, que mide otra cosa). 1 = un solo pico,
+                       0 = reparto plano entre todas las opciones.
 """
 from __future__ import annotations
 
 import math
 import statistics
+
+
+def confianza(probabilidades):
+    """Entropia normalizada de un reparto de probabilidades.
+
+    Es la formula que aplica el servidor (decision-engine.cpp), y aqui esta para poder
+    comprobarla: sobre los 180 casos de results/modos.json la reproduce con una
+    discrepancia maxima de 0.000000.
+
+    1 - H(p)/ln(n)   con   H(p) = -sum p*ln(p)
+
+    Ejemplos: todo en una opcion -> 1.0 · empate a dos -> 0.5 · empate a cuatro -> 0.0
+    """
+    p = [float(v) for v in probabilidades if float(v) > 0]
+    if not p:
+        return 0.0
+    if len(p) == 1:
+        return 1.0
+    h = -sum(v * math.log(v) for v in p)
+    return 1.0 - h / math.log(len(probabilidades))
 
 
 def wilson(k: int, n: int, z: float = 1.96):

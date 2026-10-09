@@ -108,32 +108,29 @@ python preguntar.py --texto "Entrada: ... / Pregunta: ... / Opciones: ..."
 python preguntar.py --json mi_caso.txt      las probabilidades completas
 ```
 
-## Paso 5 — Repetir las pruebas del estudio
-
-Cada una tarda unos minutos y **escribe en `results/`**:
-
-```
-python bench_modos.py       los 3 modos sobre 90 casos
-python bench_multi.py       preguntas encadenadas
-python bench_cascada.py     el escalado de 1 a 15 preguntas (con candado anti-duplicados)
-python verificar.py         comprueba que las cifras de los documentos sigan cuadrando
-```
-
-Si vuelves a medir y alguna cifra de los documentos deja de coincidir con `results/`,
-`verificar.py` te lo dice.
-
-> **Un aviso de esta máquina:** el terminal lanza cada comando **dos veces**, así que
-> dos benchmarks pueden correr a la vez y contaminarse los tiempos entre ellos.
-> `bench_cascada.py` lo evita con un candado. Si lanzas los otros dos a la vez,
-> los números no valen.
-
-## Paso 6 — Parar el servidor
+## Paso 5 — Parar el servidor
 
 Vuelve a la ventana del servidor y pulsa **Ctrl + C**. O desde otra terminal:
 
 ```
 taskkill /IM llama-server.exe /F
 ```
+
+## Y ya está
+
+Con eso tienes lo necesario: **el servidor arriba y los modos funcionando**. Escribe tus
+propios casos y pásaselos a `preguntar.py`.
+
+Los resultados del estudio —tiempos, acierto, confianza— están en
+[`ESTUDIO.md`](ESTUDIO.md), [`METRICAS.md`](METRICAS.md) y [`DETALLE.md`](DETALLE.md).
+**Son informativos**: describen lo que dio este montaje en esta máquina, y no hacen
+falta para usar el proyecto. Los scripts que los produjeron están en la raíz del
+repositorio, por si quieres auditarlos o repetirlos.
+
+> **Si repites los benchmarks:** el terminal de esta máquina lanza cada comando **dos
+> veces**, así que dos pueden correr a la vez y contaminarse los tiempos.
+> `bench_cascada.py` lo evita con un candado. Si lanzas los otros dos a la vez, los
+> números no valen.
 
 ## El Python
 
@@ -151,9 +148,10 @@ Y comprueba con `python --version` en una terminal **nueva**.
 
 **El cliente no necesita instalar nada más**: todos los scripts usan solo la biblioteca
 estándar de Python. Lo único que pide dependencias es `graficos.py` (matplotlib), y solo
-si quieres **regenerar los gráficos** — ya están generados en `results/graf/`.
+si quieres **regenerar los gráficos del estudio** — ya están generados en `results/graf/`,
+así que puedes ignorarlo por completo.
 
-Si quieres regenerarlos:
+Si aun así quieres regenerarlos:
 
 ```
 pip install matplotlib
