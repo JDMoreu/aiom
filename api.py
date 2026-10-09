@@ -36,9 +36,10 @@ import preguntar               # noqa: E402
 
 FORMATOS = ("texto", "natural", "tipado")
 
-# Tope de subida. Un documento de texto no deberia pasar de aqui; es un limite de
-# cordura para no llenar la memoria con un fichero que no era el que se queria.
-LIMITE_SUBIDA = 8 * 1024 * 1024
+# Tope de subida. Un PDF con imagenes se va facilmente a 10 o 20 MB, asi que el tope
+# es generoso: solo esta para no llenar la memoria con un fichero que no era el que se
+# queria. Lo que importa no es el peso, sino cuantos CARACTERES salen de el.
+LIMITE_SUBIDA = 64 * 1024 * 1024
 
 # El tipo del motor -> el nombre que usa JEV. Se informa con el de JEV para que los
 # dos formatos se lean igual: el natural produce enum/number/boolean y el tipado ya
@@ -359,6 +360,20 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, *a):
         pass
 
+    def _drenar(self, n):
+        """Lee y tira el cuerpo que el cliente esta mandando.
+
+        Hace falta cuando se va a contestar un error ANTES de leerlo todo: si el
+        servidor contesta y cierra mientras el cliente sigue escribiendo, el cliente
+        ve un fallo de red y nunca llega a leer la respuesta.
+        """
+        restante = n
+        while restante > 0:
+            trozo = self.rfile.read(min(restante, 65536))
+            if not trozo:
+                break
+            restante -= len(trozo)
+
     def _subir_documento(self):
         """Sube un fichero y devuelve su texto, para poder usarlo como caso.
 
@@ -385,6 +400,11 @@ class Handler(BaseHTTPRequestHandler):
             return self._send(400, {"error": "el cuerpo va vacio: manda los bytes "
                                              "del fichero en crudo"})
         if n > LIMITE_SUBIDA:
+            # Se lee y se tira el cuerpo ANTES de contestar. Si se contesta y se cierra
+            # sin leer lo que el cliente sigue mandando, el cliente ve un error de red
+            # ("Failed to fetch" en el navegador) en vez de este mensaje. Costo un
+            # rato encontrarlo: el fallo estaba en el cliente, no en el fichero.
+            self._drenar(n)
             return self._send(413, {
                 "error": f"el fichero pasa de {LIMITE_SUBIDA // (1024*1024)} MB",
                 "bytes": n})
@@ -394,6 +414,12 @@ class Handler(BaseHTTPRequestHandler):
         except ValueError as e:
             return self._send(400, {"error": str(e),
                                     "soportados": sorted(doc_mod.SOPORTADOS)})
+        except Exception as e:                                      # noqa: BLE001
+            # Un .docx corrupto o un PDF que no lo es lanzan cosas que no son
+            # ValueError. Sin esto la excepcion sube, el handler se cae y el navegador
+            # lo unico que ve es "Failed to fetch".
+            return self._send(400, {"error": f"no pude leer '{nombre}': "
+                                             f"{type(e).__name__}: {e}"})
         # El contexto del modelo son 32768 tokens. A ~4 caracteres por token, un
         # documento de mas de 100.000 caracteres puede no caber: se avisa, no se corta
         # en silencio, porque recortar cambiaria lo que el modelo ve.
