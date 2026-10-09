@@ -19,21 +19,25 @@
   *{box-sizing:border-box}
   body{margin:0;background:var(--fondo);color:var(--texto);font-family:var(--sans);
        font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
-  header{display:flex;align-items:baseline;gap:14px;padding:20px 26px;
-         border-bottom:1px solid var(--borde)}
+  header{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 14px;
+         padding:18px clamp(14px,3vw,30px);border-bottom:1px solid var(--borde)}
   header h1{margin:0;font-size:16px;font-weight:600;letter-spacing:-.01em}
   header .sub{color:var(--apagado);font-size:12.5px}
   header .estado{margin-left:auto;font-size:12px;color:var(--apagado);
                  display:flex;align-items:center;gap:7px}
+  @media (max-width:620px){
+    header .estado{margin-left:0;width:100%}
+    header .sub#catalogo{width:100%}
+  }
   .punto{width:7px;height:7px;border-radius:50%;background:var(--tenue);flex:none}
   .punto.ok{background:var(--ok)} .punto.malo{background:var(--malo)}
 
-  main{display:grid;grid-template-columns:minmax(340px,400px) 1fr;gap:0;
-       align-items:start;height:calc(100vh - 62px)}
-  @media (max-width:900px){main{grid-template-columns:1fr;height:auto}}
-  .panel{padding:22px 26px}
-  .entrada{border-right:1px solid var(--borde);height:100%;overflow-y:auto}
-  @media (max-width:900px){.entrada{border-right:none;border-bottom:1px solid var(--borde)}}
+  /* Una sola columna: el caso arriba y las respuestas debajo, en el mismo eje.
+     Con dos columnas el area de escritura quedaba estrecha y el texto incomodo. */
+  main{display:flex;flex-direction:column;gap:clamp(18px,3vw,30px);
+       max-width:1220px;margin:0 auto;padding:clamp(16px,3vw,30px) clamp(14px,3vw,30px) 40px}
+  .panel{min-width:0}
+  .entrada{display:flex;flex-direction:column}
 
   .etiqueta{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
             color:var(--apagado);margin:0 0 9px}
@@ -49,13 +53,13 @@
                                    box-shadow:inset 0 0 0 1px var(--borde2)}
 
   textarea{width:100%;background:var(--superficie);color:var(--texto);
-           border:1px solid var(--borde);border-radius:8px;padding:12px 13px;
-           font-family:var(--mono);font-size:12.5px;line-height:1.65;resize:vertical;
-           min-height:300px}
+           border:1px solid var(--borde);border-radius:8px;padding:14px 15px;
+           font-family:var(--mono);font-size:13px;line-height:1.7;resize:vertical;
+           min-height:clamp(300px,44vh,520px)}
   textarea:focus{outline:none;border-color:var(--acento);
                  box-shadow:0 0 0 3px var(--acento-suave)}
 
-  .fila{display:flex;align-items:center;gap:10px;margin:16px 0}
+  .fila{display:flex;align-items:center;gap:12px 14px;flex-wrap:wrap;margin:18px 0}
   .interruptor{display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none;
                font-size:13px;color:var(--texto)}
   .interruptor input{appearance:none;width:34px;height:19px;border-radius:99px;
@@ -66,29 +70,34 @@
                             transition:transform .15s,background .15s}
   .interruptor input:checked{background:var(--acento-suave);border-color:var(--acento)}
   .interruptor input:checked::after{transform:translateX(15px);background:var(--acento)}
-  .pista{font-size:11.5px;color:var(--tenue);margin-left:auto}
+  .pista{font-size:11.5px;color:var(--tenue)}
 
-  button.enviar{width:100%;background:var(--acento);color:#fff;border:0;border-radius:8px;
-                padding:11px;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;
-                transition:filter .12s}
+  button.enviar{background:var(--acento);color:#fff;border:0;border-radius:8px;
+                padding:11px 26px;font:inherit;font-size:13.5px;font-weight:600;
+                cursor:pointer;transition:filter .12s;margin-left:auto;min-width:180px}
   button.enviar:hover{filter:brightness(1.12)}
   button.enviar:disabled{opacity:.5;cursor:default;filter:none}
+  @media (max-width:560px){
+    button.enviar{width:100%;margin-left:0;min-width:0}
+    .pista{width:100%}
+  }
 
   .error{margin-top:14px;padding:11px 13px;border-radius:8px;font-size:12.5px;
          background:rgba(229,72,77,.1);border:1px solid rgba(229,72,77,.3);
          color:#ffb4b6;font-family:var(--mono);white-space:pre-wrap}
 
   /* --- resultados --- */
-  .salida{height:100%;overflow-y:auto}
-  .vacio{color:var(--tenue);font-size:13px;padding:60px 0;text-align:center}
+  .salida{min-width:0}
+  .vacio{color:var(--tenue);font-size:13px;padding:36px 0;text-align:center}
   .rejilla{display:grid;gap:18px;align-items:start}
   .rejilla.dos{grid-template-columns:1fr 1fr}
-  @media (max-width:1100px){.rejilla.dos{grid-template-columns:1fr}}
+  @media (max-width:1000px){.rejilla.dos{grid-template-columns:1fr}}
 
   .tarjeta{background:var(--panel);border:1px solid var(--borde);border-radius:11px;
            overflow:hidden}
   .tarjeta .cab{display:flex;align-items:center;gap:9px;padding:12px 15px;
-                border-bottom:1px solid var(--borde);background:var(--superficie)}
+                border-bottom:1px solid var(--borde);background:var(--superficie);
+                flex-wrap:wrap}
   .tarjeta .cab h2{margin:0;font-size:13px;font-weight:600}
   .tarjeta .cab .tipo{font-size:10.5px;font-weight:600;letter-spacing:.05em;
                       text-transform:uppercase;padding:2px 7px;border-radius:5px;
@@ -110,9 +119,9 @@
                color:var(--apagado)}
   .valor .conf.alta{color:var(--ok)} .valor .conf.baja{color:var(--aviso)}
 
-  .barra{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;
-         font-family:var(--mono);font-size:11.5px;margin:3px 0}
-  .barra .k{color:var(--apagado);text-align:right;min-width:74px;overflow:hidden;
+  .barra{display:grid;grid-template-columns:minmax(0,auto) 1fr auto;gap:10px;
+         align-items:center;font-family:var(--mono);font-size:11.5px;margin:3px 0}
+  .barra .k{color:var(--apagado);text-align:right;max-width:130px;overflow:hidden;
             text-overflow:ellipsis;white-space:nowrap}
   .barra .pista{height:5px;border-radius:99px;background:var(--superficie2);overflow:hidden}
   .barra .pista i{display:block;height:100%;border-radius:99px;background:var(--tenue)}
@@ -156,9 +165,8 @@
         Comparar con el chat
       </label>
       <span class="pista" id="pista">las dos vías, misma corrida</span>
+      <button class="enviar" id="enviar">Preguntar</button>
     </div>
-
-    <button class="enviar" id="enviar">Preguntar</button>
     <div id="error"></div>
   </section>
 
@@ -224,6 +232,17 @@ function pintarFormato() {
   $("pista").textContent = formato === "natural"
     ? "cabeceras: Entrada / Pregunta / Opciones / Niveles / no o sí"
     : "formato de TypeSafe: state + questions";
+  ajustarAlto();
+}
+
+// La caja se ajusta a su contenido: el caso es un documento entero y con una altura
+// fija había que hacer scroll para leerlo. Se reajusta al cambiar de formato, pero
+// no mientras se escribe, para no pelearse con quien la redimensiona a mano.
+function ajustarAlto() {
+  const ta = $("entrada");
+  ta.style.height = "auto";
+  const tope = Math.round(window.innerHeight * 0.72);
+  ta.style.height = Math.min(ta.scrollHeight + 4, tope) + "px";
 }
 
 $("btn-natural").onclick = () => { formato = "natural"; pintarFormato(); };
