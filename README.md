@@ -9,13 +9,18 @@ equipo**, sin entrenar nada y sin cargar un segundo modelo.
 
 ## Cómo funciona
 
-![Arquitectura de AIOM: un modelo, dos formas de preguntar](docs/arquitectura.png)
+![Arquitectura de AIOM: las entradas, el cliente, el modelo y las dos vías](docs/arquitectura.png)
 
 La pieza que lo hace posible no es el modelo: es **el endpoint**. llama.cpp de serie
 solo sabe generar texto; el backend
 [`parallel-decision`](https://github.com/thecodacus/llama.cpp/tree/parallel-decision)
 añade uno que **puntúa las opciones en lugar de redactar**. Por eso el modo de decisión
 no gasta tokens: no es que escriba poco, es que **no pasa por el bucle de generación**.
+
+**El cliente tiene dos puertas y las dos acaban en el mismo sitio.** Por consola
+(`preguntar.py`) o por HTTP (`api.py`, que además sirve la interfaz web en el mismo
+proceso). El modo —decisión o chat— no es del sistema: es **una propiedad de la
+petición**, y por eso se pueden pedir los dos a la vez y compararlos.
 
 ## Empezar
 
@@ -199,8 +204,11 @@ curl -X POST localhost:8100/ask -H "Content-Type: application/json" \
 | documento | qué hay |
 |---|---|
 | **[docs/MANUAL.md](docs/MANUAL.md)** | **empieza aquí**: el manual de uso, de cero, con un ejemplo de cada tipo (opciones, niveles, sí/no), cómo se hacen varias preguntas a la vez y cómo se escribe en formato tipado |
-| [docs/ARRANCAR.md](docs/ARRANCAR.md) | cómo levantar el servidor tú mismo, paso a paso, y qué hacer si no arranca |
-| [docs/API.md](docs/API.md) | la API HTTP: los tres formatos de entrada, el documento como caso, qué devuelve y cómo probarla con `curl` |
+| **[docs/ARRANCAR.md](docs/ARRANCAR.md)** | **la ruta completa, de cero**: el modelo, compilar el servidor, arrancarlo, y las dos puertas para preguntar. Con qué hacer si algo no arranca |
+| [docs/CLIENTE.md](docs/CLIENTE.md) | la interfaz web: cómo se despliega, los tres modos, el documento como caso, la comparación por pregunta y cómo se lee una respuesta |
+| [docs/API.md](docs/API.md) | la API HTTP: cómo se despliega y cómo se consume, los tres formatos de entrada, el documento como caso, qué devuelve y cómo probarla con `curl` |
+| [DESIGN.md](DESIGN.md) | el sistema visual de la interfaz, con sus tokens, sus reglas y sus prohibiciones. Los nombres de los tokens son los mismos que los de las variables CSS, así que se puede comprobar contra el código |
+| [PRODUCT.md](PRODUCT.md) | la verdad del producto: quién lo usa, qué hace, qué no se puede inventar |
 | [CREDITOS.md](CREDITOS.md) | **de quién es cada pieza**, con commit exacto, licencias y el SHA256 del modelo |
 | [docs/ESTUDIO.md](docs/ESTUDIO.md) | el estudio: con qué hardware se midió, cómo se construyó, los resultados completos, las lecciones y los límites |
 | [docs/DETALLE.md](docs/DETALLE.md) | las 154 preguntas una por una: opciones, qué se esperaba, qué eligió cada modo y el reparto de probabilidad |

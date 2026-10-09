@@ -72,17 +72,24 @@ button,input,textarea,select{font:inherit;color:inherit}
           display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
 .banda .rot{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
             color:var(--tenue);padding:9px 18px 9px 0;display:flex;align-items:center;
-            border-right:1px solid var(--hairline);max-width:210px}
-.banda .dato{padding:8px 18px;border-right:1px solid var(--hairline);min-width:96px}
+            max-width:210px}
+/* Un grupo por via, con su rotulo: sin esto los seis numeros hay que agruparlos
+   mentalmente, y el rotulo del grupo era la primera de sus cifras. */
+.banda .grupo{display:flex;align-items:stretch;border-left:1px solid var(--hairline-fuerte)}
+.banda .grupo-rot{align-self:center;font-style:normal;font-size:11.5px;letter-spacing:.14em;
+                  text-transform:uppercase;color:var(--regla);font-weight:600;
+                  padding:0 14px 0 18px;white-space:nowrap}
+.banda .dato{padding:8px 16px;border-left:1px solid var(--hairline);min-width:88px}
 .banda .dato i{display:block;font-style:normal;font-size:11.5px;letter-spacing:.12em;
-               text-transform:uppercase;color:var(--tenue);margin-bottom:1px}
-.banda .dato b{font-size:19px;font-weight:600;letter-spacing:-.01em;line-height:1.15}
+               text-transform:uppercase;color:var(--tenue);margin-top:1px}
+.banda .dato b{display:block;font-size:19px;font-weight:600;letter-spacing:-.01em;
+               line-height:1.1}
 .banda .ratio{margin-left:auto;display:flex;align-items:center;gap:12px;
               padding:6px 0 6px 18px;border-left:2px solid var(--cursor)}
 .banda .ratio b{font-size:30px;font-weight:600;letter-spacing:-.03em;color:var(--cursor);
                 line-height:1}
 .banda .ratio i{font-style:normal;font-size:11.5px;color:var(--apagado);
-                max-width:130px;line-height:1.3}
+                max-width:150px;line-height:1.3}
 .banda .ratio b small{font-size:15px;letter-spacing:0}
 
 /* ---------------------------------------------------------------- cuerpo */
@@ -185,6 +192,26 @@ textarea.mono{font-family:var(--mono);font-size:13.5px;line-height:1.65;
 .rejilla{display:grid;gap:16px;align-items:start}
 .rejilla.dos{grid-template-columns:1fr 1fr}
 @media (max-width:940px){.rejilla.dos{grid-template-columns:1fr}}
+
+/* --- la comparativa, POR PREGUNTA -------------------------------------------
+   Una fila por pregunta, con la decision a la izquierda y el chat a la derecha.
+   Emparejadas asi, comparar no obliga a bajar y subir. */
+.comparacion{background:var(--papel);border:1px solid var(--hairline-fuerte);
+             border-radius:3px}
+.comp-cab{display:grid;grid-template-columns:1fr 1fr;background:var(--papel-hundido);
+          border-bottom:1px solid var(--hairline);border-radius:3px 3px 0 0}
+.comp-cab .et{justify-self:start;margin:9px 14px;font-size:11.5px;letter-spacing:.13em;
+              text-transform:uppercase;padding:2px 7px;border-radius:2px;color:var(--papel)}
+.comp-cab .et:last-child{margin-left:14px}
+.comp-pregunta{border-bottom:1px solid var(--hairline)}
+.comp-pregunta:last-child{border-bottom:0}
+.comp-enunciado{display:flex;gap:10px;align-items:baseline;padding:11px 14px 0;
+                font-size:13.5px}
+.comp-enunciado .num{font-family:var(--mono);font-size:11.5px;color:var(--tenue)}
+.comp-celdas{display:grid;grid-template-columns:1fr 1fr}
+.comp-celda{padding:12px 14px 16px;min-width:0}
+.comp-celda + .comp-celda{border-left:1px solid var(--hairline)}
+.comp-celda .preg{border-bottom:0;padding-bottom:0;margin-bottom:0}
 .lectura{background:var(--papel);border:1px solid var(--hairline-fuerte);border-radius:3px}
 .lectura>header{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
      padding:10px 14px;border-bottom:1px solid var(--hairline);
@@ -214,7 +241,12 @@ textarea.mono{font-family:var(--mono);font-size:13.5px;line-height:1.65;
 .preg .leido .c.baja{border-color:var(--estado-aviso);color:var(--estado-aviso)}
 
 /* la regla: linea base con graduaciones finas, un trazo por opcion y el cursor */
-.regla{position:relative;height:78px;margin:0 0 4px;padding:0 2px}
+.regla{position:relative;height:78px;margin:16px 0 4px;padding:0 2px}
+/* El tope: el valor mas alto de la pregunta. Sin el, las alturas no se leen contra
+   nada y la regla es decorativa. */
+.regla .tope{position:absolute;right:2px;top:-15px;font-family:var(--mono);
+     font-size:11.5px;color:var(--tenue);white-space:nowrap}
+.regla .tope b{color:var(--regla);font-weight:600}
 .regla .base{position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--hairline-fuerte)}
 /* La linea base lleva graduaciones dibujadas -- un SVG de verdad, no un gradiente a
    rayas -- con cada quinta mas larga, como en una regla de verdad. */
@@ -233,23 +265,39 @@ textarea.mono{font-family:var(--mono);font-size:13.5px;line-height:1.65;
      left:var(--x);transform:translateX(-1px);pointer-events:none}
 .regla .cursor::after{content:"";position:absolute;top:0;left:-4px;width:10px;height:5px;
      background:var(--cursor);clip-path:polygon(0 0,100% 0,50% 100%)}
-.etiquetas{display:flex;margin-top:7px}
+.etiquetas{display:flex;margin-top:7px;align-items:flex-start}
 .etiquetas .e{flex:1;padding:0 4px;text-align:center;font-size:11.5px;color:var(--apagado);
-     line-height:1.3;overflow-wrap:anywhere}
+     line-height:1.3;overflow-wrap:anywhere;min-width:0}
+/* El valor primero, para que los numeros queden alineados bajo sus trazos aunque el
+   nombre de la opcion ocupe dos o tres lineas. */
 .etiquetas .e b{display:block;font-family:var(--mono);font-size:11.5px;
      color:var(--tenue);font-weight:400}
+.etiquetas .e .n{display:block;margin-top:2px}
 .etiquetas .e.marcada{color:var(--tinta)}
 .etiquetas .e.marcada b{color:var(--regla)}
 
 .prosa{font-size:15px;line-height:1.66;white-space:pre-wrap}
 .pie{font-size:11.5px;color:var(--tenue);margin-top:12px;padding-top:10px;
      border-top:1px solid var(--hairline);line-height:1.5}
+@media (max-width:940px){
+  /* La comparativa se apila: la decision de una pregunta y debajo su chat. */
+  .comp-celdas{grid-template-columns:1fr}
+  .comp-celda + .comp-celda{border-left:0;border-top:1px solid var(--hairline)}
+}
 @media (max-width:640px){
+  /* Los numeros de la banda se apilan en un grupo por via, sin celdas sueltas. */
+  .banda .grupo{width:100%;border-left:0;border-top:1px solid var(--hairline)}
+  .banda .grupo-rot{padding:8px 0 0}
+  .banda .dato{padding:6px 14px 6px 0;min-width:0}
   .banda .ratio{margin-left:0;padding-left:0;border-left:0;width:100%;
                 border-top:2px solid var(--cursor);padding-top:8px}
   .banda,.rail{position:static}
   .modos .cinta{display:none}
-  .opcion input.clave{flex:0 0 40%}
+  /* Las opciones de una pregunta se apilan: en una columna el campo de texto se
+     quedaba tan estrecho que cortaba la frase a media palabra. */
+  .opcion{flex-wrap:wrap}
+  .opcion input.clave{flex:1 1 40%}
+  .opcion input.texto{flex:1 1 100%}
   .preg .leido .c{margin-left:0}
 }
 </style>
@@ -364,6 +412,11 @@ let modo = "bloques";
 let documento = null;
 let ultimo = null;            // la ultima medicion, para la banda
 const $ = (id) => document.getElementById(id);
+
+// Donde esta la API. Vacio = el mismo sitio que sirve esta pagina, que es como se usa
+// siempre (api.py sirve las dos cosas). Se cambia SOLO si sirves este fichero desde
+// otro sitio: pon aqui la direccion de la API y las tres llamadas iran alli.
+const SERVIDOR = "";
 
 const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) =>
   ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
@@ -513,14 +566,18 @@ function pintarBloques() {
                    ${p.tipo === "noul" ? "readonly" : ""}>
             <input type="text" class="texto" data-texto="${i}.${j}" value="${esc(o.texto)}"
                    placeholder="${p.tipo === "score" ? "puede esperar" : "qué significa"}">
-            <button class="btn chico" data-opcion-quitar="${i}.${j}"
+            ${p.tipo === "noul" ? "" : `<button class="btn chico" data-opcion-quitar="${i}.${j}"
                     aria-label="Quitar esta opción"><svg width="9" height="9"
                     viewBox="0 0 9 9" aria-hidden="true"><path d="M1.2 1.2l6.6 6.6M7.8 1.2l-6.6 6.6"
                     stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
-                    fill="none"/></svg></button>
+                    fill="none"/></svg></button>`}
           </div>`).join("")}
       </div>
-      <button class="btn chico" data-opcion-anadir="${i}">Añadir opción</button>
+      ${p.tipo === "noul"
+        ? `<p class="nota">Un <b>noul</b> es un sí o un no: sus dos valores son
+           <b>false</b> y <b>true</b>, y no se pueden añadir más. Solo se cambia lo que
+           significa cada uno.</p>`
+        : `<button class="btn chico" data-opcion-anadir="${i}">Añadir opción</button>`}
     </div>`).join("");
 
   $("cuenta-preguntas").textContent = modelo.preguntas.length === 1
@@ -529,11 +586,17 @@ function pintarBloques() {
   caja.querySelectorAll(".tipo-sel button").forEach((b) => {
     b.onclick = () => {
       const p = modelo.preguntas[+b.dataset.i];
+      const antes = p.tipo;
       p.tipo = b.dataset.t;
-      // los valores de un noul son fijos: false y true, y en ese orden
       if (p.tipo === "noul") {
+        // Los valores de un noul son fijos: false y true, y en ese orden. Solo se
+        // conserva lo que significaba cada uno.
         p.opciones = [{clave: "false", texto: p.opciones[0] ? p.opciones[0].texto : "No lo menciona"},
                       {clave: "true", texto: p.opciones[1] ? p.opciones[1].texto : "Sí lo menciona"}];
+      } else if (antes === "noul") {
+        // Y al salir de un noul, false/true ya no sirven de nada: se ponen las
+        // opciones propias del tipo nuevo en vez de dejar dos claves sin sentido.
+        p.opciones = nuevaPregunta(p.tipo).opciones;
       }
       pintarBloques();
     };
@@ -662,7 +725,7 @@ async function subirDoc(fichero) {
   $("error").innerHTML = "";
   $("doc-elegir").textContent = "Leyendo…";
   try {
-    const r = await fetch("/documento", {
+    const r = await fetch(SERVIDOR + "/documento", {
       method: "POST",
       headers: {"Content-Type": "application/octet-stream", "X-Nombre": fichero.name},
       body: fichero
@@ -691,20 +754,28 @@ $("doc-fichero").onchange = (e) => {
 $("doc-quitar").onclick = () => { documento = null; pintarDoc(); };
 
 /* ------------------------------------------------------------------ la banda */
+// Un grupo por via, con su rotulo, para que la banda se lea de un vistazo sin
+// reconstruir la tabla mentalmente. Y las unidades escritas enteras: "peticiones" y
+// "tokens", no "pet." ni "tok".
+function grupoVia(nombre, peticiones, ms, tokens) {
+  return `<span class="grupo">
+    <i class="grupo-rot">${nombre}</i>
+    <span class="dato"><b>${peticiones}</b><i>${peticiones === 1 ? "petición" : "peticiones"}</i></span>
+    <span class="dato"><b>${ms}</b><i>ms</i></span>
+    <span class="dato"><b>${tokens}</b><i>tokens</i></span>
+  </span>`;
+}
+
 function bandaDeMedida() {
   const d = ultimo.decision, c = ultimo.chat;
   const veces = c.tiempo_ms > 0 ? (c.tiempo_ms / Math.max(d.tiempo_ms, 1)) : 0;
   return `
     <span class="rot">${ultimo.n_preguntas} ${ultimo.n_preguntas === 1 ? "pregunta" : "preguntas"}
       · medido ahora</span>
-    <span class="dato"><i>Decisión</i><b>${d.peticiones} pet.</b></span>
-    <span class="dato"><i>su tiempo</i><b>${d.tiempo_ms.toFixed(0)} ms</b></span>
-    <span class="dato"><i>sus tokens</i><b>${d.tokens}</b></span>
-    <span class="dato"><i>Chat</i><b>${c.peticiones} pet.</b></span>
-    <span class="dato"><i>su tiempo</i><b>${c.tiempo_ms.toFixed(0)} ms</b></span>
-    <span class="dato"><i>sus tokens</i><b>${c.tokens}</b></span>
+    ${grupoVia("Decisión", d.peticiones, d.tiempo_ms.toFixed(0), d.tokens)}
+    ${grupoVia("Chat", c.peticiones, c.tiempo_ms.toFixed(0), c.tokens)}
     <span class="ratio"><b>${veces.toFixed(1)}<small>×</small></b>
-      <i>menos tiempo con la decisión</i></span>`;
+      <i>tardó menos la decisión que el chat</i></span>`;
 }
 
 // Antes de la primera medicion la banda enseña la cifra que ya esta medida en el
@@ -712,14 +783,10 @@ function bandaDeMedida() {
 function bandaDelRepositorio() {
   return `
     <span class="rot">medido en el repositorio · 12 preguntas sobre un CV</span>
-    <span class="dato"><i>Decisión</i><b>1 pet.</b></span>
-    <span class="dato"><i>su tiempo</i><b>510 ms</b></span>
-    <span class="dato"><i>sus tokens</i><b>0</b></span>
-    <span class="dato"><i>Chat</i><b>12 pet.</b></span>
-    <span class="dato"><i>su tiempo</i><b>6717 ms</b></span>
-    <span class="dato"><i>sus tokens</i><b>541</b></span>
+    ${grupoVia("Decisión", 1, "510", 0)}
+    ${grupoVia("Chat", 12, "6717", 541)}
     <span class="ratio"><b>13.2<small>×</small></b>
-      <i>menos tiempo con la decisión</i></span>`;
+      <i>tardó menos la decisión que el chat</i></span>`;
 }
 
 function pintarBanda() {
@@ -727,8 +794,15 @@ function pintarBanda() {
 }
 
 /* ------------------------------------------------------------------ la lectura */
+// Las claves de un noul son `false` y `true`, que son las del motor: se leen en
+// ingles. Se les pega su equivalente en español para que la escala se entienda.
+const GLOSA_NOUL = {"true": "sí", "false": "no"};
+
 function etiquetaNivel(q, clave) {
-  if (!q.niveles) return clave;
+  if (!q.niveles) {
+    const glosa = GLOSA_NOUL[String(clave)];
+    return glosa ? clave + " · " + glosa : clave;
+  }
   const i = Math.round(parseFloat(clave));
   return (i >= 0 && i < q.niveles.length) ? i + " · " + q.niveles[i] : clave;
 }
@@ -737,8 +811,9 @@ function claseConfianza(c) { return c >= 0.7 ? "alta" : (c <= 0.3 ? "baja" : "")
 
 // LA MARCA. La respuesta se lee como una marca en una escala graduada: un trazo por
 // opcion cuya ALTURA es la probabilidad, el trazo elegido entintado, y el cursor rojo
-// encima. La linea base lleva graduaciones finas, que es lo que hace que se lea como
-// un instrumento y no como un grafico de barras.
+// encima. La linea base lleva graduaciones dibujadas y el tope lleva su valor: asi la
+// altura de cada trazo se lee contra algo, que es lo que hace que sea un instrumento
+// y no un grafico de barras.
 function escala(q) {
   const probs = q.probabilities || {};
   const pares = Object.entries(probs);
@@ -756,10 +831,11 @@ function escala(q) {
     `<span class="g${i === idx ? " marcada" : ""}"><i style="--h:${(p / max).toFixed(4)}"></i></span>`
   ).join("");
   const etiquetas = pares.map(([k, p], i) =>
-    `<span class="e${i === idx ? " marcada" : ""}">${esc(etiquetaNivel(q, k))}
-      <b>${p.toFixed(3)}</b></span>`).join("");
+    `<span class="e${i === idx ? " marcada" : ""}"><b>${p.toFixed(3)}</b><span
+      class="n" title="${esc(etiquetaNivel(q, k))}">${esc(etiquetaNivel(q, k))}</span></span>`).join("");
 
   return `<div class="regla">
+      <span class="tope"><b>${max.toFixed(3)}</b> el mas alto</span>
       <span class="tics"></span><span class="base"></span>
       <span class="trazo">${trazos}</span>
       <span class="cursor" style="--x:${x.toFixed(2)}%"></span>
@@ -767,17 +843,24 @@ function escala(q) {
     <div class="etiquetas">${etiquetas}</div>`;
 }
 
+// La lectura de UNA pregunta de decision: el valor, su probabilidad, la confianza y la
+// escala. Se separa porque la comparativa la usa celda a celda.
+function lecturaDecision(q) {
+  return `<div class="enunciado" hidden></div>
+    <div class="leido">
+      <span class="v">${esc(etiquetaNivel(q, q.value))}</span>
+      <span class="p" title="probabilidad de la opción elegida">p = ${Number(q.probability).toFixed(3)}</span>
+      <span class="c ${claseConfianza(q.confidence)}"
+        title="lo concentrada que está la distribución: 1 es un reparto sin duda, 0 es un reparto plano">confianza
+        ${Number(q.confidence).toFixed(3)}</span>
+    </div>
+    ${escala(q)}`;
+}
+
 function pintarDecision(r) {
-  return r.map((q) => `
-    <div class="preg">
+  return r.map((q) => `<div class="preg">
       <div class="enunciado">${esc(q.pregunta || q.campo)}</div>
-      <div class="leido">
-        <span class="v">${esc(etiquetaNivel(q, q.value))}</span>
-        <span class="p">p = ${Number(q.probability).toFixed(3)}</span>
-        <span class="c ${claseConfianza(q.confidence)}">confianza
-          ${Number(q.confidence).toFixed(3)}</span>
-      </div>
-      ${escala(q)}
+      ${lecturaDecision(q)}
     </div>`).join("");
 }
 
@@ -798,19 +881,37 @@ function tarjeta(titulo, tipo, claseEt, cifras, cuerpo, pie) {
   </div>`;
 }
 
+// La comparativa va POR PREGUNTA, no por via: la decision de la pregunta 1 al lado del
+// chat de la pregunta 1, y asi. Emparejadas, comparar no obliga a bajar y subir.
+//
+// Se pueden emparejar por orden porque el servidor arma los prompts del chat recorriendo
+// las mismas preguntas, en el mismo orden, que resuelve la decision.
 function pintarComparativa(d) {
   const dec = d.decision, chat = d.chat;
-  return `<div class="rejilla dos">
-    ${tarjeta("Decisión", "valores", "et-choice",
-      `<span><b>${dec.tiempo_ms.toFixed(0)}</b> ms</span><span><b>${dec.tokens}</b> tok</span>
-       <span><b>${dec.peticiones}</b> pet.</span>`,
-      pintarDecision(dec.resultados),
-      "El valor sale de puntuar las opciones contra el caso: no se escribe ni un token.")}
-    ${tarjeta("Chat", "prosa", "et-chat",
-      `<span><b>${chat.tiempo_ms.toFixed(0)}</b> ms</span><span><b>${chat.tokens}</b> tok</span>
-       <span><b>${chat.peticiones}</b> pet.</span>`,
-      pintarChat(chat.resultados),
-      "Una petición por pregunta, y la respuesta hay que leerla para sacar el dato.")}
+  const n = Math.min(dec.resultados.length, chat.resultados.length);
+  const descuadre = dec.resultados.length !== chat.resultados.length;
+
+  const filas = dec.resultados.slice(0, n).map((q, i) => {
+    const c = chat.resultados[i] || {};
+    return `<div class="comp-pregunta">
+      <div class="comp-enunciado"><span class="num">${String(i + 1).padStart(2, "0")}</span>
+        <span>${esc(q.pregunta || q.campo)}</span></div>
+      <div class="comp-celdas">
+        <div class="comp-celda">${lecturaDecision(q)}</div>
+        <div class="comp-celda"><div class="prosa">${esc(c.texto || "")}</div></div>
+      </div>
+    </div>`;
+  }).join("");
+
+  return `<div class="comparacion">
+    <div class="comp-cab">
+      <span class="et et-choice">Decisión · valores</span>
+      <span class="et et-chat">Chat · prosa</span>
+    </div>
+    ${filas}
+    ${descuadre ? `<p class="nota" style="padding:10px 14px">Ojo: la decisión devolvió
+      ${dec.resultados.length} respuestas y el chat ${chat.resultados.length}; se emparejan
+      por orden hasta donde llegan las dos.</p>` : ""}
   </div>`;
 }
 
@@ -854,7 +955,7 @@ async function preguntar() {
   boton.textContent = "Midiendo";
   try {
     const t0 = performance.now();
-    const res = await fetch("/ask", {
+    const res = await fetch(SERVIDOR + "/ask", {
       method: "POST", headers: {"Content-Type": "application/json"},
       body: JSON.stringify(cuerpo)
     });
@@ -915,7 +1016,7 @@ document.addEventListener("keydown", (e) => {
   cambiarModo("bloques");
 
   try {
-    const d = await (await fetch("/health")).json();
+    const d = await (await fetch(SERVIDOR + "/health")).json();
     const ok = d.llama_server && d.llama_server.status === "ok";
     $("punto").className = "punto " + (ok ? "ok" : "malo");
     $("texto-estado").textContent = ok ? "modelo listo" : "modelo no disponible";

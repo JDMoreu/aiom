@@ -3,18 +3,62 @@
 El `.txt` es la puerta **humana**: escribir una pregunta sin saber JSON. Esto es la
 puerta **de programa**: otro sistema manda la pregunta por HTTP y recibe JSON.
 
-Se levanta así (una terminal aparte del `llama-server`):
+## Desplegarla
+
+Necesita un `llama-server` con el endpoint `/v1/decision` ya levantado (ver
+[`ARRANCAR.md`](ARRANCAR.md)); ella **no carga el modelo**, se conecta al que hay.
 
 ```bash
-python api.py                 # escucha en 8100
-python api.py --port 9000
+python api.py                 # escucha en 127.0.0.1:8100
+python api.py --port 9000     # otro puerto
+python api.py --ui            # además abre el navegador en la interfaz
+python api.py --catalog catalogs/soporte.json   # cambia la persona de la vía de chat
 ```
 
-Y se pregunta siempre al mismo endpoint, **declarando el formato**:
+Es un servidor HTTP de la biblioteca estándar de Python: **sin dependencias, sin
+`requirements`, sin nada que instalar**. Escucha solo en `127.0.0.1`, así que no se
+expone a la red. Y sirve también la interfaz web en el mismo proceso, así que no hay un
+segundo servidor que arrancar.
+
+| | |
+|---|---|
+| `AIOM_SERVER` | dónde está el `llama-server` (por defecto `http://127.0.0.1:8096`) |
+| `AIOM_CATALOG` | qué catálogo usar, si no se pasa `--catalog` |
+| `GET /docs` | la documentación de los endpoints, en JSON, desde la propia API |
+
+## Consumirla
+
+Se pregunta siempre al mismo endpoint, **declarando el formato**:
 
 ```bash
-curl -X POST localhost:8100/ask -H "Content-Type: application/json" -d '{ ... }'
+curl -X POST localhost:8100/ask -H "Content-Type: application/json" \
+  -d '{"formato":"natural","entrada":"input: ...\n\nask: ...\nchoice:\n  si: ..."}'
 ```
+
+Y desde Python, con la biblioteca estándar y sin instalar nada:
+
+```python
+import json, urllib.request
+
+cuerpo = {"formato": "natural", "entrada": "input: ... / ask: ... / choice: ...",
+          "comparar": True}
+req = urllib.request.Request("http://127.0.0.1:8100/ask",
+                             data=json.dumps(cuerpo).encode(),
+                             headers={"Content-Type": "application/json"})
+with urllib.request.urlopen(req, timeout=600) as r:
+    d = json.loads(r.read().decode())
+
+print(d["decision"]["tiempo_ms"], d["decision"]["tokens"])   # 178.0  0
+print(d["chat"]["tiempo_ms"], d["chat"]["tokens"])           # 2182.0 126
+```
+
+**Las cabeceras CORS van abiertas**, a propósito: es una herramienta local que solo
+escucha en `127.0.0.1`, y así el fichero `web/index.html` se puede servir desde otro sitio
+si hiciera falta.
+
+> **Una cosa que conviene saber antes de meterle carga:** hay **un solo modelo y un solo
+> proceso**, así que las peticiones se atienden de una en una. Si le mandas diez a la vez
+> no van más rápido: hacen cola. Para medir tiempos, de una en una.
 
 ## Los tres formatos
 
