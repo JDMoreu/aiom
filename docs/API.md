@@ -122,6 +122,63 @@ Funciona con los tres formatos: en `texto` la pregunta va al catálogo y al chat
 `natural` cada pregunta del texto va a las dos vías; en `tipado` igual, usando el
 `state.input` y las `instructions`.
 
+## El documento como caso
+
+El caso no tiene por que escribirse: puede ser un documento que ya existe. Se sube y
+el texto que sale de él pasa a ser la `entrada`.
+
+```
+POST /documento        (el cuerpo en crudo, el nombre en la cabecera X-Nombre)
+  -> {"texto": "...", "nombre": "carta.pdf", "tipo": "pdf",
+      "caracteres": 3910, "palabras": 587, "lineas": 56}
+```
+
+Y luego se pregunta con normalidad, mandando `"documento": "<ese texto>"` junto a la
+`entrada`. El documento **manda sobre el `input:`** del texto y sobre el `state.input`
+del formato tipado.
+
+Qué se puede leer:
+
+| | |
+|---|---|
+| `.txt` `.md` `.csv` `.json` `.log` | tal cual, sin instalar nada |
+| `.docx` | sin instalar nada: un .docx es un ZIP y se lee su XML |
+| `.pdf` | hace falta `pip install pymupdf` |
+
+El `.doc` y el `.rtf` antiguos no se leen; hay que convertirlos antes. Se dice cuál es
+el problema en vez de devolver texto a medias.
+
+## Un aviso medido: preguntar «¿aparece X?» con `noul` falla
+
+Esto se midió sobre un documento largo (un currículum de 3910 caracteres) con nueve
+preguntas del tipo «¿aparece *una fecha* en el documento?», donde la respuesta correcta
+se comprobó en el texto extraído:
+
+| tipo | aciertos |
+|---|---|
+| `noul` | **4 de 9** |
+| `choice` con sí/no como opciones | **7 de 9** |
+
+Y lo preocupante no es solo que falle: es que **falla con seguridad**. En cinco de los
+seis casos donde la respuesta era sí, `noul` dijo `False` con probabilidad entre 0,59 y
+**0,99**. La confianza no avisa de este error.
+
+**Por eso, para preguntar si algo aparece en un documento, usa `choice`:**
+
+```
+ask: ¿Aparecen fechas en el documento?
+choice:
+  si: Sí, aparece alguna fecha
+  no: No aparece ninguna
+```
+
+O pregunta por el dato concreto («¿en qué fechas trabajó en X?») en vez de por su
+existencia: así acertó.
+
+*(Son nueve preguntas sobre un documento, no un estudio. Es una señal fuerte, no una
+ley — pero la dirección es clara y el error es del tipo que hace daño: una respuesta
+segura y equivocada.)*
+
 ## Qué mide exactamente `tiempo_ms`
 
 **Lo que tardas en recibir la respuesta: la ida y vuelta completa al modelo**, medida

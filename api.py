@@ -30,15 +30,35 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import aiom                    # noqa: E402
+import documento as doc_mod    # noqa: E402  (saca el texto de pdf, docx, txt...)
 import ejemplos_typesafe       # noqa: E402  (reutiliza su traductor de TypeSafe)
 import preguntar               # noqa: E402
 
 FORMATOS = ("texto", "natural", "tipado")
 
+# Tope de subida. Un documento de texto no deberia pasar de aqui; es un limite de
+# cordura para no llenar la memoria con un fichero que no era el que se queria.
+LIMITE_SUBIDA = 8 * 1024 * 1024
+
 # El tipo del motor -> el nombre que usa JEV. Se informa con el de JEV para que los
 # dos formatos se lean igual: el natural produce enum/number/boolean y el tipado ya
 # viene con choice/score/noul, y son exactamente lo mismo.
 TIPO_JEV = {"enum": "choice", "number": "score", "boolean": "noul"}
+
+
+def _documento(cuerpo):
+    """El texto del documento, si lo hay. Es el caso, en vez de escribirlo.
+
+    Se acepta el texto suelto o el objeto entero que devuelve POST /documento.
+    """
+    d = cuerpo.get("documento")
+    if d is None:
+        return None
+    if isinstance(d, dict):
+        d = d.get("texto")
+    if not isinstance(d, str) or not d.strip():
+        raise ValueError("'documento' viene vacio")
+    return d.strip()
 
 # --------------------------------------------------------------------------- #
 # los tres formatos -> una lista uniforme de resultados
@@ -71,7 +91,10 @@ def por_texto(cuerpo, catalogo, cfg):
     q = cuerpo.get("question")
     if not isinstance(q, str) or not q.strip():
         raise ValueError("falta 'question'")
-    r = aiom.ask(q, catalogo, cfg, cuerpo.get("mode", "auto"))
+    doc = _documento(cuerpo)
+    # Con documento, el caso es el documento y la pregunta va detras.
+    pregunta = f"{doc}\n\n{q.strip()}" if doc else q
+    r = aiom.ask(pregunta, catalogo, cfg, cuerpo.get("mode", "auto"))
     if r["mode"] == "chat":
         return {"resultados": [{"modo": "chat", "texto": r.get("text")}],
                 "tiempo_ms": r["timings"]["wall_ms"],
@@ -90,11 +113,14 @@ def por_texto(cuerpo, catalogo, cfg):
 
 
 def por_natural(cuerpo, catalogo, cfg):
-    """El contenido de un .txt: una o varias preguntas, en una sola peticion."""
+    """El contenido de un .txt: una o varias preguntas, en una sola peticion.
+
+    Si viene 'documento', es el caso y el texto de arriba trae solo las preguntas.
+    """
     texto = cuerpo.get("entrada")
     if not isinstance(texto, str) or not texto.strip():
         raise ValueError("falta 'entrada'")
-    estado, preguntas = preguntar.parsear(texto)
+    estado, preguntas = preguntar.parsear(texto, entrada=_documento(cuerpo))
     t0 = time.perf_counter()
     res_crudo, _ = preguntar.ejecutar(estado, preguntas, timeout=cfg["timeout"])
     ms = (time.perf_counter() - t0) * 1000.0
@@ -111,6 +137,10 @@ def por_tipado(cuerpo, catalogo, cfg):
     """
     if "state" not in cuerpo or "questions" not in cuerpo:
         raise ValueError("faltan 'state' y 'questions'")
+    doc = _documento(cuerpo)
+    if doc:
+        # El documento manda como estado, venga lo que venga en state.input.
+        cuerpo = dict(cuerpo, state=dict(cuerpo["state"], input=doc))
     res_crudo, ms = ejemplos_typesafe.ejecutar(cuerpo, timeout=cfg["timeout"])
     campos = res_crudo["results"][0]["fields"]
     # El tipo y el enunciado salen de la PETICION: la respuesta no los trae.
@@ -136,16 +166,19 @@ def _chat(texto, catalogo, cfg):
 
 
 def prompts_texto(cuerpo, catalogo, cfg):
-    return [cuerpo["question"]]
+    doc = _documento(cuerpo)
+    q = cuerpo["question"].strip()
+    return [f"{doc}\n\n{q}" if doc else q]
 
 
 def prompts_natural(cuerpo, catalogo, cfg):
-    estado, preguntas = preguntar.parsear(cuerpo["entrada"])
+    estado, preguntas = preguntar.parsear(cuerpo["entrada"], entrada=_documento(cuerpo))
     return [f"{estado}\n\nask: {c['pregunta']}" for _, c in preguntas]
 
 
 def prompts_tipado(cuerpo, catalogo, cfg):
-    entrada = cuerpo["state"].get("input", "")
+    doc = _documento(cuerpo)
+    entrada = doc or cuerpo["state"].get("input", "")
     return [f"{entrada}\n\nask: {c.get('instructions', '')}"
             for c in cuerpo["questions"].values()]
 
@@ -282,8 +315,10 @@ class Handler(BaseHTTPRequestHandler):
             self._send(404, {"error": "usa POST /ask, o GET / para la interfaz"})
 
     def do_POST(self):
+        if self.path.startswith("/documento"):
+            return self._subir_documento()
         if not self.path.startswith("/ask"):
-            return self._send(404, {"error": "usa POST /ask"})
+            return self._send(404, {"error": "usa POST /ask o POST /documento"})
         try:
             n = int(self.headers.get("Content-Length", 0))
             cuerpo = json.loads(self.rfile.read(n).decode("utf-8"))
@@ -323,6 +358,50 @@ class Handler(BaseHTTPRequestHandler):
 
     def log_message(self, *a):
         pass
+
+    def _subir_documento(self):
+        """Sube un fichero y devuelve su texto, para poder usarlo como caso.
+
+        El cuerpo va EN CRUDO (los bytes del fichero), y el nombre en la cabecera
+        X-Nombre o en ?nombre=. De la extension sale como se lee: no se adivina por
+        el contenido, porque un .docx y un .zip empiezan igual.
+
+        Esto NO se guarda en ningun sitio: se lee, se convierte a texto y se devuelve.
+        """
+        nombre = (self.headers.get("X-Nombre") or "").strip()
+        if not nombre and "?" in self.path:
+            from urllib.parse import parse_qs, unquote
+            nombre = unquote((parse_qs(self.path.split("?", 1)[1]).get("nombre")
+                              or [""])[0])
+        if not nombre:
+            return self._send(400, {
+                "error": "falta el nombre del fichero: mandalo en la cabecera "
+                         "X-Nombre, o en ?nombre=carta.pdf. De ahi sale como se lee"})
+        try:
+            n = int(self.headers.get("Content-Length") or 0)
+        except ValueError:
+            n = 0
+        if n <= 0:
+            return self._send(400, {"error": "el cuerpo va vacio: manda los bytes "
+                                             "del fichero en crudo"})
+        if n > LIMITE_SUBIDA:
+            return self._send(413, {
+                "error": f"el fichero pasa de {LIMITE_SUBIDA // (1024*1024)} MB",
+                "bytes": n})
+        datos = self.rfile.read(n)
+        try:
+            r = doc_mod.extraer_bytes(datos, nombre)
+        except ValueError as e:
+            return self._send(400, {"error": str(e),
+                                    "soportados": sorted(doc_mod.SOPORTADOS)})
+        # El contexto del modelo son 32768 tokens. A ~4 caracteres por token, un
+        # documento de mas de 100.000 caracteres puede no caber: se avisa, no se corta
+        # en silencio, porque recortar cambiaria lo que el modelo ve.
+        if r["caracteres"] > 100_000:
+            r["aviso"] = (f"{r['caracteres']} caracteres puede no caber en el contexto "
+                          f"del modelo (32768 tokens). Recorta el documento o sube "
+                          f"el contexto al arrancar llama-server")
+        self._send(200, r)
 
 
 def main() -> int:

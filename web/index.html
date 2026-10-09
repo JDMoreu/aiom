@@ -42,6 +42,26 @@
   .etiqueta{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
             color:var(--apagado);margin:0 0 9px}
 
+  /* --- el documento --- */
+  .doc{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;
+       padding:12px 14px;border:1px dashed var(--borde2);border-radius:9px;
+       background:var(--superficie)}
+  .doc.cargado{border-style:solid;border-color:var(--acento);
+               background:var(--acento-suave)}
+  .doc .icono{font-family:var(--mono);font-size:15px;color:var(--apagado);flex:none}
+  .doc .quien{font-size:12.5px;color:var(--apagado);line-height:1.45}
+  .doc .quien b{color:var(--texto);font-weight:600}
+  .doc .quien .medida{font-family:var(--mono);font-size:11.5px;color:var(--tenue)}
+  .doc .acciones{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+  .doc button{background:var(--superficie2);color:var(--texto);border:1px solid var(--borde2);
+              border-radius:7px;padding:7px 13px;font:inherit;font-size:12.5px;
+              cursor:pointer;transition:border-color .12s,background .12s}
+  .doc button:hover{border-color:var(--acento)}
+  .doc button.principal{background:var(--acento);border-color:var(--acento);color:#fff;
+                        font-weight:600}
+  .doc input[type=file]{display:none}
+  .doc .nota-doc{width:100%;font-size:11.5px;color:var(--tenue);margin-top:2px}
+
   /* control segmentado: el formato de la via de decision */
   .seg{display:flex;gap:2px;background:var(--superficie);border:1px solid var(--borde);
        border-radius:8px;padding:3px;margin-bottom:18px}
@@ -150,23 +170,39 @@
 
 <main>
   <section class="panel entrada">
-    <p class="etiqueta">Formato de la vía de decisión</p>
-    <div class="seg" role="group">
-      <button id="btn-natural" aria-pressed="true">Lenguaje natural</button>
-      <button id="btn-tipado" aria-pressed="false">JSON tipado</button>
+    <p class="etiqueta">El caso</p>
+    <div class="doc" id="doc">
+      <span class="icono" id="doc-icono">&#9671;</span>
+      <span class="quien" id="doc-quien">
+        <b>Escrito aquí abajo.</b>
+        <span class="medida">o carga un documento y las preguntas van sobre él</span>
+      </span>
+      <span class="acciones">
+        <button class="principal" id="doc-elegir">Cargar documento</button>
+        <button id="doc-quitar" hidden>Quitar</button>
+      </span>
+      <input type="file" id="doc-fichero"
+             accept=".txt,.md,.markdown,.csv,.json,.log,.docx,.pdf">
+      <span class="nota-doc" id="doc-nota">
+        txt · md · csv · json · log · docx · pdf
+      </span>
     </div>
 
-    <p class="etiqueta" id="etiqueta-entrada">Escribe el caso</p>
+    <p class="etiqueta" id="etiqueta-entrada">Escribe el caso y las preguntas</p>
     <textarea id="entrada" spellcheck="false"></textarea>
 
     <div class="fila">
+      <div class="seg" role="group" style="margin:0;flex:0 0 auto">
+        <button id="btn-natural" aria-pressed="true">Lenguaje natural</button>
+        <button id="btn-tipado" aria-pressed="false">JSON tipado</button>
+      </div>
       <label class="interruptor">
         <input type="checkbox" id="comparar" checked>
         Comparar con el chat
       </label>
-      <span class="pista" id="pista">las dos vías, misma corrida</span>
       <button class="enviar" id="enviar">Preguntar</button>
     </div>
+    <p class="pista" id="pista">cabeceras: input / ask / choice / score / noul</p>
     <div id="error"></div>
   </section>
 
@@ -243,15 +279,73 @@ const TIPADO = JSON.stringify({
   }
 }, null, 2);
 
+// Las mismas preguntas SIN el caso: es lo que se usa cuando el caso es un documento.
+const SOLO_PREGUNTAS = NATURAL.split("\n\n").slice(1).join("\n\n");
+
+// Preguntas neutras, que valen para cualquier documento. Se ponen al cargar uno si
+// el area de texto todavia tiene el ejemplo sin tocar.
+//
+// OJO con la segunda: es `choice` y no `noul` A PROPOSITO. Medido sobre un documento
+// largo, `noul` acierta 4 de 9 preguntas del tipo "¿aparece X?" y falla con
+// probabilidad 0.99; con `choice` (si/no como opciones) acierta 7 de 9. Preguntar
+// "¿menciona fechas?" con noul da "no" aunque las fechas esten a la vista.
+const GENERICAS = `ask: ¿Qué tipo de documento es?
+choice:
+  carta: una carta, un correo o una reclamación
+  informe: un informe, un estudio o una propuesta
+  curriculum: un currículum o una hoja de vida
+  otro: otra cosa
+
+---
+
+ask: ¿Aparecen fechas en el documento?
+choice:
+  si: Sí, aparece alguna fecha
+  no: No aparece ninguna
+
+---
+
+ask: ¿Qué longitud tiene?
+score:
+  corta: cabe en una pantalla
+  media: unas pocas páginas
+  larga: muchas páginas`;
+
 let formato = "natural";
+let documento = null;        // {texto, nombre, tipo, caracteres, palabras} o null
 const $ = (id) => document.getElementById(id);
+
+// Va arriba a proposito: lo usan tanto el bloque del documento como el de resultados.
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) =>
+  ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
 
 function pintarFormato() {
   $("btn-natural").setAttribute("aria-pressed", String(formato === "natural"));
   $("btn-tipado").setAttribute("aria-pressed", String(formato === "tipado"));
-  $("entrada").value = formato === "natural" ? NATURAL : TIPADO;
-  $("etiqueta-entrada").textContent = formato === "natural"
-    ? "Escribe el caso" : "Pega el JSON";
+
+  // Con un documento cargado, el caso lo pone él: el area de texto solo lleva las
+  // preguntas. Asi no se queda un "input:" a la vista que no se usa.
+  //
+  // Y si al cargar el documento el area todavia tiene el ejemplo de soporte sin
+  // tocar, se cambia por unas preguntas neutras: preguntar "¿a que area hay que
+  // enviar este correo?" sobre un curriculum confunde, y el sitio donde se escribe
+  // la pregunta tiene que invitar a escribirla.
+  const ta = $("entrada");
+  // "" cuenta como sin tocar: al arrancar el area viene vacia, no con un ejemplo.
+  const sinTocar = (ta.value === "" || ta.value === NATURAL
+                    || ta.value === SOLO_PREGUNTAS || ta.value === TIPADO
+                    || ta.value === GENERICAS);
+  if (formato === "natural") {
+    if (documento && sinTocar) ta.value = GENERICAS;
+    else if (!documento && sinTocar) ta.value = NATURAL;
+  } else if (sinTocar) {
+    ta.value = TIPADO;
+  }
+
+  $("etiqueta-entrada").textContent = documento
+    ? (formato === "natural" ? "Escribe las preguntas sobre el documento"
+                             : "Ajusta las preguntas (el caso lo pone el documento)")
+    : (formato === "natural" ? "Escribe el caso y las preguntas" : "Pega el JSON");
   $("pista").textContent = formato === "natural"
     ? "cabeceras: input / ask / choice / score / noul"
     : "formato de TypeSafe: state + questions";
@@ -270,12 +364,76 @@ function ajustarAlto() {
 
 $("btn-natural").onclick = () => { formato = "natural"; pintarFormato(); };
 $("btn-tipado").onclick = () => { formato = "tipado"; pintarFormato(); };
+
+// ---------------------------------------------------------------- el documento
+// Se sube a la API, que es quien sabe leer PDF y DOCX. No se lee aqui en el
+// navegador a proposito: asi hay UN solo lector, el mismo que usa el resto del
+// proyecto, en vez de dos que se comporten distinto.
+function pintarDoc() {
+  const caja = $("doc");
+  if (!documento) {
+    caja.className = "doc";
+    $("doc-icono").textContent = "\u25c7";
+    $("doc-quien").innerHTML = "<b>Escrito aquí abajo.</b> "
+      + '<span class="medida">o carga un documento y las preguntas van sobre él</span>';
+    $("doc-elegir").textContent = "Cargar documento";
+    $("doc-quitar").hidden = true;
+    $("doc-nota").textContent = "txt · md · csv · json · log · docx · pdf";
+    return;
+  }
+  caja.className = "doc cargado";
+  $("doc-icono").textContent = "\u25c8";
+  $("doc-quien").innerHTML = `<b>${esc(documento.nombre)}</b> `
+    + `<span class="medida">${documento.tipo} · ${documento.caracteres} caracteres · `
+    + `${documento.palabras} palabras</span>`;
+  $("doc-elegir").textContent = "Cambiar documento";
+  $("doc-quitar").hidden = false;
+  $("doc-nota").textContent = documento.aviso
+    ? documento.aviso
+    : "el documento es el caso: las preguntas van sobre él";
+}
+
+async function subirDoc(fichero) {
+  const cajaError = $("error");
+  cajaError.innerHTML = "";
+  $("doc-elegir").textContent = "Leyendo…";
+  try {
+    const r = await fetch("/documento", {
+      method: "POST",
+      headers: {"Content-Type": "application/octet-stream", "X-Nombre": fichero.name},
+      body: fichero
+    });
+    const d = await r.json();
+    if (!r.ok) {
+      cajaError.innerHTML = `<div class="error">${esc(d.error || "no se pudo leer")}`
+        + (d.soportados ? "\n\nse puede: " + esc(d.soportados.join(", ")) : "") + "</div>";
+      return;
+    }
+    documento = d;
+    pintarDoc();
+    pintarFormato();          // el area de texto pasa a llevar solo las preguntas
+  } catch (e) {
+    cajaError.innerHTML = `<div class="error">No pude subir el documento: ${esc(e.message)}</div>`;
+  } finally {
+    if (!documento) $("doc-elegir").textContent = "Cargar documento";
+  }
+}
+
+$("doc-elegir").onclick = () => $("doc-fichero").click();
+$("doc-fichero").onchange = (e) => {
+  const f = e.target.files[0];
+  if (f) subirDoc(f);
+  e.target.value = "";         // para poder volver a elegir el mismo fichero
+};
+$("doc-quitar").onclick = () => {
+  documento = null;
+  pintarDoc();
+  pintarFormato();
+};
+pintarDoc();
 pintarFormato();
 
 // ---------------------------------------------------------------- utilidades
-const esc = (s) => String(s).replace(/[&<>"]/g, (c) =>
-  ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
-
 function barra(clave, p, max) {
   const ancho = max > 0 ? (p / max) * 100 : 0;
   const primera = p === max ? " primera" : "";
@@ -378,6 +536,7 @@ ${esc(e.message)}</div>`;
     return;
   }
   cuerpo.comparar = $("comparar").checked;
+  if (documento) cuerpo.documento = documento.texto;
 
   boton.disabled = true;
   boton.textContent = "Pensando…";

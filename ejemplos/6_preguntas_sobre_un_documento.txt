@@ -1,0 +1,22 @@
+ask: ¿Cuánta experiencia profesional declara?
+score:
+  ninguna: no la menciona
+  poca: menos de 3 años
+  media: entre 3 y 5 años
+  mucha: más de 5 años
+
+---
+
+ask: ¿Tiene publicaciones científicas con DOI?
+noul:
+  false: No las menciona
+  true: Sí las menciona
+
+---
+
+ask: ¿En qué área encaja mejor su perfil?
+choice:
+  iot: IoT y sistemas embebidos
+  datos: IA y ciencia de datos
+  web: desarrollo web
+  devops: DevOps e infraestructura

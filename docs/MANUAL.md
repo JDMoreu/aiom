@@ -257,6 +257,15 @@ umbral **y** la confianza pasa del suyo. Lo demás, a revisión humana.
 > de sitio, pasó de 0.463 (confianza 0.004) a 0.953 (confianza 0.728) para la misma
 > respuesta semántica. Si te importa el resultado, **prueba las dos redacciones**.
 
+> **Y otra, si el caso es un documento largo:** `noul` tiene un sesgo hacia el «no».
+> Sobre un currículum de 3910 caracteres, con nueve preguntas del tipo «¿aparece *una
+> fecha* en el documento?», acertó **4 de 9** — y en cinco de los seis casos donde la
+> respuesta era sí dijo `False`, tres veces con probabilidad **0.99**. La confianza no
+> avisa. Con `choice` y las opciones `si` / `no` acertó **7 de 9**.
+>
+> Para preguntar si algo aparece en un documento, usa `choice`. O pregunta por el dato
+> concreto («¿en qué fechas trabajó en X?»), que así sí acertó.
+
 ---
 
 ## 5. Varias preguntas de una vez
@@ -495,6 +504,10 @@ python preguntar.py caso.txt
 
 # escribiéndolo en la línea de comandos
 python preguntar.py --texto "input: ... ask: ... choice: ..."
+
+# con el caso sacado de un documento: el fichero trae solo las preguntas
+# (ejemplos/6_preguntas_sobre_un_documento.txt es uno de esos, listo para probar)
+python preguntar.py mis_preguntas.txt --documento carta.pdf
 
 # con el JSON crudo del servidor (probabilidades completas, tiempos)
 python preguntar.py --json

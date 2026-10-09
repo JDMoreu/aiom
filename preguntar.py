@@ -93,13 +93,18 @@ def _titulo_de(linea):
     return None
 
 
-def parsear(texto):
+def parsear(texto, entrada=None):
     """Texto en lenguaje natural -> (estado, [(nombre, campo_de_esquema)]).
 
     El tipo NO se declara: se deduce de que seccion aparece.
+
+    `entrada` es para cuando el caso NO se escribe: llega de un documento. Si se pasa,
+    manda sobre lo que diga el texto, y el texto puede traer solo las preguntas. Se
+    pasa aparte a proposito: si se pegara el documento dentro del texto, una linea suya
+    que empezara por "ask:" en la columna cero se confundiria con una cabecera.
     """
     bloques = re.split(r"\n\s*-{3,}\s*\n", texto.strip())
-    estado = None
+    estado = entrada.strip() if isinstance(entrada, str) and entrada.strip() else None
     preguntas = []
 
     for i, bloque in enumerate(bloques):
@@ -122,8 +127,8 @@ def parsear(texto):
                 # texto suelto antes de cualquier titulo: es la entrada
                 buffer.setdefault("entrada", []).append(linea.strip())
 
-        # la entrada solo se toma del primer bloque
-        if i == 0 and buffer.get("entrada"):
+        # la entrada solo se toma del primer bloque, y solo si no vino de fuera
+        if i == 0 and not estado and buffer.get("entrada"):
             estado = "\n".join(l for l in buffer["entrada"] if l)
 
         instrucciones = " ".join(buffer.get("pregunta", []))
@@ -184,7 +189,8 @@ def parsear(texto):
 
     if not estado:
         raise ValueError("Falta el 'input:' (o 'Entrada:') -- sin el caso no hay "
-                         "nada que evaluar")
+                         "nada que evaluar. Si el caso es un documento, pasalo con "
+                         "entrada=<el texto>")
     if not preguntas:
         raise ValueError("Falta al menos un 'ask:' (o 'Pregunta:')")
     return estado, preguntas
@@ -262,6 +268,9 @@ def main():
     ap = argparse.ArgumentParser(prog="preguntar")
     ap.add_argument("fichero", nargs="?", help="fichero de texto con el caso")
     ap.add_argument("--texto", help="el caso, escrito aqui mismo")
+    ap.add_argument("--documento",
+                    help="el caso sale de este documento (pdf, docx, txt, md...). "
+                         "Entonces el fichero de arriba trae solo las preguntas")
     ap.add_argument("--json", action="store_true", help="respuesta cruda del servidor")
     a = ap.parse_args()
 
@@ -271,9 +280,22 @@ def main():
         with open(a.fichero, encoding="utf-8") as f:
             texto = f.read()
     else:
+        # sin fichero ni --texto: las preguntas llegan por la entrada estandar
         texto = sys.stdin.read()
 
-    estado, preguntas = parsear(texto)
+    caso = None
+    if a.documento:
+        import documento as documento_mod
+        try:
+            d = documento_mod.extraer(a.documento)
+        except ValueError as e:
+            print(f"\n  no puedo leer el documento: {e}\n", file=sys.stderr)
+            return 2
+        caso = d["texto"]
+        print(f"\n  caso: {d['nombre']}  ({d['tipo']}, {d['caracteres']} caracteres, "
+              f"{d['palabras']} palabras)")
+
+    estado, preguntas = parsear(texto, entrada=caso)
 
     print()
     cuerpo, ms = ejecutar(estado, preguntas)

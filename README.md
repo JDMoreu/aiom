@@ -175,6 +175,14 @@ La interfaz deja escribir el caso **en lenguaje natural o en JSON tipado**, y co
 «Comparar» activado pregunta lo mismo por las dos vías y las pone lado a lado: qué
 responde cada modo y cuánto tarda cada uno.
 
+**Y el caso no hace falta escribirlo**: se carga un documento (pdf, docx, txt, md, csv)
+y las preguntas van sobre él. Un `.docx` se lee sin instalar nada; un `.pdf` pide
+`pip install pymupdf`. Lo mismo desde la línea de comandos:
+
+```bash
+python preguntar.py mis_preguntas.txt --documento carta.pdf
+```
+
 Lo mismo desde un programa, declarando el formato (no se adivina):
 
 ```bash
@@ -190,7 +198,7 @@ curl -X POST localhost:8100/ask -H "Content-Type: application/json" \
 |---|---|
 | **[docs/MANUAL.md](docs/MANUAL.md)** | **empieza aquí**: el manual de uso, de cero, con un ejemplo de cada tipo (opciones, niveles, sí/no), cómo se hacen varias preguntas a la vez y cómo se escribe en formato tipado |
 | [docs/ARRANCAR.md](docs/ARRANCAR.md) | cómo levantar el servidor tú mismo, paso a paso, y qué hacer si no arranca |
-| [docs/API.md](docs/API.md) | la API HTTP: los tres formatos de entrada, qué devuelve y cómo probarla con `curl` |
+| [docs/API.md](docs/API.md) | la API HTTP: los tres formatos de entrada, el documento como caso, qué devuelve y cómo probarla con `curl` |
 | [CREDITOS.md](CREDITOS.md) | **de quién es cada pieza**, con commit exacto, licencias y el SHA256 del modelo |
 | [docs/ESTUDIO.md](docs/ESTUDIO.md) | el estudio: con qué hardware se midió, cómo se construyó, los resultados completos, las lecciones y los límites |
 | [docs/DETALLE.md](docs/DETALLE.md) | las 154 preguntas una por una: opciones, qué se esperaba, qué eligió cada modo y el reparto de probabilidad |
@@ -204,6 +212,8 @@ curl -X POST localhost:8100/ask -H "Content-Type: application/json" \
 ```
 preguntar.py         LA PUERTA DE ENTRADA: escribes en lenguaje natural y deduce el
                      tipo por la cabecera; una o varias preguntas en una petición
+                     (--documento hace que el caso salga de un pdf, docx, txt...)
+documento.py         saca el texto de un documento para usarlo como caso
 aiom.py              el cliente: los tres modos
 api.py               la API HTTP, que además sirve la interfaz web
 web/index.html       la interfaz: un solo fichero, HTML+CSS+JS sin dependencias
@@ -212,8 +222,10 @@ catalogs/            dos catálogos listos para usar:
                        soporte.json  triage de tickets, con los mismos ejemplos que
                                      publica TypeSafe, para comparar respuesta a respuesta
                      se elige con la variable AIOM_CATALOG o el argumento del script
-ejemplos/            cinco casos de ejemplo, sobre correos de soporte
-                     (uno por tipo de pregunta, y uno con las tres de golpe)
+ejemplos/            seis casos: cinco sobre correos de soporte (uno por tipo de
+                     pregunta, y uno con las tres de golpe) y uno con SOLO las
+                     preguntas, para usarlo con un documento:
+                       6_preguntas_sobre_un_documento.txt
 ```
 
 **Lo que produjo los resultados** — no hace falta para usar el proyecto; está aquí
