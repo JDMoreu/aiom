@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIOM</title>
+<style>
+  /* Una sola hoja, sin dependencias: el repositorio es Python puro y esto se sirve
+     desde la propia API, asi que no hay build ni segundo servidor que arrancar. */
+  :root{
+    --fondo:#08090a; --panel:#0f1011; --superficie:#141516; --superficie2:#1a1b1d;
+    --borde:rgba(255,255,255,.08); --borde2:rgba(255,255,255,.14);
+    --texto:#f7f8f8; --apagado:#8a8f98; --tenue:#5c6169;
+    --acento:#7170ff; --acento-suave:rgba(113,112,255,.14);
+    --ok:#4cb782; --aviso:#e0a458; --malo:#e5484d;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+    --sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--fondo);color:var(--texto);font-family:var(--sans);
+       font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  header{display:flex;align-items:baseline;gap:14px;padding:20px 26px;
+         border-bottom:1px solid var(--borde)}
+  header h1{margin:0;font-size:16px;font-weight:600;letter-spacing:-.01em}
+  header .sub{color:var(--apagado);font-size:12.5px}
+  header .estado{margin-left:auto;font-size:12px;color:var(--apagado);
+                 display:flex;align-items:center;gap:7px}
+  .punto{width:7px;height:7px;border-radius:50%;background:var(--tenue);flex:none}
+  .punto.ok{background:var(--ok)} .punto.malo{background:var(--malo)}
+
+  main{display:grid;grid-template-columns:minmax(340px,400px) 1fr;gap:0;
+       align-items:start;height:calc(100vh - 62px)}
+  @media (max-width:900px){main{grid-template-columns:1fr;height:auto}}
+  .panel{padding:22px 26px}
+  .entrada{border-right:1px solid var(--borde);height:100%;overflow-y:auto}
+  @media (max-width:900px){.entrada{border-right:none;border-bottom:1px solid var(--borde)}}
+
+  .etiqueta{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+            color:var(--apagado);margin:0 0 9px}
+
+  /* control segmentado: el formato de la via de decision */
+  .seg{display:flex;gap:2px;background:var(--superficie);border:1px solid var(--borde);
+       border-radius:8px;padding:3px;margin-bottom:18px}
+  .seg button{flex:1;background:none;border:0;color:var(--apagado);font:inherit;
+              font-size:13px;padding:7px 10px;border-radius:6px;cursor:pointer;
+              transition:background .12s,color .12s}
+  .seg button:hover{color:var(--texto)}
+  .seg button[aria-pressed="true"]{background:var(--acento-suave);color:var(--texto);
+                                   box-shadow:inset 0 0 0 1px var(--borde2)}
+
+  textarea{width:100%;background:var(--superficie);color:var(--texto);
+           border:1px solid var(--borde);border-radius:8px;padding:12px 13px;
+           font-family:var(--mono);font-size:12.5px;line-height:1.65;resize:vertical;
+           min-height:300px}
+  textarea:focus{outline:none;border-color:var(--acento);
+                 box-shadow:0 0 0 3px var(--acento-suave)}
+
+  .fila{display:flex;align-items:center;gap:10px;margin:16px 0}
+  .interruptor{display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none;
+               font-size:13px;color:var(--texto)}
+  .interruptor input{appearance:none;width:34px;height:19px;border-radius:99px;
+                     background:var(--superficie2);border:1px solid var(--borde2);
+                     position:relative;cursor:pointer;transition:background .15s;flex:none}
+  .interruptor input::after{content:"";position:absolute;top:2px;left:2px;width:13px;
+                            height:13px;border-radius:50%;background:var(--apagado);
+                            transition:transform .15s,background .15s}
+  .interruptor input:checked{background:var(--acento-suave);border-color:var(--acento)}
+  .interruptor input:checked::after{transform:translateX(15px);background:var(--acento)}
+  .pista{font-size:11.5px;color:var(--tenue);margin-left:auto}
+
+  button.enviar{width:100%;background:var(--acento);color:#fff;border:0;border-radius:8px;
+                padding:11px;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;
+                transition:filter .12s}
+  button.enviar:hover{filter:brightness(1.12)}
+  button.enviar:disabled{opacity:.5;cursor:default;filter:none}
+
+  .error{margin-top:14px;padding:11px 13px;border-radius:8px;font-size:12.5px;
+         background:rgba(229,72,77,.1);border:1px solid rgba(229,72,77,.3);
+         color:#ffb4b6;font-family:var(--mono);white-space:pre-wrap}
+
+  /* --- resultados --- */
+  .salida{height:100%;overflow-y:auto}
+  .vacio{color:var(--tenue);font-size:13px;padding:60px 0;text-align:center}
+  .rejilla{display:grid;gap:18px;align-items:start}
+  .rejilla.dos{grid-template-columns:1fr 1fr}
+  @media (max-width:1100px){.rejilla.dos{grid-template-columns:1fr}}
+
+  .tarjeta{background:var(--panel);border:1px solid var(--borde);border-radius:11px;
+           overflow:hidden}
+  .tarjeta .cab{display:flex;align-items:center;gap:9px;padding:12px 15px;
+                border-bottom:1px solid var(--borde);background:var(--superficie)}
+  .tarjeta .cab h2{margin:0;font-size:13px;font-weight:600}
+  .tarjeta .cab .tipo{font-size:10.5px;font-weight:600;letter-spacing:.05em;
+                      text-transform:uppercase;padding:2px 7px;border-radius:5px;
+                      background:var(--acento-suave);color:#b6b5ff}
+  .tarjeta.chat .cab .tipo{background:rgba(255,255,255,.07);color:var(--apagado)}
+  .metricas{margin-left:auto;display:flex;gap:14px;font-family:var(--mono);font-size:11.5px;
+            color:var(--apagado)}
+  .metricas b{color:var(--texto);font-weight:600}
+  .cuerpo{padding:15px}
+
+  .preg{margin-bottom:18px}
+  .preg:last-child{margin-bottom:0}
+  .preg .titulo{font-size:12.5px;color:var(--apagado);margin-bottom:9px}
+  .valor{display:flex;align-items:baseline;gap:9px;margin-bottom:11px}
+  .valor .v{font-family:var(--mono);font-size:19px;font-weight:600;letter-spacing:-.02em}
+  .valor .p{font-family:var(--mono);font-size:12px;color:var(--apagado)}
+  .valor .conf{margin-left:auto;font-family:var(--mono);font-size:11.5px;
+               padding:2px 8px;border-radius:5px;background:var(--superficie2);
+               color:var(--apagado)}
+  .valor .conf.alta{color:var(--ok)} .valor .conf.baja{color:var(--aviso)}
+
+  .barra{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;
+         font-family:var(--mono);font-size:11.5px;margin:3px 0}
+  .barra .k{color:var(--apagado);text-align:right;min-width:74px;overflow:hidden;
+            text-overflow:ellipsis;white-space:nowrap}
+  .barra .pista{height:5px;border-radius:99px;background:var(--superficie2);overflow:hidden}
+  .barra .pista i{display:block;height:100%;border-radius:99px;background:var(--tenue)}
+  .barra.primera .pista i{background:var(--acento)}
+  .barra.primera .k,.barra.primera .n{color:var(--texto)}
+  .barra .n{color:var(--tenue);min-width:46px}
+
+  .prosa{font-size:13.5px;line-height:1.68;white-space:pre-wrap;color:#e4e6e8}
+  .nota{font-size:11.5px;color:var(--tenue);margin-top:13px;padding-top:12px;
+        border-top:1px solid var(--borde)}
+  .resumen{display:flex;gap:20px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;
+           color:var(--apagado);margin-bottom:16px;padding:12px 15px;border-radius:9px;
+           background:var(--superficie);border:1px solid var(--borde)}
+  .resumen b{color:var(--texto)}
+  .resumen .mejor{color:var(--ok)}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>AIOM</h1>
+  <span class="sub">un modelo, dos formas de preguntar</span>
+  <span class="sub" id="catalogo" style="color:var(--tenue)"></span>
+  <span class="estado"><i class="punto" id="punto"></i><span id="texto-estado">comprobando…</span></span>
+</header>
+
+<main>
+  <section class="panel entrada">
+    <p class="etiqueta">Formato de la vía de decisión</p>
+    <div class="seg" role="group">
+      <button id="btn-natural" aria-pressed="true">Lenguaje natural</button>
+      <button id="btn-tipado" aria-pressed="false">JSON tipado</button>
+    </div>
+
+    <p class="etiqueta" id="etiqueta-entrada">Escribe el caso</p>
+    <textarea id="entrada" spellcheck="false"></textarea>
+
+    <div class="fila">
+      <label class="interruptor">
+        <input type="checkbox" id="comparar" checked>
+        Comparar con el chat
+      </label>
+      <span class="pista" id="pista">las dos vías, misma corrida</span>
+    </div>
+
+    <button class="enviar" id="enviar">Preguntar</button>
+    <div id="error"></div>
+  </section>
+
+  <section class="panel salida" id="salida">
+    <p class="vacio">Escribe un caso y pulsa Preguntar.<br>
+      Con «Comparar» activado se pregunta lo mismo por las dos vías y se ven juntas.</p>
+  </section>
+</main>
+
+<script>
+"use strict";
+
+// Los dos textos de arranque son casos del propio repositorio, para que lo que se
+// ve al abrir sea exactamente lo que documenta el manual.
+const NATURAL = `Entrada: Buenas tardes. Escribo porque estoy bastante molesto: contraté el plan de 20 GB el mes pasado y llevo una semana con cortes de conexión casi todas las noches. He llamado tres veces y nadie me ha dado una solución. Además me han cobrado dos veces la factura de este mes. Si esto sigue así me voy a dar de baja.
+
+Pregunta: ¿A qué área hay que enviar este correo?
+Opciones:
+  soporte: Fallos y errores del producto
+  facturacion: Cobros, facturas y reembolsos
+  comercial: Ventas, planes y bajas
+  otros: Todo lo demás
+
+---
+
+Pregunta: ¿Qué urgencia tiene?
+Niveles de puntuación:
+  Baja: puede esperar
+  Media: conviene atenderlo esta semana
+  Alta: hay una fecha límite encima
+
+---
+
+Pregunta: ¿Amenaza el cliente con darse de baja?
+Qué significa no o sí:
+  false: No lo menciona
+  true: Sí lo menciona`;
+
+const TIPADO = JSON.stringify({
+  state: {input: "Me cobraron dos veces la suscripción. ¿Pueden ayudarme?"},
+  questions: {
+    decision: {
+      type: "choice",
+      instructions: "¿Qué equipo debe atenderlo?",
+      criteria: {
+        billing: "Pagos y reembolsos",
+        technical: "Errores e integraciones",
+        general: "Otras consultas"
+      }
+    }
+  }
+}, null, 2);
+
+let formato = "natural";
+const $ = (id) => document.getElementById(id);
+
+function pintarFormato() {
+  $("btn-natural").setAttribute("aria-pressed", String(formato === "natural"));
+  $("btn-tipado").setAttribute("aria-pressed", String(formato === "tipado"));
+  $("entrada").value = formato === "natural" ? NATURAL : TIPADO;
+  $("etiqueta-entrada").textContent = formato === "natural"
+    ? "Escribe el caso" : "Pega el JSON";
+  $("pista").textContent = formato === "natural"
+    ? "cabeceras: Entrada / Pregunta / Opciones / Niveles / no o sí"
+    : "formato de TypeSafe: state + questions";
+}
+
+$("btn-natural").onclick = () => { formato = "natural"; pintarFormato(); };
+$("btn-tipado").onclick = () => { formato = "tipado"; pintarFormato(); };
+pintarFormato();
+
+// ---------------------------------------------------------------- utilidades
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) =>
+  ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+
+function barra(clave, p, max) {
+  const ancho = max > 0 ? (p / max) * 100 : 0;
+  const primera = p === max ? " primera" : "";
+  return `<div class="barra${primera}">
+    <span class="k" title="${esc(clave)}">${esc(clave)}</span>
+    <span class="pista"><i style="width:${ancho.toFixed(1)}%"></i></span>
+    <span class="n">${p.toFixed(3)}</span>
+  </div>`;
+}
+
+function claseConfianza(c) {
+  return c >= 0.7 ? "alta" : (c <= 0.3 ? "baja" : "");
+}
+
+function pintarDecision(r) {
+  return r.map((q) => {
+    const probs = q.probabilities || {};
+    const pares = Object.entries(probs).sort((a, b) => b[1] - a[1]);
+    const max = pares.length ? pares[0][1] : 0;
+    const barras = pares.map(([k, p]) => barra(k, p, max)).join("");
+    return `<div class="preg">
+      <div class="titulo">${esc(q.pregunta || q.campo)}
+        <span style="color:var(--tenue)">· ${esc(q.tipo || "")}</span></div>
+      <div class="valor">
+        <span class="v">${esc(q.value)}</span>
+        <span class="p">p = ${Number(q.probability).toFixed(3)}</span>
+        <span class="conf ${claseConfianza(q.confidence)}">
+          confianza ${Number(q.confidence).toFixed(3)}</span>
+      </div>
+      ${barras}
+    </div>`;
+  }).join("");
+}
+
+function pintarChat(r) {
+  return r.map((c) => `<div class="preg"><div class="prosa">${esc(c.texto || "")}</div></div>`)
+          .join("");
+}
+
+function tarjeta(titulo, etiqueta, clase, metricas, cuerpo) {
+  return `<div class="tarjeta ${clase}">
+    <div class="cab">
+      <h2>${esc(titulo)}</h2>
+      <span class="tipo">${esc(etiqueta)}</span>
+      <span class="metricas">${metricas}</span>
+    </div>
+    <div class="cuerpo">${cuerpo}</div>
+  </div>`;
+}
+
+function pintarComparativa(d) {
+  const dec = d.decision, chat = d.chat;
+  const ahorro = chat.tiempo_ms > 0
+    ? (chat.tiempo_ms / Math.max(dec.tiempo_ms, 1)).toFixed(1) : "0";
+
+  const resumen = `<div class="resumen">
+    <span>peticiones &nbsp; decisi&oacute;n <b>${dec.peticiones}</b> · chat <b>${chat.peticiones}</b></span>
+    <span>tiempo &nbsp; decisi&oacute;n <b>${dec.tiempo_ms.toFixed(0)} ms</b> ·
+      chat <b>${chat.tiempo_ms.toFixed(0)} ms</b></span>
+    <span>tokens &nbsp; decisi&oacute;n <b>${dec.tokens}</b> · chat <b>${chat.tokens}</b></span>
+    <span class="mejor">la decisi&oacute;n tarda ${ahorro}&times; menos</span>
+  </div>`;
+
+  return resumen + `<div class="rejilla dos">
+    ${tarjeta("Decisión", "valores", "decision",
+      `<span><b>${dec.tiempo_ms.toFixed(0)}</b> ms</span><span><b>${dec.tokens}</b> tok</span>`,
+      pintarDecision(dec.resultados))}
+    ${tarjeta("Chat", "prosa", "chat",
+      `<span><b>${chat.tiempo_ms.toFixed(0)}</b> ms</span><span><b>${chat.tokens}</b> tok</span>`,
+      pintarChat(chat.resultados))}
+  </div>`;
+}
+
+function pintarSolo(d) {
+  const r = d.resultados || [];
+  if (r[0] && r[0].modo === "chat") {
+    return tarjeta("Chat", "prosa", "chat",
+      `<span><b>${d.tiempo_ms.toFixed(0)}</b> ms</span><span><b>${d.tokens}</b> tok</span>`,
+      pintarChat(r));
+  }
+  return tarjeta("Decisión", "valores", "decision",
+    `<span><b>${d.tiempo_ms.toFixed(0)}</b> ms</span><span><b>${d.tokens}</b> tok</span>`,
+    pintarDecision(r));
+}
+
+// ---------------------------------------------------------------- peticion
+async function preguntar() {
+  const boton = $("enviar"), cajaError = $("error"), salida = $("salida");
+  cajaError.innerHTML = "";
+  let cuerpo;
+  try {
+    if (formato === "natural") {
+      cuerpo = {formato: "natural", entrada: $("entrada").value};
+    } else {
+      cuerpo = Object.assign({formato: "tipado"}, JSON.parse($("entrada").value));
+    }
+  } catch (e) {
+    cajaError.innerHTML = `<div class="error">El JSON no es válido:
+${esc(e.message)}</div>`;
+    return;
+  }
+  cuerpo.comparar = $("comparar").checked;
+
+  boton.disabled = true;
+  boton.textContent = "Pensando…";
+  try {
+    const t0 = performance.now();
+    const res = await fetch("/ask", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(cuerpo)
+    });
+    const d = await res.json();
+    if (!res.ok) {
+      cajaError.innerHTML = `<div class="error">${esc(JSON.stringify(d, null, 2))}</div>`;
+      return;
+    }
+    const redondo = performance.now() - t0;
+    salida.innerHTML = d.comparar ? pintarComparativa(d) : pintarSolo(d);
+    const pie = document.createElement("p");
+    pie.className = "nota";
+    pie.textContent = `ida y vuelta completa: ${redondo.toFixed(0)} ms · `
+      + `formato ${d.formato} · ${d.n_preguntas} pregunta(s)`;
+    salida.appendChild(pie);
+  } catch (e) {
+    cajaError.innerHTML = `<div class="error">No pude hablar con la API: ${esc(e.message)}.
+¿Está levantada? python api.py</div>`;
+  } finally {
+    boton.disabled = false;
+    boton.textContent = "Preguntar";
+  }
+}
+
+$("enviar").onclick = preguntar;
+$("entrada").addEventListener("keydown", (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") preguntar();
+});
+
+// ---------------------------------------------------------------- estado
+(async () => {
+  try {
+    const r = await fetch("/health");
+    const d = await r.json();
+    const ok = d.llama_server && d.llama_server.status === "ok";
+    $("punto").className = "punto " + (ok ? "ok" : "malo");
+    $("texto-estado").textContent = ok
+      ? "modelo listo" : "modelo no disponible";
+  } catch (e) {
+    $("punto").className = "punto malo";
+    $("texto-estado").textContent = "API no disponible";
+  }
+  // El catálogo se muestra porque la vía de chat usa su persona: con el de IoT,
+  // el chat contesta como agente de campo aunque el caso sea de facturación.
+  try {
+    const c = await (await fetch("/catalog")).json();
+    const nombre = c.nombre || c.name || c.id || "catálogo";
+    $("catalogo").textContent = "catálogo: " + nombre;
+  } catch (e) { /* sin catálogo no se muestra nada */ }
+})();
+</script>
+</body>
+</html>

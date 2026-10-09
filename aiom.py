@@ -25,9 +25,7 @@ import json
 import os
 import sys
 import time
-import urllib.error
 import urllib.request
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 DEFAULTS = {
     "server": os.environ.get("AIOM_SERVER", "http://127.0.0.1:8096"),
@@ -206,61 +204,7 @@ def ask_many(questions, catalog, cfg, lote=16, meta=None):
 
 
 # --------------------------------------------------------------------------- #
-# servidor HTTP
-# --------------------------------------------------------------------------- #
-class Handler(BaseHTTPRequestHandler):
-    catalog: dict = {}
-    cfg: dict = {}
-
-    def _send(self, code: int, obj) -> None:
-        body = json.dumps(obj, ensure_ascii=False, indent=2).encode("utf-8")
-        self.send_response(code)
-        self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Content-Length", str(len(body)))
-        self.end_headers()
-        self.wfile.write(body)
-
-    def do_GET(self):
-        if self.path.startswith("/health"):
-            try:
-                body, _ = _post(self.cfg["server"], "/health", {}, 5)
-                self._send(200, {"aiom": "ok", "llama_server": body})
-            except Exception as e:
-                self._send(503, {"aiom": "ok", "llama_server": f"unreachable: {e}"})
-        elif self.path.startswith("/catalog"):
-            self._send(200, self.catalog)
-        else:
-            self._send(404, {"error": "usa POST /ask"})
-
-    def do_POST(self):
-        if not self.path.startswith("/ask"):
-            return self._send(404, {"error": "usa POST /ask"})
-        try:
-            n = int(self.headers.get("Content-Length", 0))
-            req = json.loads(self.rfile.read(n).decode("utf-8"))
-            q = req["question"]
-        except Exception as e:
-            return self._send(400, {"error": f"cuerpo invalido: {e}"})
-        try:
-            self._send(200, ask(q, self.catalog, self.cfg, req.get("mode", "auto")))
-        except urllib.error.HTTPError as e:
-            self._send(502, {"error": f"llama-server {e.code}", "detail": e.read()[:300].decode("utf-8", "replace")})
-        except Exception as e:
-            self._send(500, {"error": f"{type(e).__name__}: {e}"})
-
-    def log_message(self, *a):
-        pass
-
-
-def serve(catalog: dict, cfg: dict, port: int) -> None:
-    Handler.catalog, Handler.cfg = catalog, cfg
-    srv = ThreadingHTTPServer(("127.0.0.1", port), Handler)
-    print(f"AIOM escuchando en http://127.0.0.1:{port}")
-    print(f"  POST /ask      {{\"question\": \"...\"}}")
-    print(f"  GET  /health   GET /catalog")
-    srv.serve_forever()
-
-
+# linea de comandos
 # --------------------------------------------------------------------------- #
 def main() -> int:
     ap = argparse.ArgumentParser(prog="aiom", description="all in one mode")
@@ -270,7 +214,6 @@ def main() -> int:
     ap.add_argument("--timeout", type=int, default=DEFAULTS["timeout"])
     sub = ap.add_subparsers(dest="cmd")
 
-    sub.add_parser("serve").add_argument("--port", type=int, default=8100)
     p_ask = sub.add_parser("ask")
     p_ask.add_argument("question")
     p_ask.add_argument("--mode", default="auto", choices=["auto", "decision", "chat"])
@@ -291,9 +234,7 @@ def main() -> int:
         print(f"no puedo leer el catalogo {args.catalog}: {e}", file=sys.stderr)
         return 2
 
-    if args.cmd == "serve":
-        serve(catalog, cfg, args.port)
-    elif args.cmd == "ask":
+    if args.cmd == "ask":
         r = ask(args.question, catalog, cfg, args.mode)
         if args.json:
             print(json.dumps(r, ensure_ascii=False, indent=2))

@@ -162,12 +162,35 @@ python preguntar.py ejemplos/1_opciones.txt
 python bench_modos.py && python rendimiento.py && python verificar.py --estricto
 ```
 
+## Desde el navegador, y desde un programa
+
+Con el servidor arriba, `api.py` levanta la API y **sirve también la interfaz** — así
+no hay un segundo servidor ni un paso de compilación:
+
+```bash
+python api.py          # y abre http://127.0.0.1:8100/
+```
+
+La interfaz deja escribir el caso **en lenguaje natural o en JSON tipado**, y con
+«Comparar» activado pregunta lo mismo por las dos vías y las pone lado a lado: qué
+responde cada modo y cuánto tarda cada uno.
+
+Lo mismo desde un programa, declarando el formato (no se adivina):
+
+```bash
+curl -X POST localhost:8100/ask -H "Content-Type: application/json" \
+  -d '{"formato":"natural","entrada":"Entrada: ... Pregunta: ... Opciones: ...","comparar":true}'
+```
+
+`formato` es `texto`, `natural` o `tipado`. Detalles en [docs/API.md](docs/API.md).
+
 ## Documentación
 
 | documento | qué hay |
 |---|---|
 | **[docs/MANUAL.md](docs/MANUAL.md)** | **empieza aquí**: el manual de uso, de cero, con un ejemplo de cada tipo (opciones, niveles, sí/no), cómo se hacen varias preguntas a la vez y cómo se escribe en formato tipado |
 | [docs/ARRANCAR.md](docs/ARRANCAR.md) | cómo levantar el servidor tú mismo, paso a paso, y qué hacer si no arranca |
+| [docs/API.md](docs/API.md) | la API HTTP: los tres formatos de entrada, qué devuelve y cómo probarla con `curl` |
 | [CREDITOS.md](CREDITOS.md) | **de quién es cada pieza**, con commit exacto, licencias y el SHA256 del modelo |
 | [docs/ESTUDIO.md](docs/ESTUDIO.md) | el estudio: con qué hardware se midió, cómo se construyó, los resultados completos, las lecciones y los límites |
 | [docs/DETALLE.md](docs/DETALLE.md) | las 154 preguntas una por una: opciones, qué se esperaba, qué eligió cada modo y el reparto de probabilidad |
@@ -181,7 +204,9 @@ python bench_modos.py && python rendimiento.py && python verificar.py --estricto
 ```
 preguntar.py         LA PUERTA DE ENTRADA: escribes en lenguaje natural y deduce el
                      tipo por la cabecera; una o varias preguntas en una petición
-aiom.py              el cliente y el servidor HTTP (los tres modos)
+aiom.py              el cliente: los tres modos
+api.py               la API HTTP, que además sirve la interfaz web
+web/index.html       la interfaz: un solo fichero, HTML+CSS+JS sin dependencias
 catalogs/            dos catálogos listos para usar:
                        iot.json      operación de campo (el que se usa por defecto)
                        soporte.json  triage de tickets, con los mismos ejemplos que
