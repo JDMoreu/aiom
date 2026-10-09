@@ -187,8 +187,8 @@ tipado.py            el traductor del formato tipado (el de TypeSafe, tal cual)
 documento.py         saca el texto de un documento para usarlo como caso
 api.py               la API HTTP, que además sirve la interfaz web
 web/index.html       la interfaz: un solo fichero, HTML+CSS+JS sin dependencias
-catalogs/            dos juegos de campos de ejemplo, para el formato `texto` de la API.
-                     De cada uno se usa también `chat_system`: la persona del chat
+catalogs/            dos juegos de campos de ejemplo para el modo decisión, los que usa
+                     el formato `texto` de la API:
                        iot.json      operación de campo (el que se usa por defecto)
                        soporte.json  triage de tickets
                      se elige con la variable AIOM_CATALOG o el argumento del script

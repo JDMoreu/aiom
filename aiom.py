@@ -95,10 +95,18 @@ def decide(question: str, catalog: dict, cfg: dict) -> dict:
 # modo chat  (el mismo modelo, respuesta en prosa)
 # --------------------------------------------------------------------------- #
 def chat(question: str, catalog: dict, cfg: dict) -> dict:
+    """La via de chat: un asistente GENERICO.
+
+    A proposito no lleva persona de dominio. El modo decision es el que esta disenado
+    para la tarea; el chat es el liston con el que se compara, y para que la comparacion
+    diga algo tiene que ser un LLM corriente, no un agente ya especializado en el tema.
+    Un catalogo PUEDE traer `chat_system` si alguien quiere darle una voz concreta, pero
+    los ejemplos no lo traen: sin nada, el chat contesta como asistente normal.
+    """
     payload = {
         "messages": [
             {"role": "system", "content": catalog.get(
-                "chat_system", "Eres un asistente tecnico conciso.")},
+                "chat_system") or "Eres un asistente util."},
             {"role": "user", "content": question},
         ],
         "temperature": 0.2,

@@ -12,7 +12,7 @@ Necesita un `llama-server` con el endpoint `/v1/decision` ya levantado (ver
 python api.py                 # escucha en 127.0.0.1:8100
 python api.py --port 9000     # otro puerto
 python api.py --ui            # además abre el navegador en la interfaz
-python api.py --catalog catalogs/soporte.json   # cambia la persona de la vía de chat
+python api.py --catalog catalogs/soporte.json   # cambia los campos del formato `texto`
 ```
 
 Es un servidor HTTP de la biblioteca estándar de Python: **sin dependencias, sin
@@ -100,19 +100,25 @@ la misma petición, igual que en el formato natural.
 ## Qué es el catálogo, y qué no
 
 El catálogo (`catalogs/*.json`, se elige con `--catalog` o la variable `AIOM_CATALOG`) es
-**un juego de campos preparado**. Tiene cuatro claves, y no todas se usan igual:
+**un juego de campos preparado para el modo decisión**. Tiene cuatro claves, y todas son
+de la vía de decisión:
 
-| clave | para qué | quién la usa |
-|---|---|---|
-| `chat_system` | la persona del chat | **todas** las llamadas de chat, en cualquier formato |
-| `fields` | los campos del esquema | **solo** el formato `texto` |
-| `instructions` | el prompt del modo decisión | **solo** el formato `texto` |
-| `gate_field` | qué campo decide «¿es respondible?» | **solo** el formato `texto` |
+| clave | para qué |
+|---|---|
+| `fields` | los campos del esquema: **lo que la decisión elige como valores** |
+| `instructions` | el prompt del modo decisión |
+| `gate_field` | qué campo decide «¿es respondible?» |
+| `description` | nadie: es para quien lee el fichero |
 
-**Si usas `natural` o `tipado` —que es lo que hace la interfaz— el catálogo no decide
-nada**: tú traes el esquema en el cuerpo de la petición. Lo único que se sigue usando es
-`chat_system`, la persona con la que contesta la vía de chat. Por eso se puede cambiar de
-catálogo y ver cómo el chat cambia de registro sin tocar las preguntas.
+Lo usa **solo el formato `texto`**, el de «una pregunta suelta contra campos ya
+preparados». **Si usas `natural` o `tipado` —que es lo que hace la interfaz— el catálogo
+no se toca**: tú traes el esquema en el cuerpo de la petición.
+
+**El chat no lleva persona de dominio, y es a propósito.** Contesta como asistente
+genérico: el modo decisión es el que está diseñado para la tarea, y el chat es el listón
+con el que se compara. Para que la comparación diga algo, tiene que ser un LLM corriente y
+no un agente ya especializado en el tema. Si aun así quieres darle una voz concreta, un
+catálogo **puede** traer `chat_system` y se usará; los dos ejemplos no lo traen.
 
 Los dos que hay son **dos ejemplos** de juego de campos, para que el formato `texto` tenga
 contra qué responder sin que escribas un esquema. `GET /catalog` devuelve el que esté
@@ -352,9 +358,10 @@ La **medida** —los números de las dos vías— vive **con la respuesta**, no 
 pegada arriba: son los números de esto que acabas de leer, y separarlos obligaba a mirar
 en dos sitios para juntar el dato con su tiempo.
 
-El **catálogo** no se enseña en la interfaz, pero sigue importando: la vía de chat usa su
-*persona*. Con el catálogo de IoT por defecto, un caso de facturación hace que el chat
-conteste como agente de campo. Para eso está `--catalog catalogs/soporte.json`.
+El **catálogo** no se enseña en la interfaz, y no hace falta: solo lo usa el formato
+`texto` de la API. El chat, además, **no lleva persona de dominio**: contesta como
+asistente genérico, para que la comparación con la decisión sea contra un LLM corriente y
+no contra un agente ya especializado en el tema.
 
 ## Los otros endpoints
 

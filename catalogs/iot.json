@@ -1,8 +1,7 @@
 {
-  "description": "Juego de campos de ejemplo: una red de sensores IoT agricola. Lo usa el formato `texto` de la API (una pregunta suelta contra estos campos). La persona del chat sale de `chat_system`. Los formatos `natural` y `tipado` NO usan este fichero: traen su propio esquema en el cuerpo.",
+  "description": "Juego de campos de ejemplo: una red de sensores IoT agricola. Es lo que el modo DECISION elige como valores, y lo usa el formato `texto` de la API (una pregunta suelta contra estos campos). Los formatos `natural` y `tipado` NO usan este fichero: traen su propio esquema en el cuerpo. El chat no lleva persona de dominio a proposito: es el liston generico con el que se compara la decision.",
   "gate_field": "respondible",
   "instructions": "Clasificas consultas de operadores de campo sobre una red de sensores IoT agricola. Para cada consulta, elige UN valor por campo del esquema. El campo `respondible` es true solo si la consulta se puede contestar usando el catalogo de campos (magnitud, predio, urgencia); marcalo false si la pregunta pide algo que el catalogo no cubre, como redactar un informe, explicar una causa o pedir una opinion.",
-  "chat_system": "Eres un asistente tecnico para un operador de campo de una red de sensores IoT agricola. Responde en dos frases como maximo, en espanol, sin relleno.",
   "fields": {
     "respondible": {
       "type": "boolean",
