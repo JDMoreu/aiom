@@ -91,11 +91,11 @@ Todo esto está explicado paso a paso en [`MANUAL.md`](MANUAL.md).
 No hace falta tocar código. Crea un fichero `.txt` con este formato y pásaselo:
 
 ```
-Entrada: Buenos días. Llevo desde ayer sin poder entrar a la aplicación: me sale un
+input: Buenos días. Llevo desde ayer sin poder entrar a la aplicación: me sale un
 error 500 cada vez que intento iniciar sesión.
 
-Pregunta: ¿A qué área hay que enviar este correo?
-Opciones:
+ask: ¿A qué área hay que enviar este correo?
+choice:
   soporte: Fallos y errores del producto
   facturacion: Cobros, facturas y reembolsos
   comercial: Ventas y planes
@@ -104,7 +104,7 @@ Opciones:
 
 ```
 python preguntar.py mi_caso.txt
-python preguntar.py --texto "Entrada: ... / Pregunta: ... / Opciones: ..."
+python preguntar.py --texto "input: ... / ask: ... / choice: ..."
 python preguntar.py --json mi_caso.txt      las probabilidades completas
 ```
 

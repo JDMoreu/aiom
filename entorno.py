@@ -291,7 +291,7 @@ def lineas():
     L.append("convención que respetar (las cabeceras). Con el formato tipado esa")
     L.append("convención es explícita; aquí es un acuerdo de lectura. Se paga con una")
     L.append("regla: **la cabecera tiene que empezar en la columna cero**, porque si no")
-    L.append("una opción llamada `pregunta:` se confundiría con la cabecera `Pregunta:`")
+    L.append("una opción llamada `pregunta:` se confundiría con la cabecera `ask:`")
     L.append("— pasó de verdad, y se detectó porque el banco de pruebas lo marcó.\n")
     L.append("### ¿Por qué tres tipos de pregunta y no uno?\n")
     L.append("Porque la forma de la pregunta cambia lo que el motor puede hacer:\n")

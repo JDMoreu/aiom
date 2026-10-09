@@ -109,8 +109,8 @@ def pregunta(L, titulo, entrada, crit, esperado, razon, registros):
     L.append(f"\n#### {titulo}\n")
     L.append(f"> {entrada}\n")
 
-    etiqueta = {"choice": "Opciones", "score": "Niveles (de menor a mayor)",
-                "probability": "Resultados posibles"}[describir(crit)[0]]
+    etiqueta = {"choice": "choice", "score": "score",
+                "probability": "boolean"}[describir(crit)[0]]
     L.append(f"**{etiqueta}:**\n")
     for valor, signif in opciones:
         L.append(f"- `{valor}` — {signif}")

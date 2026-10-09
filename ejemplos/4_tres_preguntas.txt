@@ -1,7 +1,7 @@
-Entrada: Hola, el viernes pagué el plan anual y desde entonces la aplicación se cierra sola cada vez que intento subir una foto. Necesito subir las fotos de un evento este fin de semana.
+input: Hola, el viernes pagué el plan anual y desde entonces la aplicación se cierra sola cada vez que intento subir una foto. Necesito subir las fotos de un evento este fin de semana.
 
-Pregunta: ¿A qué área hay que enviar este correo?
-Opciones:
+ask: ¿A qué área hay que enviar este correo?
+choice:
   soporte: Fallos y errores del producto
   facturacion: Cobros, facturas y reembolsos
   comercial: Ventas y planes
@@ -9,15 +9,15 @@ Opciones:
 
 ---
 
-Pregunta: ¿Qué urgencia tiene?
-Niveles de puntuación:
+ask: ¿Qué urgencia tiene?
+score:
   Baja: puede esperar
   Media: conviene atenderlo esta semana
   Alta: hay una fecha límite encima
 
 ---
 
-Pregunta: ¿El cliente ya pagó el plan anual?
-Qué significa no o sí:
+ask: ¿El cliente ya pagó el plan anual?
+boolean:
   false: No ha pagado todavía
   true: Sí, ya lo pagó

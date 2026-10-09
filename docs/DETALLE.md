@@ -126,7 +126,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Me cobraron dos veces la suscripción. ¿Pueden ayudarme?
 
-**Opciones:**
+**choice:**
 
 - `billing` — Pagos, cargos y reembolsos
 - `technical` — Errores de la aplicación e integraciones
@@ -145,7 +145,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > La app se cierra sola cada vez que abro el informe mensual.
 
-**Opciones:**
+**choice:**
 
 - `billing` — Pagos, cargos y reembolsos
 - `technical` — Errores de la aplicación e integraciones
@@ -164,7 +164,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > ¿Cuál es vuestro horario de atención telefónica?
 
-**Opciones:**
+**choice:**
 
 - `billing` — Pagos, cargos y reembolsos
 - `technical` — Errores de la aplicación e integraciones
@@ -183,7 +183,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Llevo tres días esperando el reembolso de un pedido cancelado.
 
-**Opciones:**
+**choice:**
 
 - `billing` — Pagos, cargos y reembolsos
 - `technical` — Errores de la aplicación e integraciones
@@ -202,7 +202,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El botón de exportar no hace nada cuando lo pulso.
 
-**Opciones:**
+**choice:**
 
 - `billing` — Pagos, cargos y reembolsos
 - `technical` — Errores de la aplicación e integraciones
@@ -221,7 +221,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Me encantó el servicio, muy rápido todo. Gracias!
 
-**Opciones:**
+**choice:**
 
 - `positivo` — Satisfacción o agradecimiento
 - `negativo` — Queja, enfado o frustración
@@ -240,7 +240,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Es la tercera vez que escribo y nadie me contesta. Es vergonzoso.
 
-**Opciones:**
+**choice:**
 
 - `positivo` — Satisfacción o agradecimiento
 - `negativo` — Queja, enfado o frustración
@@ -259,7 +259,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Quería consultar si el plan incluye facturación automática.
 
-**Opciones:**
+**choice:**
 
 - `positivo` — Satisfacción o agradecimiento
 - `negativo` — Queja, enfado o frustración
@@ -278,7 +278,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Gracias por arreglarlo tan rápido, sois los mejores.
 
-**Opciones:**
+**choice:**
 
 - `positivo` — Satisfacción o agradecimiento
 - `negativo` — Queja, enfado o frustración
@@ -297,7 +297,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Nunca funciona nada, estoy harto de esta aplicación.
 
-**Opciones:**
+**choice:**
 
 - `positivo` — Satisfacción o agradecimiento
 - `negativo` — Queja, enfado o frustración
@@ -316,7 +316,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > ¿Cómo puedo cambiar la contraseña de mi cuenta?
 
-**Opciones:**
+**choice:**
 
 - `pregunta` — Pide información o instrucciones
 - `queja` — Reporta un problema o expresa descontento
@@ -335,7 +335,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Necesito que me cambien la dirección de envío del pedido 4471.
 
-**Opciones:**
+**choice:**
 
 - `pregunta` — Pide información o instrucciones
 - `queja` — Reporta un problema o expresa descontento
@@ -354,7 +354,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El producto llegó roto y nadie me ha dado solución.
 
-**Opciones:**
+**choice:**
 
 - `pregunta` — Pide información o instrucciones
 - `queja` — Reporta un problema o expresa descontento
@@ -373,7 +373,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > ¿Dónde puedo ver el historial de mis pagos?
 
-**Opciones:**
+**choice:**
 
 - `pregunta` — Pide información o instrucciones
 - `queja` — Reporta un problema o expresa descontento
@@ -392,7 +392,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Por favor, cancelen mi suscripción a partir del mes que viene.
 
-**Opciones:**
+**choice:**
 
 - `pregunta` — Pide información o instrucciones
 - `queja` — Reporta un problema o expresa descontento
@@ -411,7 +411,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Zapatillas de trail impermeables con suela de agarre para barro.
 
-**Opciones:**
+**choice:**
 
 - `calzado` — Zapatos, botas o zapatillas
 - `ropa` — Prendas de vestir
@@ -430,7 +430,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Chaqueta impermeable con capucha, talla L, color azul marino.
 
-**Opciones:**
+**choice:**
 
 - `calzado` — Zapatos, botas o zapatillas
 - `ropa` — Prendas de vestir
@@ -449,7 +449,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Mochila de 30 litros con funda de lluvia incluida.
 
-**Opciones:**
+**choice:**
 
 - `calzado` — Zapatos, botas o zapatillas
 - `ropa` — Prendas de vestir
@@ -468,7 +468,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Botas de montaña de caña alta para invierno.
 
-**Opciones:**
+**choice:**
 
 - `calzado` — Zapatos, botas o zapatillas
 - `ropa` — Prendas de vestir
@@ -487,7 +487,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Guantes térmicos y gorro de lana para actividades de invierno.
 
-**Opciones:**
+**choice:**
 
 - `calzado` — Zapatos, botas o zapatillas
 - `ropa` — Prendas de vestir
@@ -506,7 +506,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Hello, I would like to know if you ship to Ireland.
 
-**Opciones:**
+**choice:**
 
 - `espanol` — Español
 - `ingles` — Inglés
@@ -525,7 +525,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Buenos días, quería consultar el estado de mi pedido.
 
-**Opciones:**
+**choice:**
 
 - `espanol` — Español
 - `ingles` — Inglés
@@ -544,7 +544,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Bonjour, je voudrais un remboursement s'il vous plaît.
 
-**Opciones:**
+**choice:**
 
 - `espanol` — Español
 - `ingles` — Inglés
@@ -563,7 +563,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > La web no carga desde esta mañana en toda la oficina.
 
-**Opciones:**
+**choice:**
 
 - `alta` — Bloquea el trabajo ahora mismo
 - `media` — Molesto pero hay forma de seguir
@@ -582,7 +582,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El color del icono no me gusta demasiado, pero funciona bien.
 
-**Opciones:**
+**choice:**
 
 - `alta` — Bloquea el trabajo ahora mismo
 - `media` — Molesto pero hay forma de seguir
@@ -601,7 +601,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Tengo que exportar el informe a mano porque el botón falla, pero puedo seguir.
 
-**Opciones:**
+**choice:**
 
 - `alta` — Bloquea el trabajo ahora mismo
 - `media` — Molesto pero hay forma de seguir
@@ -620,7 +620,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > No podemos facturar a clientes porque el sistema está caído.
 
-**Opciones:**
+**choice:**
 
 - `alta` — Bloquea el trabajo ahora mismo
 - `media` — Molesto pero hay forma de seguir
@@ -639,7 +639,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > ¿Podéis añadir un modo oscuro en alguna actualización futura?
 
-**Opciones:**
+**choice:**
 
 - `alta` — Bloquea el trabajo ahora mismo
 - `media` — Molesto pero hay forma de seguir
@@ -658,7 +658,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El pago se rechazó tres veces y no sé por qué.
 
-**Opciones:**
+**choice:**
 
 - `billing` — Pagos, cargos y reembolsos
 - `technical` — Errores de la aplicación e integraciones
@@ -677,7 +677,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > La integración con nuestra herramienta de nóminas dejó de sincronizar ayer.
 
-**Opciones:**
+**choice:**
 
 - `billing` — Pagos, cargos y reembolsos
 - `technical` — Errores de la aplicación e integraciones
@@ -705,7 +705,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Búsqueda: zapatillas de senderismo ligeras para días de lluvia. Resultado: una ficha de zapatillas de trail impermeables con guía de tallas y reseñas.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — No relevante
 - `1` — Algo relevante
@@ -724,7 +724,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Búsqueda: zapatillas de senderismo ligeras para días de lluvia. Resultado: una ficha de calcetines de algodón para vestir.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — No relevante
 - `1` — Algo relevante
@@ -743,7 +743,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Búsqueda: zapatillas de senderismo ligeras para días de lluvia. Resultado: una ficha de botas de montaña de caña alta para invierno.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — No relevante
 - `1` — Algo relevante
@@ -762,7 +762,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Búsqueda: regalo para un niño de 6 años aficionado a los dinosaurios. Resultado: un set de figuras de dinosaurios de plástico, para mayores de 3 años.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — No relevante
 - `1` — Algo relevante
@@ -781,7 +781,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Búsqueda: regalo para un niño de 6 años aficionado a los dinosaurios. Resultado: una novela histórica para adultos sobre la Segunda Guerra Mundial.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — No relevante
 - `1` — Algo relevante
@@ -800,7 +800,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El botón de exportar se ve un poco desplazado dos píxeles en pantallas pequeñas. La función de exportar funciona correctamente.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Cosmético, sin impacto en la funcionalidad
 - `1` — Función rota pero existe una forma de saltárselo
@@ -819,7 +819,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El botón de exportar no responde en Safari. En Chrome funciona, y la mayoría de los clientes usan Chrome.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Cosmético, sin impacto en la funcionalidad
 - `1` — Función rota pero existe una forma de saltárselo
@@ -838,7 +838,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > La aplicación no arranca en ningún navegador. Ningún cliente puede entrar desde esta mañana.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Cosmético, sin impacto en la funcionalidad
 - `1` — Función rota pero existe una forma de saltárselo
@@ -857,7 +857,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El texto del pie de página tiene una errata en una palabra.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Cosmético, sin impacto en la funcionalidad
 - `1` — Función rota pero existe una forma de saltárselo
@@ -876,7 +876,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > La búsqueda devuelve resultados vacíos, pero se puede navegar por categorías.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Cosmético, sin impacto en la funcionalidad
 - `1` — Función rota pero existe una forma de saltárselo
@@ -895,7 +895,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Este producto es exactamente lo que buscaba, llegó antes de lo previsto y en perfecto estado.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Mala
 - `1` — Aceptable
@@ -914,7 +914,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El producto llegó con un golpe visible en la caja y un arañazo en la carcasa.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Mala
 - `1` — Aceptable
@@ -933,7 +933,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El producto funciona bien aunque el embalaje venía algo dañado y tardó un día más de lo previsto.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Mala
 - `1` — Aceptable
@@ -952,7 +952,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Impecable: envío rápido, embalaje cuidado y el producto supera lo anunciado.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Mala
 - `1` — Aceptable
@@ -971,7 +971,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Nada más abrir la caja el aparato no encendía y tuve que devolverlo.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Mala
 - `1` — Aceptable
@@ -990,7 +990,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El sistema lleva caído desde las 8:00 y toda la plantilla está parada sin poder facturar.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Puede esperar
 - `1` — Conviene atenderlo hoy
@@ -1009,7 +1009,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Quería saber si hay planes de añadir más idiomas en el futuro.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Puede esperar
 - `1` — Conviene atenderlo hoy
@@ -1028,7 +1028,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El informe mensual del cliente sale mañana y el botón de exportar falla.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Puede esperar
 - `1` — Conviene atenderlo hoy
@@ -1047,7 +1047,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Se ha filtrado el acceso a la cuenta de un cliente con datos de pago visibles.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Puede esperar
 - `1` — Conviene atenderlo hoy
@@ -1066,7 +1066,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Me gustaría saber si el manual está disponible en papel.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Puede esperar
 - `1` — Conviene atenderlo hoy
@@ -1085,7 +1085,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > La respuesta explica paso a paso cómo cambiar la contraseña y funcionó a la primera.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Nada útil
 - `1` — Parcialmente útil
@@ -1104,7 +1104,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > La respuesta repite lo mismo que ya venía en el manual y no resuelve la duda.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Nada útil
 - `1` — Parcialmente útil
@@ -1123,7 +1123,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > La respuesta soluciona el problema pero no explica por qué ocurría.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Nada útil
 - `1` — Parcialmente útil
@@ -1142,7 +1142,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Instrucciones claras, con capturas y el enlace directo a la pantalla exacta.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Nada útil
 - `1` — Parcialmente útil
@@ -1161,7 +1161,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Me remitieron a otra sección sin decirme dónde encontrarla.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Nada útil
 - `1` — Parcialmente útil
@@ -1180,7 +1180,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El producto está en buen estado general, con alguna marca de uso leve en la esquina.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Deteriorado
 - `1` — Con señales de uso
@@ -1199,7 +1199,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El artículo viene precintado en su caja original, sin abrir.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Deteriorado
 - `1` — Con señales de uso
@@ -1218,7 +1218,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El artículo tiene la pantalla rota y no enciende.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Deteriorado
 - `1` — Con señales de uso
@@ -1237,7 +1237,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > La carcasa está desgastada en las esquinas y la bisagra suena al cerrar.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Deteriorado
 - `1` — Con señales de uso
@@ -1256,7 +1256,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El teclado tiene dos teclas hundidas y la pantalla parpadea al moverla.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Deteriorado
 - `1` — Con señales de uso
@@ -1284,7 +1284,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > ¡GANADOR! Has sido seleccionado para recibir un iPhone gratis. Haz clic aquí para reclamarlo antes de 24 horas.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Es spam, fraude o intento de estafa
 - `false` — Es un mensaje legítimo
@@ -1302,7 +1302,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Tu pedido 4471 ha salido de nuestro almacén y llegará el jueves.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Es spam, fraude o intento de estafa
 - `false` — Es un mensaje legítimo
@@ -1320,7 +1320,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Haga clic en este enlace para verificar su cuenta bancaria o será suspendida.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Es spam, fraude o intento de estafa
 - `false` — Es un mensaje legítimo
@@ -1338,7 +1338,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Gracias por tu compra. Adjuntamos la factura del pedido 3312.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Es spam, fraude o intento de estafa
 - `false` — Es un mensaje legítimo
@@ -1356,7 +1356,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > URGENTE: su suscripción caduca hoy, introduzca sus datos de tarjeta para renovarla al instante.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Es spam, fraude o intento de estafa
 - `false` — Es un mensaje legítimo
@@ -1374,7 +1374,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > I have asked three times now. Can I please just talk to a real person?
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Pide explícitamente un agente humano
 - `false` — No lo pide
@@ -1392,7 +1392,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > ¿Podríais indicarme cómo cambiar mi dirección de facturación?
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Pide explícitamente un agente humano
 - `false` — No lo pide
@@ -1410,7 +1410,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Quiero hablar con un responsable, esto no lo soluciona un bot.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Pide explícitamente un agente humano
 - `false` — No lo pide
@@ -1428,7 +1428,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > ¿Hay alguna forma de descargar la factura en PDF?
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Pide explícitamente un agente humano
 - `false` — No lo pide
@@ -1446,7 +1446,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Pásenme con alguien de verdad, por favor.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Pide explícitamente un agente humano
 - `false` — No lo pide
@@ -1464,7 +1464,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Como ya comenté la semana pasada, el problema sigue exactamente igual.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Menciona un intento o ticket previo
 - `false` — No hay señal de contacto anterior
@@ -1482,7 +1482,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Acabo de registrarme y no encuentro la opción de cambiar el idioma.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Menciona un intento o ticket previo
 - `false` — No hay señal de contacto anterior
@@ -1500,7 +1500,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Es la cuarta vez que escribo sobre este mismo asunto.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Menciona un intento o ticket previo
 - `false` — No hay señal de contacto anterior
@@ -1518,7 +1518,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Perdón por insistir, ya abrí un ticket el lunes con el número 8823.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Menciona un intento o ticket previo
 - `false` — No hay señal de contacto anterior
@@ -1536,7 +1536,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Necesito ayuda con la configuración inicial del dispositivo.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Menciona un intento o ticket previo
 - `false` — No hay señal de contacto anterior
@@ -1554,7 +1554,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Me llamo Ana García, mi correo es ana.garcia@ejemplo.com y mi teléfono es 612345678.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Contiene datos personales como nombre, correo o teléfono
 - `false` — No contiene datos personales
@@ -1572,7 +1572,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El pedido número 4471 sigue sin llegar y ya han pasado dos semanas.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Contiene datos personales como nombre, correo o teléfono
 - `false` — No contiene datos personales
@@ -1590,7 +1590,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Adjunto mi DNI 12345678Z para verificar la titularidad de la cuenta.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Contiene datos personales como nombre, correo o teléfono
 - `false` — No contiene datos personales
@@ -1608,7 +1608,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > La aplicación va lenta desde la última actualización.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Contiene datos personales como nombre, correo o teléfono
 - `false` — No contiene datos personales
@@ -1626,7 +1626,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Soy Juan Pérez y quiero cancelar mi suscripción.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Contiene datos personales como nombre, correo o teléfono
 - `false` — No contiene datos personales
@@ -1644,7 +1644,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Se ha caído la base de datos de producción y ningún cliente puede acceder.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Requiere que una persona actúe ya
 - `false` — Puede gestionarse sin intervención humana
@@ -1662,7 +1662,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > ¿Podéis confirmarme si el envío incluye seguimiento?
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Requiere que una persona actúe ya
 - `false` — Puede gestionarse sin intervención humana
@@ -1680,7 +1680,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Hay un cargo de 4.500 euros que no reconozco en mi tarjeta corporativa.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Requiere que una persona actúe ya
 - `false` — Puede gestionarse sin intervención humana
@@ -1698,7 +1698,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Quería saber cuál es la política de devoluciones para productos abiertos.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Requiere que una persona actúe ya
 - `false` — Puede gestionarse sin intervención humana
@@ -1716,7 +1716,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Un cliente ha denunciado una brecha de datos y hay que avisar a protección de datos hoy mismo.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Requiere que una persona actúe ya
 - `false` — Puede gestionarse sin intervención humana
@@ -1734,7 +1734,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El usuario pregunta si el plan anual se puede pagar en dos plazos.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Es solo una pregunta informativa
 - `false` — Requiere una acción, no solo información
@@ -1752,7 +1752,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El usuario pide que le devolvamos el importe del pedido 3312.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Es solo una pregunta informativa
 - `false` — Requiere una acción, no solo información
@@ -1770,7 +1770,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > ¿Cada cuánto se renueva automáticamente la suscripción?
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Es solo una pregunta informativa
 - `false` — Requiere una acción, no solo información
@@ -1788,7 +1788,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Necesito que me emitan una factura rectificativa del mes pasado.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Es solo una pregunta informativa
 - `false` — Requiere una acción, no solo información
@@ -1806,7 +1806,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > ¿Tenéis tienda física en Bogotá?
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Es solo una pregunta informativa
 - `false` — Requiere una acción, no solo información
@@ -1845,7 +1845,7 @@ Una manzana es **dulce** (no cítrica), de forma **redonda**, y al decir «roja�
 
 > una manzana roja
 
-**Opciones:**
+**choice:**
 
 - `citrico` — Ácido, como el limón
 - `dulce` — Dulce, como el azúcar
@@ -1864,7 +1864,7 @@ Una manzana es **dulce** (no cítrica), de forma **redonda**, y al decir «roja�
 
 > una manzana roja
 
-**Opciones:**
+**choice:**
 
 - `redonda` — Esférica o casi esférica
 - `alargada` — Más larga que ancha
@@ -1883,7 +1883,7 @@ Una manzana es **dulce** (no cítrica), de forma **redonda**, y al decir «roja�
 
 > una manzana roja
 
-**Opciones:**
+**choice:**
 
 - `rojo` — Rojo
 - `amarillo` — Amarillo
@@ -1903,7 +1903,7 @@ Una manzana es **dulce** (no cítrica), de forma **redonda**, y al decir «roja�
 
 > una manzana roja
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Un solo tono en toda la superficie
 - `false` — Varios tonos o manchas
@@ -1921,7 +1921,7 @@ Una manzana es **dulce** (no cítrica), de forma **redonda**, y al decir «roja�
 
 > una manzana roja
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Pequeño
 - `1` — Mediano
@@ -1947,7 +1947,7 @@ Un plátano maduro es **dulce**; su forma es **alargada**, no esférica. El amar
 
 > un plátano amarillo maduro
 
-**Opciones:**
+**choice:**
 
 - `citrico` — Ácido, como el limón
 - `dulce` — Dulce, como el azúcar
@@ -1966,7 +1966,7 @@ Un plátano maduro es **dulce**; su forma es **alargada**, no esférica. El amar
 
 > un plátano amarillo maduro
 
-**Opciones:**
+**choice:**
 
 - `redonda` — Esférica o casi esférica
 - `alargada` — Más larga que ancha
@@ -1985,7 +1985,7 @@ Un plátano maduro es **dulce**; su forma es **alargada**, no esférica. El amar
 
 > un plátano amarillo maduro
 
-**Opciones:**
+**choice:**
 
 - `rojo` — Rojo
 - `amarillo` — Amarillo
@@ -2005,7 +2005,7 @@ Un plátano maduro es **dulce**; su forma es **alargada**, no esférica. El amar
 
 > un plátano amarillo maduro
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Un solo tono en toda la superficie
 - `false` — Varios tonos o manchas
@@ -2023,7 +2023,7 @@ Un plátano maduro es **dulce**; su forma es **alargada**, no esférica. El amar
 
 > un plátano amarillo maduro
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Pequeño
 - `1` — Mediano
@@ -2049,7 +2049,7 @@ El limón es el caso **cítrico** por antonomasia. Su forma es **redonda** u ova
 
 > un limón verde
 
-**Opciones:**
+**choice:**
 
 - `citrico` — Ácido, como el limón
 - `dulce` — Dulce, como el azúcar
@@ -2068,7 +2068,7 @@ El limón es el caso **cítrico** por antonomasia. Su forma es **redonda** u ova
 
 > un limón verde
 
-**Opciones:**
+**choice:**
 
 - `redonda` — Esférica o casi esférica
 - `alargada` — Más larga que ancha
@@ -2087,7 +2087,7 @@ El limón es el caso **cítrico** por antonomasia. Su forma es **redonda** u ova
 
 > un limón verde
 
-**Opciones:**
+**choice:**
 
 - `rojo` — Rojo
 - `amarillo` — Amarillo
@@ -2107,7 +2107,7 @@ El limón es el caso **cítrico** por antonomasia. Su forma es **redonda** u ova
 
 > un limón verde
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Un solo tono en toda la superficie
 - `false` — Varios tonos o manchas
@@ -2125,7 +2125,7 @@ El limón es el caso **cítrico** por antonomasia. Su forma es **redonda** u ova
 
 > un limón verde
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Pequeño
 - `1` — Mediano
@@ -2151,7 +2151,7 @@ La naranja es **cítrica** aunque sea dulce al paladar: la pregunta es por el sa
 
 > una naranja
 
-**Opciones:**
+**choice:**
 
 - `citrico` — Ácido, como el limón
 - `dulce` — Dulce, como el azúcar
@@ -2170,7 +2170,7 @@ La naranja es **cítrica** aunque sea dulce al paladar: la pregunta es por el sa
 
 > una naranja
 
-**Opciones:**
+**choice:**
 
 - `redonda` — Esférica o casi esférica
 - `alargada` — Más larga que ancha
@@ -2189,7 +2189,7 @@ La naranja es **cítrica** aunque sea dulce al paladar: la pregunta es por el sa
 
 > una naranja
 
-**Opciones:**
+**choice:**
 
 - `rojo` — Rojo
 - `amarillo` — Amarillo
@@ -2209,7 +2209,7 @@ La naranja es **cítrica** aunque sea dulce al paladar: la pregunta es por el sa
 
 > una naranja
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Un solo tono en toda la superficie
 - `false` — Varios tonos o manchas
@@ -2227,7 +2227,7 @@ La naranja es **cítrica** aunque sea dulce al paladar: la pregunta es por el sa
 
 > una naranja
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Pequeño
 - `1` — Mediano
@@ -2253,7 +2253,7 @@ La sandía es **dulce** (de ahí que se coma como postre) y **redonda**, pero al
 
 > una sandía partida por la mitad
 
-**Opciones:**
+**choice:**
 
 - `citrico` — Ácido, como el limón
 - `dulce` — Dulce, como el azúcar
@@ -2272,7 +2272,7 @@ La sandía es **dulce** (de ahí que se coma como postre) y **redonda**, pero al
 
 > una sandía partida por la mitad
 
-**Opciones:**
+**choice:**
 
 - `redonda` — Esférica o casi esférica
 - `alargada` — Más larga que ancha
@@ -2291,7 +2291,7 @@ La sandía es **dulce** (de ahí que se coma como postre) y **redonda**, pero al
 
 > una sandía partida por la mitad
 
-**Opciones:**
+**choice:**
 
 - `rojo` — Rojo
 - `amarillo` — Amarillo
@@ -2311,7 +2311,7 @@ La sandía es **dulce** (de ahí que se coma como postre) y **redonda**, pero al
 
 > una sandía partida por la mitad
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Un solo tono en toda la superficie
 - `false` — Varios tonos o manchas
@@ -2329,7 +2329,7 @@ La sandía es **dulce** (de ahí que se coma como postre) y **redonda**, pero al
 
 > una sandía partida por la mitad
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Pequeño
 - `1` — Mediano
@@ -2355,7 +2355,7 @@ Las uvas son **dulces**; cada uva es **redonda** aunque el racimo no lo sea, y e
 
 > un racimo de uvas moradas
 
-**Opciones:**
+**choice:**
 
 - `citrico` — Ácido, como el limón
 - `dulce` — Dulce, como el azúcar
@@ -2374,7 +2374,7 @@ Las uvas son **dulces**; cada uva es **redonda** aunque el racimo no lo sea, y e
 
 > un racimo de uvas moradas
 
-**Opciones:**
+**choice:**
 
 - `redonda` — Esférica o casi esférica
 - `alargada` — Más larga que ancha
@@ -2393,7 +2393,7 @@ Las uvas son **dulces**; cada uva es **redonda** aunque el racimo no lo sea, y e
 
 > un racimo de uvas moradas
 
-**Opciones:**
+**choice:**
 
 - `rojo` — Rojo
 - `amarillo` — Amarillo
@@ -2413,7 +2413,7 @@ Las uvas son **dulces**; cada uva es **redonda** aunque el racimo no lo sea, y e
 
 > un racimo de uvas moradas
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Un solo tono en toda la superficie
 - `false` — Varios tonos o manchas
@@ -2431,7 +2431,7 @@ Las uvas son **dulces**; cada uva es **redonda** aunque el racimo no lo sea, y e
 
 > un racimo de uvas moradas
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Pequeño
 - `1` — Mediano
@@ -2457,7 +2457,7 @@ La fresa es **dulce**; su forma es **irregular** (no es una esfera ni un alargad
 
 > una fresa roja con las hojas verdes
 
-**Opciones:**
+**choice:**
 
 - `citrico` — Ácido, como el limón
 - `dulce` — Dulce, como el azúcar
@@ -2476,7 +2476,7 @@ La fresa es **dulce**; su forma es **irregular** (no es una esfera ni un alargad
 
 > una fresa roja con las hojas verdes
 
-**Opciones:**
+**choice:**
 
 - `redonda` — Esférica o casi esférica
 - `alargada` — Más larga que ancha
@@ -2495,7 +2495,7 @@ La fresa es **dulce**; su forma es **irregular** (no es una esfera ni un alargad
 
 > una fresa roja con las hojas verdes
 
-**Opciones:**
+**choice:**
 
 - `rojo` — Rojo
 - `amarillo` — Amarillo
@@ -2515,7 +2515,7 @@ La fresa es **dulce**; su forma es **irregular** (no es una esfera ni un alargad
 
 > una fresa roja con las hojas verdes
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Un solo tono en toda la superficie
 - `false` — Varios tonos o manchas
@@ -2533,7 +2533,7 @@ La fresa es **dulce**; su forma es **irregular** (no es una esfera ni un alargad
 
 > una fresa roja con las hojas verdes
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Pequeño
 - `1` — Mediano
@@ -2559,7 +2559,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > una pera verde alargada
 
-**Opciones:**
+**choice:**
 
 - `citrico` — Ácido, como el limón
 - `dulce` — Dulce, como el azúcar
@@ -2578,7 +2578,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > una pera verde alargada
 
-**Opciones:**
+**choice:**
 
 - `redonda` — Esférica o casi esférica
 - `alargada` — Más larga que ancha
@@ -2597,7 +2597,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > una pera verde alargada
 
-**Opciones:**
+**choice:**
 
 - `rojo` — Rojo
 - `amarillo` — Amarillo
@@ -2617,7 +2617,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > una pera verde alargada
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Un solo tono en toda la superficie
 - `false` — Varios tonos o manchas
@@ -2635,7 +2635,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > una pera verde alargada
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Pequeño
 - `1` — Mediano
@@ -2668,7 +2668,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > Me cobraron dos veces la suscripción este mes y necesito que me devuelvan el dinero antes del viernes.
 
-**Opciones:**
+**choice:**
 
 - `billing` — Pagos, cargos y reembolsos
 - `technical` — Errores de la aplicación
@@ -2687,7 +2687,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > Me cobraron dos veces la suscripción este mes y necesito que me devuelvan el dinero antes del viernes.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Puede esperar
 - `1` — Conviene atenderlo hoy
@@ -2706,7 +2706,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > Me cobraron dos veces la suscripción este mes y necesito que me devuelvan el dinero antes del viernes.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Sí, conviene revisión humana
 - `false` — No hace falta, puede automatizarse
@@ -2724,7 +2724,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > Me cobraron dos veces la suscripción este mes y necesito que me devuelvan el dinero antes del viernes.
 
-**Opciones:**
+**choice:**
 
 - `calmado` — Tranquilo y objetivo
 - `molesto` — Visiblemente enfadado
@@ -2747,7 +2747,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > La aplicación no arranca desde esta mañana y toda la plantilla está parada sin poder facturar. Esto es inaceptable.
 
-**Opciones:**
+**choice:**
 
 - `billing` — Pagos, cargos y reembolsos
 - `technical` — Errores de la aplicación
@@ -2766,7 +2766,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > La aplicación no arranca desde esta mañana y toda la plantilla está parada sin poder facturar. Esto es inaceptable.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Puede esperar
 - `1` — Conviene atenderlo hoy
@@ -2785,7 +2785,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > La aplicación no arranca desde esta mañana y toda la plantilla está parada sin poder facturar. Esto es inaceptable.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Sí, conviene revisión humana
 - `false` — No hace falta, puede automatizarse
@@ -2803,7 +2803,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > La aplicación no arranca desde esta mañana y toda la plantilla está parada sin poder facturar. Esto es inaceptable.
 
-**Opciones:**
+**choice:**
 
 - `calmado` — Tranquilo y objetivo
 - `molesto` — Visiblemente enfadado
@@ -2826,7 +2826,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > ¿Cuál es vuestro horario de atención telefónica los sábados?
 
-**Opciones:**
+**choice:**
 
 - `billing` — Pagos, cargos y reembolsos
 - `technical` — Errores de la aplicación
@@ -2845,7 +2845,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > ¿Cuál es vuestro horario de atención telefónica los sábados?
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Puede esperar
 - `1` — Conviene atenderlo hoy
@@ -2864,7 +2864,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > ¿Cuál es vuestro horario de atención telefónica los sábados?
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Sí, conviene revisión humana
 - `false` — No hace falta, puede automatizarse
@@ -2882,7 +2882,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > ¿Cuál es vuestro horario de atención telefónica los sábados?
 
-**Opciones:**
+**choice:**
 
 - `calmado` — Tranquilo y objetivo
 - `molesto` — Visiblemente enfadado
@@ -2905,7 +2905,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > El botón de exportar no hace nada en Safari. En Chrome sí funciona.
 
-**Opciones:**
+**choice:**
 
 - `billing` — Pagos, cargos y reembolsos
 - `technical` — Errores de la aplicación
@@ -2924,7 +2924,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > El botón de exportar no hace nada en Safari. En Chrome sí funciona.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Puede esperar
 - `1` — Conviene atenderlo hoy
@@ -2943,7 +2943,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > El botón de exportar no hace nada en Safari. En Chrome sí funciona.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Sí, conviene revisión humana
 - `false` — No hace falta, puede automatizarse
@@ -2961,7 +2961,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > El botón de exportar no hace nada en Safari. En Chrome sí funciona.
 
-**Opciones:**
+**choice:**
 
 - `calmado` — Tranquilo y objetivo
 - `molesto` — Visiblemente enfadado
@@ -2984,7 +2984,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > Llevo tres semanas esperando el reembolso y nadie me contesta. Quiero hablar con un responsable.
 
-**Opciones:**
+**choice:**
 
 - `billing` — Pagos, cargos y reembolsos
 - `technical` — Errores de la aplicación
@@ -3003,7 +3003,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > Llevo tres semanas esperando el reembolso y nadie me contesta. Quiero hablar con un responsable.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Puede esperar
 - `1` — Conviene atenderlo hoy
@@ -3022,7 +3022,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > Llevo tres semanas esperando el reembolso y nadie me contesta. Quiero hablar con un responsable.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Sí, conviene revisión humana
 - `false` — No hace falta, puede automatizarse
@@ -3040,7 +3040,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > Llevo tres semanas esperando el reembolso y nadie me contesta. Quiero hablar con un responsable.
 
-**Opciones:**
+**choice:**
 
 - `calmado` — Tranquilo y objetivo
 - `molesto` — Visiblemente enfadado
@@ -3063,7 +3063,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > Quería saber si el plan anual se puede pagar en dos plazos.
 
-**Opciones:**
+**choice:**
 
 - `billing` — Pagos, cargos y reembolsos
 - `technical` — Errores de la aplicación
@@ -3082,7 +3082,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > Quería saber si el plan anual se puede pagar en dos plazos.
 
-**Niveles (de menor a mayor):**
+**score:**
 
 - `0` — Puede esperar
 - `1` — Conviene atenderlo hoy
@@ -3101,7 +3101,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > Quería saber si el plan anual se puede pagar en dos plazos.
 
-**Resultados posibles:**
+**boolean:**
 
 - `true` — Sí, conviene revisión humana
 - `false` — No hace falta, puede automatizarse
@@ -3119,7 +3119,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > Quería saber si el plan anual se puede pagar en dos plazos.
 
-**Opciones:**
+**choice:**
 
 - `calmado` — Tranquilo y objetivo
 - `molesto` — Visiblemente enfadado

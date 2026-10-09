@@ -2,8 +2,8 @@
 
   tipado    el formato de TypeSafe: JSON con state.input + questions.decision y
             `criteria`. El que usa quien integra por API.
-  natural   el mismo caso escrito con cabeceras (Opciones: / Niveles de puntuación:
-            / Qué significa no o sí:). El que usa quien escribe a mano.
+  natural   el mismo caso escrito con cabeceras (choice: / score: / boolean:).
+            El que usa quien escribe a mano.
   llm       la pregunta a pelo por /v1/chat/completions, sin esquema: es el modo por
             defecto de cualquier LLM. Hay que leerle la respuesta del texto.
 
@@ -75,15 +75,15 @@ def modo_natural(caso):
     """El caso escrito con cabeceras -> parseado -> /v1/decision."""
     estado, pregunta, criterios, _ = caso
     if isinstance(criterios, list):
-        texto = (f"Entrada: {estado}\n\nPregunta: {pregunta}\n"
-                 f"Niveles de puntuación:\n" +
+        texto = (f"input: {estado}\n\nask: {pregunta}\n"
+                 f"score:\n" +
                  "\n".join(f"  {n}" for n in criterios))
     elif isinstance(criterios, dict) and set(criterios) <= {"true", "false"}:
-        texto = (f"Entrada: {estado}\n\nPregunta: {pregunta}\n"
-                 f"Qué significa no o sí:\n"
+        texto = (f"input: {estado}\n\nask: {pregunta}\n"
+                 f"boolean:\n"
                  f"  false: {criterios['false']}\n  true: {criterios['true']}")
     else:
-        texto = (f"Entrada: {estado}\n\nPregunta: {pregunta}\nOpciones:\n" +
+        texto = (f"input: {estado}\n\nask: {pregunta}\nchoice:\n" +
                  "\n".join(f"  {k}: {v}" for k, v in criterios.items()))
 
     estado2, preguntas = preguntar.parsear(texto)

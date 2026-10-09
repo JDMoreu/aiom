@@ -1,7 +1,7 @@
-Entrada: Aviso del sistema de monitorización: la aplicación completa lleva una hora sin responder. Ningún usuario puede entrar ni usar ninguna función.
+input: Aviso del sistema de monitorización: la aplicación completa lleva una hora sin responder. Ningún usuario puede entrar ni usar ninguna función.
 
-Pregunta: ¿Qué gravedad tiene el incidente?
-Niveles de puntuación:
+ask: ¿Qué gravedad tiene el incidente?
+score:
   Aviso: no afecta al servicio
   Menor: afecta a unos pocos usuarios
   Grave: afecta a la mayoría

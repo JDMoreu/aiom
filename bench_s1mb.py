@@ -83,6 +83,13 @@ def campo_de(dec):
 
 
 def contexto_de(row, dec):
+    """El estado + los criterios + la instruccion, como contexto para el modelo.
+
+    OJO: estas cabeceras (Estado / Opciones / Pregunta) NO son el formato de AIOM.
+    Este texto va TAL CUAL como contexto de /v1/decision y reproduce la forma en que
+    S1MB presenta sus casos. Cambiarlas aqui cambiaria el prompt y por tanto la
+    puntuacion medida, que esta atada a esta redaccion. No son un descuido.
+    """
     estado = _texto_estado(row["input"].get("state_json"))
     sysp = dec.get("system_prompt") or ""
     instr = _j(dec.get("instructions_json"), "")

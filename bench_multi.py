@@ -77,16 +77,16 @@ def modo_tipado(estado, preguntas):
 
 def modo_natural(estado, preguntas):
     """El caso escrito con cabeceras -> parseado -> N campos en una peticion."""
-    partes = [f"Entrada: {estado}"]
+    partes = [f"input: {estado}"]
     for pid, p, c, _ in preguntas:
         if isinstance(c, list):
-            partes.append(f"---\nPregunta: {p}\nNiveles de puntuación:\n"
+            partes.append(f"---\nask: {p}\nscore:\n"
                           + "\n".join(f"  {n}" for n in c))
         elif isinstance(c, dict) and set(c) <= {"true", "false"}:
-            partes.append(f"---\nPregunta: {p}\nQué significa no o sí:\n"
+            partes.append(f"---\nask: {p}\nboolean:\n"
                           f"  false: {c['false']}\n  true: {c['true']}")
         else:
-            partes.append(f"---\nPregunta: {p}\nOpciones:\n"
+            partes.append(f"---\nask: {p}\nchoice:\n"
                           + "\n".join(f"  {k}: {v}" for k, v in c.items()))
     texto = "\n\n".join(partes)
 

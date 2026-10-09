@@ -129,12 +129,12 @@ def prompts_texto(cuerpo, catalogo, cfg):
 
 def prompts_natural(cuerpo, catalogo, cfg):
     estado, preguntas = preguntar.parsear(cuerpo["entrada"])
-    return [f"{estado}\n\nPregunta: {c['pregunta']}" for _, c in preguntas]
+    return [f"{estado}\n\nask: {c['pregunta']}" for _, c in preguntas]
 
 
 def prompts_tipado(cuerpo, catalogo, cfg):
     entrada = cuerpo["state"].get("input", "")
-    return [f"{entrada}\n\nPregunta: {c.get('instructions', '')}"
+    return [f"{entrada}\n\nask: {c.get('instructions', '')}"
             for c in cuerpo["questions"].values()]
 
 
@@ -181,7 +181,7 @@ DOC = {
             },
             "natural": {
                 "cuerpo": {"formato": "natural",
-                           "entrada": "Entrada: ...\n\nPregunta: ...\nOpciones:\n  a: ..."},
+                           "entrada": "input: ...\n\nask: ...\nchoice:\n  a: ..."},
                 "nota": "el contenido de un .txt: una o varias preguntas separadas por "
                         "---. Trae su propio esquema, no usa el catalogo.",
             },

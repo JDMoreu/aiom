@@ -1,7 +1,7 @@
-Entrada: Buenos días. Llevo desde ayer sin poder entrar a la aplicación: me sale un error 500 cada vez que intento iniciar sesión. Ya probé a reinstalarla y sigue igual.
+input: Buenos días. Llevo desde ayer sin poder entrar a la aplicación: me sale un error 500 cada vez que intento iniciar sesión. Ya probé a reinstalarla y sigue igual.
 
-Pregunta: ¿A qué área hay que enviar este correo?
-Opciones:
+ask: ¿A qué área hay que enviar este correo?
+choice:
   soporte: Fallos y errores del producto
   facturacion: Cobros, facturas y reembolsos
   comercial: Ventas y planes

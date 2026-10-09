@@ -33,7 +33,7 @@ Responde contra los campos que declara el **catálogo** (`--catalog`). `mode` es
 ### 2. `natural` — el contenido de un `.txt`, entero
 
 ```json
-{"formato": "natural", "entrada": "Entrada: ...\n\nPregunta: ...\nOpciones:\n  a: ..."}
+{"formato": "natural", "entrada": "input: ...\n\nask: ...\nchoice:\n  a: ..."}
 ```
 
 Trae su propio esquema en el texto, así que **no usa el catálogo**. Admite varias
@@ -87,7 +87,7 @@ de la **misma corrida** y se pueden comparar; midiéndolos en dos llamadas separ
 serían de momentos distintos.
 
 ```json
-{"formato": "natural", "entrada": "Entrada: ... Pregunta: ... Opciones: ...", "comparar": true}
+{"formato": "natural", "entrada": "input: ... ask: ... choice: ...", "comparar": true}
 ```
 
 Y devuelve:

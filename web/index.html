@@ -181,10 +181,10 @@
 
 // Los dos textos de arranque son casos del propio repositorio, para que lo que se
 // ve al abrir sea exactamente lo que documenta el manual.
-const NATURAL = `Entrada: Buenas tardes. Escribo porque estoy bastante molesto: contraté el plan de 20 GB el mes pasado y llevo una semana con cortes de conexión casi todas las noches. He llamado tres veces y nadie me ha dado una solución. Además me han cobrado dos veces la factura de este mes. Si esto sigue así me voy a dar de baja.
+const NATURAL = `input: Buenas tardes. Escribo porque estoy bastante molesto: contraté el plan de 20 GB el mes pasado y llevo una semana con cortes de conexión casi todas las noches. He llamado tres veces y nadie me ha dado una solución. Además me han cobrado dos veces la factura de este mes. Si esto sigue así me voy a dar de baja.
 
-Pregunta: ¿A qué área hay que enviar este correo?
-Opciones:
+ask: ¿A qué área hay que enviar este correo?
+choice:
   soporte: Fallos y errores del producto
   facturacion: Cobros, facturas y reembolsos
   comercial: Ventas, planes y bajas
@@ -192,16 +192,16 @@ Opciones:
 
 ---
 
-Pregunta: ¿Qué urgencia tiene?
-Niveles de puntuación:
+ask: ¿Qué urgencia tiene?
+score:
   Baja: puede esperar
   Media: conviene atenderlo esta semana
   Alta: hay una fecha límite encima
 
 ---
 
-Pregunta: ¿Amenaza el cliente con darse de baja?
-Qué significa no o sí:
+ask: ¿Amenaza el cliente con darse de baja?
+boolean:
   false: No lo menciona
   true: Sí lo menciona`;
 
@@ -230,7 +230,7 @@ function pintarFormato() {
   $("etiqueta-entrada").textContent = formato === "natural"
     ? "Escribe el caso" : "Pega el JSON";
   $("pista").textContent = formato === "natural"
-    ? "cabeceras: Entrada / Pregunta / Opciones / Niveles / no o sí"
+    ? "cabeceras: input / ask / choice / score / boolean"
     : "formato de TypeSafe: state + questions";
   ajustarAlto();
 }

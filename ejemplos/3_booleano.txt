@@ -1,6 +1,6 @@
-Entrada: Un cliente escribe diciendo que han entrado en su cuenta desde otro país y que no reconoce dos compras hechas esta madrugada.
+input: Un cliente escribe diciendo que han entrado en su cuenta desde otro país y que no reconoce dos compras hechas esta madrugada.
 
-Pregunta: ¿Hay indicios de que la cuenta esté comprometida?
-Qué significa no o sí:
+ask: ¿Hay indicios de que la cuenta esté comprometida?
+boolean:
   false: No hay indicios de acceso no autorizado
   true: Hay indicios de acceso no autorizado

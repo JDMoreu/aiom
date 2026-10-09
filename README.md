@@ -42,7 +42,7 @@ Python 3.10+**. El detalle de cómo se construyó y compiló el backend está en
 
 |  | cómo se escribe | quién puede escribirlo |
 |---|---|---|
-| **lenguaje natural** | `Pregunta: ...` + `Opciones:` | cualquiera |
+| **lenguaje natural** | `ask: ...` + `choice:` | cualquiera |
 | **tipada** | JSON con `questions.decision` y `criteria` | quien conozca el esquema |
 
 **Dan exactamente lo mismo.** Medido sobre 90 casos: **85,6% de acierto y 76 ms en las
@@ -50,11 +50,11 @@ dos**, con idéntica confianza. El formato tipado no aporta nada aquí y sí cue
 que la puerta de entrada es el lenguaje natural.
 
 ```
-Entrada: Buenos días. Llevo desde ayer sin poder entrar a la aplicación: me sale un
+input: Buenos días. Llevo desde ayer sin poder entrar a la aplicación: me sale un
 error 500 cada vez que intento iniciar sesión.
 
-Pregunta: ¿A qué área hay que enviar este correo?
-Opciones:
+ask: ¿A qué área hay que enviar este correo?
+choice:
   soporte: Fallos y errores del producto
   facturacion: Cobros, facturas y reembolsos
   comercial: Ventas y planes
@@ -65,9 +65,9 @@ La cabecera decide el tipo de pregunta:
 
 | cabecera que escribes | tipo | devuelve |
 |---|---|---|
-| `Opciones:` | **choice** | la opción elegida + probabilidad de todas + confianza |
-| `Niveles de puntuación:` | **score** | posición en la escala (puede caer entre dos niveles) |
-| `Qué significa no o sí:` | **boolean** | un valor entre 0 y 1 |
+| `choice:` | **choice** | la opción elegida + probabilidad de todas + confianza |
+| `score:` | **score** | posición en la escala (puede caer entre dos niveles) |
+| `boolean:` | **boolean** | un valor entre 0 y 1 |
 
 Si la pregunta **no cabe** en ningún campo conocido, se releva al modo chat sobre el
 **mismo** modelo. Una sola pasada decide las dos cosas: si era respondible, y cuáles
@@ -179,7 +179,7 @@ Lo mismo desde un programa, declarando el formato (no se adivina):
 
 ```bash
 curl -X POST localhost:8100/ask -H "Content-Type: application/json" \
-  -d '{"formato":"natural","entrada":"Entrada: ... Pregunta: ... Opciones: ...","comparar":true}'
+  -d '{"formato":"natural","entrada":"input: ... ask: ... choice: ...","comparar":true}'
 ```
 
 `formato` es `texto`, `natural` o `tipado`. Detalles en [docs/API.md](docs/API.md).

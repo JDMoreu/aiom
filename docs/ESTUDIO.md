@@ -74,7 +74,7 @@ dos modelos ni dos procesos:
 | modo | cómo se le pregunta | qué devuelve |
 |---|---|---|
 | `tipado` | JSON con un esquema de campos, al estilo de la API de TypeSafe (`state.input` + `questions`) | valores tipados, con la probabilidad de **cada** opción |
-| `natural` | el mismo caso escrito con cabeceras legibles (`Opciones:`, `Niveles de puntuación:`, `Qué significa no o sí:`) | lo mismo, tras traducir el texto a un esquema |
+| `natural` | el mismo caso escrito con cabeceras legibles (`choice:`, `score:`, `boolean:`) | lo mismo, tras traducir el texto a un esquema |
 | `llm` | la pregunta a pelo por el endpoint de chat, sin esquema. El uso por defecto | texto libre, del que hay que **leer** la respuesta |
 
 Las condiciones `tipado` y `natural` comparten motor y difieren solo en
@@ -228,7 +228,7 @@ un formato. Eso cambia cuánto se experimenta.
 convención que respetar (las cabeceras). Con el formato tipado esa
 convención es explícita; aquí es un acuerdo de lectura. Se paga con una
 regla: **la cabecera tiene que empezar en la columna cero**, porque si no
-una opción llamada `pregunta:` se confundiría con la cabecera `Pregunta:`
+una opción llamada `pregunta:` se confundiría con la cabecera `ask:`
 — pasó de verdad, y se detectó porque el banco de pruebas lo marcó.
 
 ### ¿Por qué tres tipos de pregunta y no uno?
@@ -506,7 +506,7 @@ en lenguaje natural y se ejecutan.
 
 ```bash
 python preguntar.py ejemplos/5_correo_soporte.txt
-python preguntar.py --texto "Entrada: ... | Pregunta: ... | Opciones: ..."
+python preguntar.py --texto "input: ... | ask: ... | choice: ..."
 ```
 
 El único requisito duro es que el servidor exponga el endpoint de

@@ -22,9 +22,9 @@ Estos son los nombres de verdad, los que usa el código:
 
 | quiero… | tipo | cabecera que escribo | me devuelve |
 |---|---|---|---|
-| elegir de una lista | **choice** | `Opciones:` | la opción elegida + probabilidad de cada una |
-| poner algo en una escala | **score** | `Niveles de puntuación:` | **el nivel** (y, si lo quieres, una puntuación ponderada) |
-| un sí o un no | **boolean** | `Qué significa no o sí:` | `true` o `false`, con su probabilidad |
+| elegir de una lista | **choice** | `choice:` | la opción elegida + probabilidad de cada una |
+| poner algo en una escala | **score** | `score:` | **el nivel** (y, si lo quieres, una puntuación ponderada) |
+| un sí o un no | **boolean** | `boolean:` | `true` o `false`, con su probabilidad |
 
 *(El tipo `boolean` es el que Jev llama **noul**, y es el que el programa muestra por
 pantalla como **PROBABILITY**.)*
@@ -40,12 +40,12 @@ es un choice» es **`preguntar.py`**, leyendo **la cabecera** que has escrito:
 
 | si ve esta cabecera… | …monta un campo de tipo |
 |---|---|
-| `Opciones:` | `enum` → **choice** |
-| `Niveles de puntuación:` | `number` → **score** |
-| `Qué significa no o sí:` | `boolean` → **boolean** |
+| `choice:` | `enum` → **choice** |
+| `score:` | `number` → **score** |
+| `boolean:` | `boolean` → **boolean** |
 
 Después traduce eso al esquema del endpoint y el modelo responde dentro de ese esquema.
-**Por eso funciona sin declarar nada:** la cabecera es la declaración.
+**Por eso funciona sin declarar nada más:** la cabecera es la declaración.
 
 Y si no escribes ninguna de las tres, el sistema no se queda sin responder: lo trata
 como un sí o un no. (Si la pregunta es de texto libre, es el relevo al modo chat, ver
@@ -55,16 +55,16 @@ apartado 8.)
 
 ## 2. Opciones (elegir de una lista)
 
-Se escribe la cabecera `Opciones:` y debajo, una por línea, con el formato
+Se escribe la cabecera `choice:` y debajo, una por línea, con el formato
 `clave: descripción`. **La clave es lo que te va a devolver**; la descripción es para
 que el modelo entienda cuál toca.
 
 ```
-Entrada: Buenos días. Llevo desde ayer sin poder entrar a la aplicación: me sale un
+input: Buenos días. Llevo desde ayer sin poder entrar a la aplicación: me sale un
 error 500 cada vez que intento iniciar sesión. Ya probé a reinstalarla y sigue igual.
 
-Pregunta: ¿A qué área hay que enviar este correo?
-Opciones:
+ask: ¿A qué área hay que enviar este correo?
+choice:
   soporte: Fallos y errores del producto
   facturacion: Cobros, facturas y reembolsos
   comercial: Ventas y planes
@@ -106,15 +106,15 @@ Qué leer:
 
 ## 3. Niveles (poner algo en una escala)
 
-Cabecera `Niveles de puntuación:` y debajo los niveles **de menor a mayor**. El
+Cabecera `score:` y debajo los niveles **de menor a mayor**. El
 sistema los numera solo: el primero es 0.
 
 ```
-Entrada: Aviso del sistema de monitorización: la aplicación completa lleva una hora
+input: Aviso del sistema de monitorización: la aplicación completa lleva una hora
 sin responder. Ningún usuario puede entrar ni usar ninguna función.
 
-Pregunta: ¿Qué gravedad tiene el incidente?
-Niveles de puntuación:
+ask: ¿Qué gravedad tiene el incidente?
+score:
   Aviso: no afecta al servicio
   Menor: afecta a unos pocos usuarios
   Grave: afecta a la mayoría
@@ -173,15 +173,15 @@ el resultado. Si dudas, quédate con `value`.
 
 ## 4. Boolean (un sí o un no, con su probabilidad)
 
-Cabecera `Qué significa no o sí:` y debajo qué significa cada uno. **Aquí sí o sí hay
+Cabecera `boolean:` y debajo qué significa cada uno. **Aquí sí o sí hay
 que poner `true:` y `false:`**, porque si no, el modelo no sabe qué estás preguntando.
 
 ```
-Entrada: Un cliente escribe diciendo que han entrado en su cuenta desde otro país
+input: Un cliente escribe diciendo que han entrado en su cuenta desde otro país
 y que no reconoce dos compras hechas esta madrugada.
 
-Pregunta: ¿Hay indicios de que la cuenta esté comprometida?
-Qué significa no o sí:
+ask: ¿Hay indicios de que la cuenta esté comprometida?
+boolean:
   false: No hay indicios de acceso no autorizado
   true: Hay indicios de acceso no autorizado
 ```
@@ -206,11 +206,11 @@ confianza razonable (0.277) — ni un empate ni un exceso de seguridad.
 pero con la entrada sin la información que hace falta:
 
 ```
-Entrada: Son las 22:30. Una aplicación de calendario quiere recordar una comida
+input: Son las 22:30. Una aplicación de calendario quiere recordar una comida
 de equipo el viernes. El usuario tiene activado el horario de descanso hasta las 07:00.
 
-Pregunta: ¿Debe esperar esta notificación hasta que termine el horario de descanso?
-Qué significa no o sí:
+ask: ¿Debe esperar esta notificación hasta que termine el horario de descanso?
+boolean:
   false: El recordatorio es urgente y debe enviarse ahora
   true: Puede enviarse después sin perjudicar al usuario
 ```
@@ -264,12 +264,12 @@ Aquí está lo bueno. Se ponen **varias preguntas sobre la misma entrada**, sepa
 una línea con `---`. Se mandan **en una sola petición** y el modelo las evalúa todas.
 
 ```
-Entrada: Hola, el viernes pagué el plan anual y desde entonces la aplicación se cierra
+input: Hola, el viernes pagué el plan anual y desde entonces la aplicación se cierra
 sola cada vez que intento subir una foto. Necesito subir las fotos de un evento este
 fin de semana.
 
-Pregunta: ¿A qué área hay que enviar este correo?
-Opciones:
+ask: ¿A qué área hay que enviar este correo?
+choice:
   soporte: Fallos y errores del producto
   facturacion: Cobros, facturas y reembolsos
   comercial: Ventas y planes
@@ -277,16 +277,16 @@ Opciones:
 
 ---
 
-Pregunta: ¿Qué urgencia tiene?
-Niveles de puntuación:
+ask: ¿Qué urgencia tiene?
+score:
   Baja: puede esperar
   Media: conviene atenderlo esta semana
   Alta: hay una fecha límite encima
 
 ---
 
-Pregunta: ¿El cliente ya pagó el plan anual?
-Qué significa no o sí:
+ask: ¿El cliente ya pagó el plan anual?
+boolean:
   false: No ha pagado todavía
   true: Sí, ya lo pagó
 ```
@@ -360,7 +360,7 @@ python aiom.py --catalog catalogs/soporte.json ask "Buenas tardes. Contraté el 
 20 GB el mes pasado y llevo una semana con cortes de conexión casi todas las noches.
 Además me han cobrado dos veces la factura de este mes.
 
-Pregunta: ¿A qué área hay que enviar este correo?" --mode chat
+ask: ¿A qué área hay que enviar este correo?" --mode chat
 ```
 
 > **Ojo con la posición de `--catalog`:** va **antes** de `ask`. Después, `argparse`
@@ -406,10 +406,10 @@ Las equivalencias son estas:
 
 | lenguaje natural | JSON |
 |---|---|
-| `Pregunta:` | `instructions` |
-| `Opciones:` + `clave: descripción` | `type: "choice"` + `criteria: {clave: descripción}` |
-| `Niveles de puntuación:` | `type: "score"` + `criteria: [lista]` |
-| `Qué significa no o sí:` | `type: "noul"` + `criteria: {true:…, false:…}` |
+| `ask:` | `instructions` |
+| `choice:` + `clave: descripción` | `type: "choice"` + `criteria: {clave: descripción}` |
+| `score:` | `type: "score"` + `criteria: [lista]` |
+| `boolean:` | `type: "noul"` + `criteria: {true:…, false:…}` |
 
 El ejemplo 2, tipado:
 
@@ -445,23 +445,34 @@ el lenguaje natural.
 
 ---
 
-## 7. Las cabeceras que acepta cada sección
+## 7. Las cabeceras
 
-No hace falta memorizar una forma exacta. El sistema reconoce varias:
+El estándar son cinco, cortas:
 
-| sección | formas que valen |
+| sección | qué abre |
 |---|---|
-| **entrada** | `Entrada:`, `Estado:`, `Input:`, `State:`, `Contexto:` |
-| **pregunta** | `Pregunta:`, `Instrucciones:`, `Question:` |
-| **opciones** | `Opciones:`, `Choices:`, `Criterios:` |
-| **niveles** | `Niveles de puntuación:`, `Escala:`, `Score:`, `Niveles de score:` |
-| **boolean** | `Qué significa no o sí:`, `No o sí:`, `Noul:`, `Sí o no:`, `Significado:` |
+| `input:` | el caso. Va antes de la primera cabecera |
+| `ask:` | la pregunta |
+| `choice:` | las opciones, para elegir de una lista |
+| `score:` | los niveles, de menor a mayor |
+| `boolean:` | el significado de `false` y de `true` |
+
+Las tres del medio son las que **declaran el tipo**: `choice` es una elección, `score`
+una escala y `boolean` un sí o un no. No hay que deducirlo, se lee en la cabecera.
+
+Las formas largas en español (`Entrada:`, `Pregunta:`, `Opciones:`,
+`Niveles de puntuación:`, `Qué significa no o sí:`) **se siguen aceptando**, pero el
+estándar es el corto. Y hay sinónimos sueltos por comodidad: `Estado:`, `Question:`,
+`Choices:`, `Escala:`, `Sí o no:`.
 
 Dos reglas que conviene conocer:
 
 1. **La cabecera empieza en la columna cero.** Lo que va debajo va sangrado (con
    espacios delante). Así una opción llamada `pregunta:` no se confunde con la cabecera.
 2. **La entrada va antes de la primera cabecera**, y solo cuenta la del primer bloque.
+
+*(Si escribes un `ask:` sin ninguna de las tres, se trata como un sí/no. Es el único
+caso en que el tipo no se declara.)*
 
 ---
 
@@ -482,7 +493,7 @@ hay que hacer nada especial: es automático. Y es la razón de que existan los d
 python preguntar.py caso.txt
 
 # escribiéndolo en la línea de comandos
-python preguntar.py --texto "Entrada: ... Pregunta: ... Opciones: ..."
+python preguntar.py --texto "input: ... ask: ... choice: ..."
 
 # con el JSON crudo del servidor (probabilidades completas, tiempos)
 python preguntar.py --json
@@ -504,15 +515,15 @@ guarda y se ejecuta. Los ejemplos de este manual están en `ejemplos/`.
 **Entrada** (siempre la misma, cambia solo la cabecera):
 
 ```
-Entrada: Buenos días. Llevo desde ayer sin poder entrar a la aplicación: me sale un
+input: Buenos días. Llevo desde ayer sin poder entrar a la aplicación: me sale un
 error 500 cada vez que intento iniciar sesión.
 ```
 
 | tipo | cabecera | lo que escribes debajo |
 |---|---|---|
-| **choice** | `Opciones:` | `soporte: Fallos y errores del producto` (una por línea, `clave: descripción`) |
-| **score** | `Niveles de puntuación:` | `Aviso: no afecta al servicio` (una por línea, de menor a mayor) |
-| **boolean** | `Qué significa no o sí:` | `true: ...` y `false: ...` |
+| **choice** | `choice:` | `soporte: Fallos y errores del producto` (una por línea, `clave: descripción`) |
+| **score** | `score:` | `Aviso: no afecta al servicio` (una por línea, de menor a mayor) |
+| **boolean** | `boolean:` | `true: ...` y `false: ...` |
 
 **Y esto es lo que devuelve cada uno**, ejecutado de verdad:
 

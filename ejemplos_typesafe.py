@@ -174,19 +174,19 @@ def en_lenguaje_natural(caso):
     """El mismo caso, escrito como se lo dirias a una persona."""
     p = caso["code"]
     q = p["questions"]["decision"]
-    print(f"Entrada :\n  {p['state']['input']}\n")
-    print(f"Pregunta / instrucciones:\n  {q['instructions']}\n")
+    print(f"input:\n  {p['state']['input']}\n")
+    print(f"ask:\n  {q['instructions']}\n")
 
     if q["type"] == "choice":
-        print("Opciones:")
+        print("choice:")
         for k, v in q["criteria"].items():
             print(f"  {k}: {v}")
     elif q["type"] == "score":
-        print("Niveles de puntuación:")
+        print("score:")
         for t in q["criteria"]:
             print(f"  {t}")
     else:
-        print("Qué significa no o sí:")
+        print("boolean:")
         for k in ("false", "true"):
             print(f"  {k}: {q['criteria'][k]}")
 

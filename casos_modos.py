@@ -3,8 +3,7 @@
 Los tres modos que se comparan responden EXACTAMENTE a estos mismos casos:
 
   tipado      el formato de TypeSafe, JSON con state.input + questions.decision
-  natural     el mismo caso escrito con cabeceras (Opciones: / Niveles de puntuación:
-              / Qué significa no o sí:)
+  natural     el mismo caso escrito con cabeceras (choice: / score: / boolean:)
   llm         la pregunta a pelo por /v1/chat/completions, sin esquema
 
 `esperado` es la respuesta correcta. En SCORE es el nivel (0, 1 o 2).

@@ -206,7 +206,7 @@ def main():
              "TypeSafe (`state.input` + `questions`) | valores tipados, con la "
              "probabilidad de **cada** opción |")
     L.append("| `natural` | el mismo caso escrito con cabeceras legibles "
-             "(`Opciones:`, `Niveles de puntuación:`, `Qué significa no o sí:`) | "
+             "(`choice:`, `score:`, `boolean:`) | "
              "lo mismo, tras traducir el texto a un esquema |")
     L.append("| `llm` | la pregunta a pelo por el endpoint de chat, sin esquema. "
              "El uso por defecto | texto libre, del que hay que **leer** la respuesta |")
@@ -547,7 +547,7 @@ def main():
     L.append("en lenguaje natural y se ejecutan.\n")
     L.append("```bash")
     L.append("python preguntar.py ejemplos/5_correo_soporte.txt")
-    L.append("python preguntar.py --texto \"Entrada: ... | Pregunta: ... | Opciones: ...\"")
+    L.append("python preguntar.py --texto \"input: ... | ask: ... | choice: ...\"")
     L.append("```")
     L.append("")
     L.append("El único requisito duro es que el servidor exponga el endpoint de")

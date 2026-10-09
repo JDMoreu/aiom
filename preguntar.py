@@ -1,32 +1,33 @@
-"""Escribe la decision en lenguaje natural; el sistema deduce el tipo y la ejecuta.
+"""Escribe la decision en lenguaje natural; el sistema lee el tipo y la ejecuta.
 
-No hay que escribir JSON ni declarar tipos. Se escribe el caso asi:
+No hay que escribir JSON. Se escribe el caso asi:
 
-    Entrada: Buenos días. Llevo desde ayer sin poder entrar a la aplicación: me sale
-    un error 500 cada vez que intento iniciar sesión.
+    input: Buenas tardes. Contraté el plan de 20 GB y llevo una semana con cortes de
+    conexión casi todas las noches. Además me han cobrado dos veces la factura.
 
-    Pregunta: ¿A qué área hay que enviar este correo?
-    Opciones:
+    ask: ¿A qué área hay que enviar este correo?
+    choice:
       soporte: Fallos y errores del producto
       facturacion: Cobros, facturas y reembolsos
-      comercial: Ventas y planes
+      comercial: Ventas, planes y bajas
       otros: Todo lo demás
 
-Y el sistema ve que hay "Opciones:" -> es un CHOICE. Si en vez de opciones hay
+El tipo se DECLARA con la cabecera: `choice` elige de una lista, `score` pone algo en
+una escala y `boolean` es un si o un no.
 
-    Niveles de puntuación:
-      Aviso: no afecta al servicio
-      Menor: afecta a unos pocos usuarios
-      Grave: afecta a la mayoría
-      Crítico: el servicio está caído del todo
+    ask: ¿Qué urgencia tiene?
+    score:
+      Baja: puede esperar
+      Media: conviene atenderlo esta semana
+      Alta: hay una fecha límite encima
 
--> es un SCORE. Y si hay
+    ask: ¿Amenaza el cliente con darse de baja?
+    boolean:
+      false: No lo menciona
+      true: Sí lo menciona
 
-    Qué significa no o sí:
-      false: No hay indicios de acceso no autorizado
-      true: Hay indicios de acceso no autorizado
-
--> es una PROBABILITY (lo que TypeSafe llama noul).
+`score` va de menor a mayor y se numera desde 0, asi que en el ejemplo Baja=0, Media=1
+y Alta=2. Y `boolean` escribe primero el significado de false y luego el de true.
 
 Se pueden poner varias preguntas separadas por una linea con ---, y se mandan TODAS
 en una sola peticion: es la ventaja de tener un solo modelo sirviendo varios campos.
@@ -34,6 +35,9 @@ en una sola peticion: es la ventaja de tener un solo modelo sirviendo varios cam
     python preguntar.py caso.txt          # desde un fichero
     python preguntar.py --texto "..."     # desde la linea de comandos
     python preguntar.py --json            # la respuesta cruda del servidor
+
+Las cabeceras largas en espanol (Entrada / Pregunta / Opciones / Niveles de puntuación
+/ Qué significa no o sí) se siguen aceptando, pero el estandar es el corto.
 """
 
 import argparse
@@ -49,22 +53,28 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 SERVIDOR = os.environ.get("AIOM_SERVER", "http://127.0.0.1:8096")
 
 # Los titulos que reconoce. Se aceptan varias formas para no obligar a recordar una.
+#
+# La forma ESTANDAR es la corta: input / ask / choice / score / boolean. Con ella el
+# tipo se DECLARA (choice, score, boolean) en vez de deducirse de que seccion aparezca,
+# que es mas facil de explicar y de leer. Las formas largas en espanol se siguen
+# aceptando como alias, para no romper nada de lo ya escrito.
 TITULOS = {
-    "entrada": ("entrada", "estado", "input", "state", "contexto"),
-    "pregunta": ("pregunta", "instrucciones", "pregunta / instrucciones", "question"),
-    "opciones": ("opciones", "opciones:", "choices", "criterios"),
-    "niveles": ("niveles", "niveles de puntuación", "niveles de puntuacion",
-                "escala", "score", "niveles de score"),
-    "sino": ("qué significa no o sí", "que significa no o si", "no o sí", "no o si",
-             "significado", "noul", "sí o no", "si o no"),
+    "entrada": ("input", "entrada", "estado", "state", "contexto"),
+    "pregunta": ("ask", "pregunta", "instrucciones", "pregunta / instrucciones",
+                 "question"),
+    "opciones": ("choice", "opciones", "choices", "criterios"),
+    "niveles": ("score", "niveles", "niveles de puntuación", "niveles de puntuacion",
+                "escala", "niveles de score"),
+    "sino": ("boolean", "qué significa no o sí", "que significa no o si", "no o sí",
+             "no o si", "significado", "noul", "sí o no", "si o no"),
 }
 
 
 def _titulo_de(linea):
     """Si la linea abre una seccion conocida, devuelve (clave, resto).
 
-    Admite el titulo solo ("Opciones:") y el titulo con contenido en la misma linea
-    ("Pregunta: ¿Que equipo debe atenderlo?"), que es como se escribe naturalmente.
+    Admite el titulo solo ("choice:") y el titulo con contenido en la misma linea
+    ("ask: ¿Que equipo debe atenderlo?"), que es como se escribe naturalmente.
 
     Exige que empiece en la columna 0: el contenido de una seccion va sangrado, y sin
     esta condicion una opcion llamada "pregunta:" o "estado:" se confundiria con una
@@ -173,9 +183,9 @@ def parsear(texto):
         preguntas.append((nombre, campo))
 
     if not estado:
-        raise ValueError("Falta la 'Entrada:' -- sin estado no hay nada que evaluar")
+        raise ValueError("Falta el 'input:' -- sin el caso no hay nada que evaluar")
     if not preguntas:
-        raise ValueError("Falta al menos una 'Pregunta:'")
+        raise ValueError("Falta al menos un 'ask:'")
     return estado, preguntas
 
 
@@ -205,7 +215,7 @@ def mostrar(estado, preguntas, cuerpo, ms):
     tipos = {"enum": "CHOICE", "number": "SCORE", "boolean": "PROBABILITY"}
     campos = cuerpo["results"][0]["fields"]
 
-    print(f"Entrada: {estado}")
+    print(f"input: {estado}")
     print(f"\n{len(preguntas)} pregunta(s), una sola peticion  "
           f"({ms:.0f} ms, 0 tokens)")
 
