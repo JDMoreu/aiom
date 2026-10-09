@@ -1,6 +1,5 @@
 {
-  "name": "operaciones-iot",
-  "description": "Puerta de entrada para un operador de campo de una red de sensores IoT. El modelo elige un valor por campo; no escribe prosa.",
+  "description": "Juego de campos de ejemplo: una red de sensores IoT agricola. Lo usa el formato `texto` de la API (una pregunta suelta contra estos campos). La persona del chat sale de `chat_system`. Los formatos `natural` y `tipado` NO usan este fichero: traen su propio esquema en el cuerpo.",
   "gate_field": "respondible",
   "instructions": "Clasificas consultas de operadores de campo sobre una red de sensores IoT agricola. Para cada consulta, elige UN valor por campo del esquema. El campo `respondible` es true solo si la consulta se puede contestar usando el catalogo de campos (magnitud, predio, urgencia); marcalo false si la pregunta pide algo que el catalogo no cubre, como redactar un informe, explicar una causa o pedir una opinion.",
   "chat_system": "Eres un asistente tecnico para un operador de campo de una red de sensores IoT agricola. Responde en dos frases como maximo, en espanol, sin relleno.",
@@ -29,14 +28,5 @@
       "choices": ["baja", "media", "alta"],
       "description": "Cuanta urgencia tiene la consulta? Alta si hay una falla activa o perdida de datos."
     }
-  },
-  "examples": [
-    "El sensor del predio 3 lleva dos dias sin reportar temperatura, revisen ya",
-    "cuanta humedad promedio tuvimos en el predio 7 la semana pasada?",
-    "como va la bateria de los nodos del predio 2",
-    "se cayo la senal en el predio 11, es grave",
-    "el nodo 4 del predio 9 manda lecturas raras de humedad",
-    "redactame un informe para el cliente sobre el estado de la red",
-    "explicame por que se descargan tan rapido las baterias"
-  ]
+  }
 }

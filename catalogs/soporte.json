@@ -1,6 +1,5 @@
 {
-  "name": "soporte",
-  "descripcion": "Triage de tickets de soporte. Los ejemplos son los mismos que publica Jev en docs.typesafe.ai, para poder comparar respuesta contra respuesta.",
+  "description": "Juego de campos de ejemplo: triage de tickets de soporte. Lo usa el formato `texto` de la API. La persona del chat sale de `chat_system`. Los formatos `natural` y `tipado` NO usan este fichero: traen su propio esquema en el cuerpo.",
   "gate_field": "respondible",
 
   "instructions": "Clasificas tickets de atencion al cliente. Respondes SOLO con los valores del catalogo, nunca con texto libre.",

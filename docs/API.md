@@ -97,6 +97,27 @@ preguntas separadas por `---`, y las resuelve todas en **una sola petición**.
 `questions` admite **varias**: cada una es un campo del esquema y todas se resuelven en
 la misma petición, igual que en el formato natural.
 
+## Qué es el catálogo, y qué no
+
+El catálogo (`catalogs/*.json`, se elige con `--catalog` o la variable `AIOM_CATALOG`) es
+**un juego de campos preparado**. Tiene cuatro claves, y no todas se usan igual:
+
+| clave | para qué | quién la usa |
+|---|---|---|
+| `chat_system` | la persona del chat | **todas** las llamadas de chat, en cualquier formato |
+| `fields` | los campos del esquema | **solo** el formato `texto` |
+| `instructions` | el prompt del modo decisión | **solo** el formato `texto` |
+| `gate_field` | qué campo decide «¿es respondible?» | **solo** el formato `texto` |
+
+**Si usas `natural` o `tipado` —que es lo que hace la interfaz— el catálogo no decide
+nada**: tú traes el esquema en el cuerpo de la petición. Lo único que se sigue usando es
+`chat_system`, la persona con la que contesta la vía de chat. Por eso se puede cambiar de
+catálogo y ver cómo el chat cambia de registro sin tocar las preguntas.
+
+Los dos que hay son **dos ejemplos** de juego de campos, para que el formato `texto` tenga
+contra qué responder sin que escribas un esquema. `GET /catalog` devuelve el que esté
+cargado.
+
 ## Los dos formatos dan lo mismo
 
 `natural` y `tipado` son dos maneras de decir lo mismo, y devuelven los mismos valores.
