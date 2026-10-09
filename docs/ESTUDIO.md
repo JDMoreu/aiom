@@ -136,8 +136,8 @@ darlo por escrito: si cambias de máquina, el documento cambia con ella.
 | Referencia de los módulos | CMK32GX4M2D3600C18 |
 | Placa base | Micro-Star International Co., Ltd. PRO B550M-VC WIFI (MS-7C95) |
 | GPU | AMD Radeon RX 9070 |
-| VRAM, según llama.cpp | Vulkan0: AMD Radeon RX 9070 (16304 MiB, 15416 MiB free) |
-| Controlador gráfico | 32.0.31041.1004 |
+| VRAM, según llama.cpp | Vulkan0: AMD Radeon RX 9070 (16304 MiB, 15419 MiB free) |
+| Controlador gráfico | 32.0.32015.2008 |
 | Disco | KINGSTON SNV2S1000G |
 | Sistema | Microsoft Windows 11 Home build 26300 |
 

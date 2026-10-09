@@ -46,24 +46,33 @@ def puntuar(pares):
     return ok, ev
 
 
-decision([QS[0]])          # calentar prefijo
+def main():
+    decision([QS[0]])          # calentar prefijo
 
-print("26 consultas etiquetadas | A) 1 consulta por peticion, en paralelo")
-print(f"{'concurrencia':>13} {'pared_ms':>9} {'ms/consulta':>12} {'acierto':>10}")
-for c in (4, 8, 16):
-    t0 = time.perf_counter()
-    with ThreadPoolExecutor(max_workers=c) as ex:
-        outs = list(ex.map(lambda i: (decision([QS[i]])[0], [CASES[i]]), range(len(QS))))
-    pared = (time.perf_counter() - t0) * 1000
-    ok, ev = puntuar(outs)
-    print(f"{c:>13} {pared:>9.0f} {pared/26:>12.1f} {ok:>6}/{ev}")
+    print("26 consultas etiquetadas | A) 1 consulta por peticion, en paralelo")
+    print(f"{'concurrencia':>13} {'pared_ms':>9} {'ms/consulta':>12} {'acierto':>10}")
+    for c in (4, 8, 16):
+        t0 = time.perf_counter()
+        with ThreadPoolExecutor(max_workers=c) as ex:
+            outs = list(ex.map(lambda i: (decision([QS[i]])[0], [CASES[i]]),
+                               range(len(QS))))
+        pared = (time.perf_counter() - t0) * 1000
+        ok, ev = puntuar(outs)
+        print(f"{c:>13} {pared:>9.0f} {pared/26:>12.1f} {ok:>6}/{ev}")
 
-print("\nB) N consultas por peticion, en serie")
-print(f"{'lote':>13} {'pared_ms':>9} {'ms/consulta':>12} {'acierto':>10}")
-for tam in (1, 2, 4, 8, 13, 16, 26):
-    tandas = [(QS[i:i + tam], CASES[i:i + tam]) for i in range(0, len(QS), tam)]
-    t0 = time.perf_counter()
-    outs = [(decision(qs)[0], cs) for qs, cs in tandas]
-    pared = (time.perf_counter() - t0) * 1000
-    ok, ev = puntuar(outs)
-    print(f"{tam:>13} {pared:>9.0f} {pared/26:>12.1f} {ok:>6}/{ev}")
+    print("\nB) N consultas por peticion, en serie")
+    print(f"{'lote':>13} {'pared_ms':>9} {'ms/consulta':>12} {'acierto':>10}")
+    for tam in (1, 2, 4, 8, 13, 16, 26):
+        tandas = [(QS[i:i + tam], CASES[i:i + tam]) for i in range(0, len(QS), tam)]
+        t0 = time.perf_counter()
+        outs = [(decision(qs)[0], cs) for qs, cs in tandas]
+        pared = (time.perf_counter() - t0) * 1000
+        ok, ev = puntuar(outs)
+        print(f"{tam:>13} {pared:>9.0f} {pared/26:>12.1f} {ok:>6}/{ev}")
+
+
+# El experimento NO se lanza al importar el modulo: antes corria aqui mismo, asi que
+# un simple `import exp_batch` (por ejemplo desde una comprobacion de imports) abria
+# conexiones al servidor. Ahora hace falta llamarlo a proposito.
+if __name__ == "__main__":
+    main()

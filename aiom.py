@@ -106,8 +106,7 @@ def chat(question: str, catalog: dict, cfg: dict) -> dict:
         "temperature": 0.2,
         "max_tokens": 512,
         # El modelo trae el razonamiento activado por defecto: sin esto se gasta
-        # el presupuesto entero pensando y devuelve contenido vacio. Medido en
-        # docs/WORKFLOW.md, seccion "un baseline roto fabrica victorias falsas".
+        # el presupuesto entero pensando y devuelve contenido vacio.
         "chat_template_kwargs": {"enable_thinking": False},
     }
     if cfg.get("model"):

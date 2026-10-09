@@ -16,7 +16,7 @@ Generado por `reports.py` a partir de los artefactos de `results/`. **Ninguna ci
 
 ## Métricas internas (catálogo IoT propio)
 
-Artefactos: `exp_stats.py`, `exp_stress.py`, `exp_range.py`
+Artefacto: `results/internos.json` · regenerar con `python snapshot.py`
 
 - Latencia: **93.0 ms** (desv 10.4), p50 93.6 ms, p95 112.1 ms — 20 repeticiones
 - Coste del esquema: **6 nodos** puntuados, **1 rondas** por consulta
@@ -93,7 +93,7 @@ ECE 0.0163 → 0.0000 (100.0% de mejora), T = 0.050, sesgo +0.016.
 
 ### Puntuación OFICIAL de S1MB
 
-Artefacto: `results/s1mb_oficial.json` · regenerar con `python s1mb_official.py results/s1mb_crudo.json`
+Artefacto: `results/s1mb_oficial.json` · regenerar con `python bench_s1mb.py` y después `python s1mb_official.py`
 
 Implementa `evaluator/SCORING.md` del repo de S1MB: `noul` por Brier y `adjusted skill = 2·BA − 1`, `choice` por acierto contra el mejor baseline trivial (azar uniforme, id fijo o posición fija), `score` por MAE de valor esperado contra el baseline de la mediana. Se recorta a [0,1] **por benchmark**, se promedia por tarea y las tres tareas pesan igual.
 

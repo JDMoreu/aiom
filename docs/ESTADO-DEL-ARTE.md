@@ -211,7 +211,7 @@ calibración no cambia la opción elegida, solo la confianza que declaras.[4]
 
 ## 5. Cómo nos comparamos
 
-Nuestras cifras (`docs/RESULTADOS.md`, medido en una RX 9070 por Vulkan):
+Nuestras cifras (`docs/ESTUDIO.md`, medido en una RX 9070 por Vulkan):
 
 | | AIOM `decision` | AIOM `chat` |
 |---|---|---|

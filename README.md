@@ -150,12 +150,10 @@ python bench_modos.py && python rendimiento.py && python verificar.py --estricto
 | **[docs/MANUAL.md](docs/MANUAL.md)** | **empieza aquí**: el manual de uso, de cero, con un ejemplo de cada tipo (opciones, niveles, sí/no), cómo se hacen varias preguntas a la vez y cómo se escribe en formato tipado |
 | [docs/ARRANCAR.md](docs/ARRANCAR.md) | cómo levantar el servidor tú mismo, paso a paso, y ejecutar las pruebas |
 | [CREDITOS.md](CREDITOS.md) | **de quién es cada pieza**, con commit exacto, licencias y el SHA256 del modelo |
-| [docs/GUIA.md](docs/GUIA.md) | la guía del proyecto: cómo se prueba, cómo se estructura un catálogo, cómo mejorarlo |
 | [docs/ESTUDIO.md](docs/ESTUDIO.md) | el estudio: con qué hardware se midió, cómo se construyó, los resultados completos, las lecciones y los límites |
 | [docs/DETALLE.md](docs/DETALLE.md) | las 154 preguntas una por una: opciones, qué se esperaba, qué eligió cada modo y el reparto de probabilidad |
-| [docs/ESTADO-DEL-ARTE.md](docs/ESTADO-DEL-ARTE.md) | de dónde sale la idea, quién es quién y qué es de cada uno |
 | [docs/METRICAS.md](docs/METRICAS.md) | todas las métricas consolidadas, con sus definiciones |
-| [docs/VALIDACION.md](docs/VALIDACION.md) | qué está medido, qué no, y con qué intervalos de confianza |
+| [docs/ESTADO-DEL-ARTE.md](docs/ESTADO-DEL-ARTE.md) | de dónde sale la idea, quién es quién y qué es de cada uno |
 
 ## Estructura
 
@@ -163,42 +161,77 @@ python bench_modos.py && python rendimiento.py && python verificar.py --estricto
 preguntar.py         LA PUERTA DE ENTRADA: escribes en lenguaje natural y deduce el
                      tipo por la cabecera; una o varias preguntas en una petición
 aiom.py              cliente y servidor HTTP (los tres modos)
-bench_modos.py       los 3 modos sobre 90 casos, 30 de cada tipo
-bench_multi.py       preguntas encadenadas: N preguntas al mismo caso
+
+# --- los benchmarks del estudio (producen results/) ---
+bench_modos.py       los 3 modos sobre 90 casos, 30 de cada tipo  -> results/modos.json
+bench_multi.py       preguntas encadenadas: N preguntas al mismo caso -> multi.json
 bench_cascada.py     el escalado 1, 5, 10 y 15 preguntas, con candado anti-duplicados
+bench.py             caudal y latencia frente a concurrencia      -> bench.json
+bench_s1mb.py        el benchmark público S1MB (102 suites); su crudo lo consume
+                     s1mb_official.py (no se versiona: 6,5 MB, se regenera)
+bench_public.py      mide contra datasets públicos, base de lo anterior
+s1mb_official.py     puntuación OFICIAL de S1MB sobre las predicciones
+test_official.py     comprueba s1mb_official.py contra los ejemplos de SCORING.md
+calibrate.py         corrige la calibración con temperature scaling
+snapshot.py          reúne las métricas internas                  -> internos.json
+
+# --- los conjuntos de casos con verdad de referencia ---
 casos_modos.py       90 casos con verdad de referencia
 casos_multi.py       14 casos con 4-5 preguntas encadenadas
 casos_cascada.py     fondo de 15 preguntas por caso, para el escalado
-detalle.py           -> docs/DETALLE.md
+dataset.py           consultas etiquetadas del benchmark de caudal
+dataset_stress.py    set adversario: donde se rompe el modo decisión
+ejemplos_typesafe.py los tres ejemplos de TypeSafe, en su formato
+
+# --- generadores de documentación ---
 rendimiento.py       -> docs/ESTUDIO.md y los gráficos
-graficos.py          los gráficos con matplotlib (estilo único, leyendas fuera del área)
-diagrama.py          -> docs/arquitectura.svg y .png: el diagrama de arquitectura
 entorno.py           -> la parte de hardware y decisiones de docs/ESTUDIO.md
+graficos.py          los gráficos con matplotlib (estilo único, leyendas fuera del área)
+detalle.py           -> docs/DETALLE.md
+razones.py           por qué se espera cada respuesta, por tipo de pregunta
+reports.py           consolida results/                     -> docs/METRICAS.md
+diagrama.py          -> docs/arquitectura.svg y .png: el diagrama de arquitectura
+metrics.py           toda la estadística en un sitio: Wilson, balanceada, ECE, Brier
 verificar.py         enlaces, gráficos y cifras: comprueba que los documentos cuadren
                      con results/ (ninguna cifra se queda vieja sin avisar)
-metrics.py           toda la estadística en un sitio: Wilson, balanceada, ECE, Brier
-reports.py           consolida results/ -> docs/METRICAS.md
-report.py            bench.json -> informe y gráficas SVG
-depurar.py           encuentra lo que ya no se usa y lo elimina con validación
-catalogs/            catálogos de ejemplo (triage de tickets, operación de campo)
+
+catalogs/            dos catálogos de ejemplo, listos para usar:
+                       iot.json      operación de campo (el que se usa por defecto)
+                       soporte.json  triage de tickets, con los mismos ejemplos que
+                                     publica TypeSafe, para comparar respuesta a respuesta
+                     se elige con la variable AIOM_CATALOG o el argumento del script
 ejemplos/            casos de ejemplo para preguntar.py, uno por tipo (los del MANUAL)
 docs/                la documentación (ver arriba)
-docs/arquitectura.svg  el diagrama de arquitectura (editables) y su PNG para el README
-results/             el crudo de todo lo medido (json + csv) y los gráficos
+docs/arquitectura.svg  el diagrama de arquitectura (editable) y su PNG para el README
+results/             lo medido (json) y los gráficos; es la evidencia de las cifras
 ```
 
 ## Reproducir
 
+El estudio completo se rehace con estos comandos (hace falta el servidor arriba, ver
+[`docs/ARRANCAR.md`](docs/ARRANCAR.md)):
+
 ```bash
-python bench_modos.py   --out results/modos.json
-python bench_multi.py   --out results/multi.json
-python bench_cascada.py --reps 10 --out results/cascada.json
-python rendimiento.py
-python verificar.py --estricto
+python bench_modos.py   --out results/modos.json    # 90 casos, 3 modos
+python bench_multi.py   --out results/multi.json    # 64 preguntas encadenadas
+python bench_cascada.py --reps 10 --out results/cascada.json   # escalado 1/5/10/15
+python snapshot.py                                  # métricas internas
+python reports.py                                   # -> docs/METRICAS.md
+python rendimiento.py                               # -> docs/ESTUDIO.md + gráficos
+python detalle.py                                   # -> docs/DETALLE.md
+python verificar.py --estricto                      # ¿cuadran los documentos con los datos?
 ```
 
-`verificar.py` comprueba que las tablas de este README y de la guía **sigan coincidiendo
-con `results/`**: si vuelves a medir y se te olvida actualizar una cifra, lo dice.
+Los benchmarks públicos son aparte y tardan bastante más:
+
+```bash
+python bench_s1mb.py        # S1MB, 102 suites -> results/s1mb_crudo.json (6,5 MB)
+python s1mb_official.py     # puntuación oficial -> results/s1mb_oficial.json
+python test_official.py     # comprueba el evaluador contra los ejemplos de SCORING.md
+```
+
+`verificar.py` comprueba que las tablas de este README **sigan coincidiendo con
+`results/`**: si vuelves a medir y se te olvida actualizar una cifra, lo dice.
 
 > **Antes de medir:** el terminal de esta máquina lanza cada comando **dos veces**, así
 > que dos benchmarks pueden correr a la vez, encolarse en el servidor y contaminarse los
@@ -210,3 +243,7 @@ con `results/`**: si vuelves a medir y se te olvida actualizar una cifra, lo dic
 - Python 3.10+ — el cliente **no tiene dependencias**, solo la biblioteca estándar.
 - Un `llama-server` con el endpoint `/v1/decision`, del backend
   [`parallel-decision`](https://github.com/thecodacus/llama.cpp/tree/parallel-decision).
+- Solo para **regenerar los gráficos** hace falta `matplotlib` (ver `requirements.txt`);
+  sin él, `rendimiento.py` reutiliza los SVG ya generados y avisa.
+- Solo para **levantar el servidor** hace falta compilar el fork de llama.cpp (Vulkan),
+  con las instrucciones de [`docs/ARRANCAR.md`](docs/ARRANCAR.md).

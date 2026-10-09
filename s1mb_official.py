@@ -30,11 +30,13 @@ Agregacion: media de decisiones por benchmark -> recorte del skill a [0,1] POR
 BENCHMARK -> media por tarea -> indice global con las tres tareas a peso igual,
 en escala 0-100 (0 = en o por debajo del baseline trivial, 100 = techo).
 
-Uso:  python s1mb_official.py results/s1mb_crudo.json
+Uso:  python bench_s1mb.py          # deja results/s1mb_crudo.json
+      python s1mb_official.py       # lo puntua con el evaluador oficial
 """
 from __future__ import annotations
 
 import json
+import os
 import statistics
 import sys
 
@@ -180,6 +182,13 @@ CALC = {"noul": metrica_noul, "choice": metrica_choice, "score": metrica_score}
 
 # --------------------------------------------------------------------------- #
 def main(ruta="results/s1mb_crudo.json"):
+    if not os.path.exists(ruta):
+        print(f"  falta {ruta}.")
+        print("  Es el crudo que deja `bench_s1mb.py` al correr el benchmark.")
+        print("  No se versiona porque pesa 6,5 MB; se regenera con:")
+        print("      python bench_s1mb.py")
+        print("  y despues vuelve a lanzar esto.")
+        return 1
     suites = json.load(open(ruta, encoding="utf-8"))
     por_tarea = {"noul": [], "choice": [], "score": []}
     detalle = []

@@ -40,8 +40,9 @@ título : perf(parallel-decision): score hybrid-model branches in one pass
 
 Esa copia está en `C:\Users\JDMoreu\Documents\llm-local\llama-decision` **solo en esta
 máquina**: el binario compilado no se versiona, porque pesa 60 MB y se regenera. Para
-reconstruirlo hace falta compilarlo, y las instrucciones completas —con los dos
-obstáculos que aparecieron— están en [`docs/WORKFLOW.md`](docs/WORKFLOW.md):
+reconstruirlo hace falta compilarlo. Los pasos, con los dos obstáculos que aparecieron
+(el backend de Vulkan y la versión de GCC), están en
+[`docs/ARRANCAR.md`](docs/ARRANCAR.md):
 
 ```bash
 git clone -b parallel-decision https://github.com/thecodacus/llama.cpp llama-decision

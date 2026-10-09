@@ -187,7 +187,8 @@ def bloque_s1mb(d):
 
 def bloque_s1mb_oficial(d):
     if not d:
-        return ["_Sin datos: `python s1mb_official.py results/s1mb_crudo.json`_"]
+        return ["_Sin datos: primero `python bench_s1mb.py`, después "
+                "`python s1mb_official.py`_"]
     t = d.get("tareas") or {}
     det = d.get("detalle") or []
     eleg = {k: len([x for x in det if x.get("tipo") == k and x.get("elegible")])
@@ -196,7 +197,7 @@ def bloque_s1mb_oficial(d):
     total = {"noul": 61, "choice": 59, "score": 23}      # suite inglesa
     L = ["### Puntuación OFICIAL de S1MB", "",
          "Artefacto: `results/s1mb_oficial.json` · regenerar con "
-         "`python s1mb_official.py results/s1mb_crudo.json`", "",
+         "`python bench_s1mb.py` y después `python s1mb_official.py`", "",
          "Implementa `evaluator/SCORING.md` del repo de S1MB: `noul` por Brier y "
          "`adjusted skill = 2·BA − 1`, `choice` por acierto contra el mejor baseline "
          "trivial (azar uniforme, id fijo o posición fija), `score` por MAE de valor "
@@ -279,7 +280,7 @@ def bloque_internos(d):
     if not d:
         return ["_Sin datos_"]
     L = ["## Métricas internas (catálogo IoT propio)", "",
-         "Artefactos: `exp_stats.py`, `exp_stress.py`, `exp_range.py`", ""]
+         "Artefacto: `results/internos.json` · regenerar con `python snapshot.py`", ""]
     if "latencia" in d:
         x = d["latencia"]
         L.append(f"- Latencia: **{x['media']} ms** (desv {x['desv']}), "

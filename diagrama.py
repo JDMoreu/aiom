@@ -28,15 +28,12 @@ SALIDA = os.path.join(AQUI, "docs", "arquitectura.svg")
 # --- tokens de Linear ---------------------------------------------------------
 FONDO = "#08090a"          # marketing black
 PANEL = "#0f1011"          # panel dark
-SUPERFICIE = "#191a1b"     # level 3
-ELEVADO = "#28282c"        # secondary surface
 TXT = "#f7f8f8"            # primary text (no blanco puro)
 TXT2 = "#d0d6e0"           # secondary
 TXT3 = "#8a8f98"           # tertiary
 TXT4 = "#62666d"           # quaternary
 ACENTO = "#7170ff"         # accent violet
 ACENTO2 = "#828fff"        # accent hover
-INDIGO = "#5e6ad2"         # brand indigo
 BORDE = "rgba(255,255,255,0.08)"
 BORDE_SUAVE = "rgba(255,255,255,0.05)"
 
