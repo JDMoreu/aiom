@@ -46,19 +46,24 @@ def traducir(peticion):
         tipo = pregunta["type"]
         instrucciones = pregunta["instructions"]
         criterios = pregunta.get("criteria")
+        if tipo not in aiom.AL_MOTOR:
+            raise ValueError(
+                f"tipo '{tipo}' desconocido. "
+                f"Los tipos son: {', '.join(sorted(aiom.AL_MOTOR))}")
 
         if tipo == "choice":
             # {id: descripcion} -> choices = ids, y las descripciones al enunciado
             opciones = list(criterios.keys())
             detalle = " ".join(f"'{k}' = {v}." for k, v in criterios.items())
-            campo = {"type": "enum", "choices": opciones,
+            campo = {"type": aiom.AL_MOTOR[tipo], "choices": opciones,
                      "description": f"{instrucciones} {detalle}"}
 
         elif tipo == "score":
             # [nivel0, nivel1, ...] -> rejilla numerica 0..n-1, el nivel i vale i
             n = len(criterios)
             detalle = " ".join(f"{i} = {t}." for i, t in enumerate(criterios))
-            campo = {"type": "number", "minimum": 0, "maximum": n - 1, "step": 1,
+            campo = {"type": aiom.AL_MOTOR[tipo], "minimum": 0, "maximum": n - 1,
+                     "step": 1,
                      "description": f"{instrucciones} Niveles, de menor a mayor: {detalle}"}
 
         elif tipo == "noul":
@@ -66,7 +71,8 @@ def traducir(peticion):
             v = criterios.get("true", "") if criterios else ""
             f = criterios.get("false", "") if criterios else ""
             detalle = f"true = {v}. false = {f}." if criterios else ""
-            campo = {"type": "boolean", "description": f"{instrucciones} {detalle}"}
+            campo = {"type": aiom.AL_MOTOR[tipo],
+                     "description": f"{instrucciones} {detalle}"}
 
         else:
             raise ValueError(f"tipo desconocido: {tipo}")

@@ -130,19 +130,22 @@ Cada campo del esquema se declara así:
 
 ```json
 "magnitud": {
-  "type": "enum",
+  "type": "choice",
   "choices": ["temperatura", "humedad", "bateria", "senal", "riego", "ninguna"],
   "description": "Sobre que variable pregunta el operador? Usa 'ninguna' si no menciona una."
 }
 ```
 
-| clave | cuándo | qué es |
-|---|---|---|
-| `type` | siempre | `boolean`, `enum`, `integer` o `number` |
-| `description` | siempre | el enunciado de la pregunta: **es lo que el modelo lee** |
-| `choices` | en `enum` | las opciones, en orden |
-| `minimum` / `maximum` / `step` | en `integer` y `number` | el rango y el salto de la rejilla |
-| `aggregate` | opcional | cómo se resume el campo cuando hay varios |
+**Los tipos son tres, y se llaman igual en todo el proyecto:**
+
+- **`choice`** — elegir una de una lista (`choices`, en orden)
+- **`score`** — una escala o un número (`minimum`, `maximum`, `step`)
+- **`noul`** — sí o no
+
+**El motor de llama-server habla otro idioma por dentro** (`enum`, `number`, `boolean`), y
+esa diferencia se resuelve en **un solo sitio**: el mapa `AL_MOTOR` de `aiom.py`. En
+ningún otro fichero del repositorio aparecen esos nombres, ni hay que saberlos para leer
+un catálogo. Si escribes un tipo que no existe, el error te dice cuáles hay.
 
 **No hay clave `examples`.** La hubo —consultas de ejemplo para calibrar dónde está la
 frontera del `gate_field`— y **se midió: no sirve**. Alargar el enunciado con ellas no

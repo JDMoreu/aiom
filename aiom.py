@@ -53,11 +53,38 @@ def _post(base: str, path: str, payload: dict, timeout: int = 120):
 # --------------------------------------------------------------------------- #
 # modo decision  (elegir valores, no escribirlos)
 # --------------------------------------------------------------------------- #
+# EL UNICO VOCABULARIO DEL PROYECTO, y su traduccion en un solo sitio.
+#
+# En todo el proyecto se escribe choice / score / noul. El motor de llama-server habla
+# otro idioma por dentro (enum / number / boolean), y esa diferencia se resuelve AQUI y
+# en ningun otro fichero. Antes el catalogo escribia los nombres del motor y las otras
+# puertas los del proyecto, asi que habia que saber que 'enum' era 'choice' para poder
+# leer un catalogo. Ya no: el catalogo tambien habla el idioma del proyecto.
+AL_MOTOR = {"choice": "enum", "score": "number", "noul": "boolean"}
+
+
 def build_schema(catalog: dict) -> dict:
-    """Catalogo de campos -> esquema finito que acepta /v1/decision."""
+    """Catalogo de campos -> esquema finito que acepta /v1/decision.
+
+    El catalogo declara sus campos en el vocabulario del proyecto (choice, score, noul);
+    aqui se traducen al del motor, que es lo unico que ve el servidor.
+    """
     schema = {}
     for name, spec in catalog["fields"].items():
-        f = {"type": spec["type"], "description": spec["description"]}
+        try:
+            tipo = AL_MOTOR[spec["type"]]
+        except KeyError:
+            raise ValueError(
+                f"campo '{name}': tipo '{spec['type']}' desconocido. "
+                f"Los tipos son: {', '.join(sorted(AL_MOTOR))}") from None
+        # Un score de numeros enteros es un ENTERO para el motor: asi devuelve 11 y no
+        # 11.0. Se reconoce por el paso y los extremos, y se dice aqui para no obligar a
+        # nadie a conocer la palabra 'integer' del motor.
+        if (tipo == "number" and spec.get("step") == 1
+                and float(spec.get("minimum", 0)).is_integer()
+                and float(spec.get("maximum", 0)).is_integer()):
+            tipo = "integer"
+        f = {"type": tipo, "description": spec["description"]}
         for k in ("choices", "minimum", "maximum", "step", "aggregate"):
             if k in spec:
                 f[k] = spec[k]

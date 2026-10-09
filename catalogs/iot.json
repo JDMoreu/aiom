@@ -4,26 +4,27 @@
   "instructions": "Clasificas consultas de operadores de campo sobre una red de sensores IoT agricola. Para cada consulta, elige UN valor por campo del esquema. El campo `respondible` es true solo si la consulta se puede contestar usando el catalogo de campos (magnitud, predio, urgencia); marcalo false si la pregunta pide algo que el catalogo no cubre, como redactar un informe, explicar una causa o pedir una opinion.",
   "fields": {
     "respondible": {
-      "type": "boolean",
+      "type": "noul",
       "description": "Se puede contestar la consulta con el catalogo de campos, sin generar texto libre?"
     },
     "magnitud": {
-      "type": "enum",
+      "type": "choice",
       "choices": ["temperatura", "humedad", "bateria", "senal", "riego", "ninguna"],
       "description": "Sobre que variable pregunta el operador? Usa 'ninguna' si no menciona una variable concreta."
     },
     "predio": {
-      "type": "integer",
+      "type": "score",
       "minimum": 1,
       "maximum": 12,
+      "step": 1,
       "description": "Numero de predio mencionado en la consulta. La red tiene 12 predios."
     },
     "predio_valido": {
-      "type": "boolean",
+      "type": "noul",
       "description": "El numero de predio mencionado esta entre 1 y 12? Usa false si la consulta menciona un predio que no existe en la red. Si no menciona ningun predio, usa true."
     },
     "urgencia": {
-      "type": "enum",
+      "type": "choice",
       "choices": ["baja", "media", "alta"],
       "description": "Cuanta urgencia tiene la consulta? Alta si hay una falla activa o perdida de datos."
     }
