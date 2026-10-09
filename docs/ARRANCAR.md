@@ -116,6 +116,23 @@ Vuelve a la ventana del servidor y pulsa **Ctrl + C**. O desde otra terminal:
 taskkill /IM llama-server.exe /F
 ```
 
+## Si cambias el código, reinicia
+
+`api.py` carga `preguntar.py` y `aiom.py` **una vez, al arrancar**. Si editas esos
+ficheros, el proceso que sigue vivo trabaja con los viejos y da errores que no
+corresponden con lo que hay en el disco — por ejemplo, un mensaje que ya no existe.
+
+Se nota rápido: el texto del error no coincide con el del fichero.
+
+```
+taskkill /IM python.exe /F      y vuelve a:  python api.py
+```
+
+Lo mismo vale para `llama-server`: si cambias el modelo o los argumentos, hay que
+pararlo y arrancarlo otra vez.
+
+---
+
 ## Y ya está
 
 Con eso tienes lo necesario: **el servidor arriba y los modos funcionando**. Escribe tus

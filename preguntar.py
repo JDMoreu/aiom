@@ -183,9 +183,10 @@ def parsear(texto):
         preguntas.append((nombre, campo))
 
     if not estado:
-        raise ValueError("Falta el 'input:' -- sin el caso no hay nada que evaluar")
+        raise ValueError("Falta el 'input:' (o 'Entrada:') -- sin el caso no hay "
+                         "nada que evaluar")
     if not preguntas:
-        raise ValueError("Falta al menos un 'ask:'")
+        raise ValueError("Falta al menos un 'ask:' (o 'Pregunta:')")
     return estado, preguntas
 
 
