@@ -342,6 +342,38 @@ otro. Con «¿qué área corresponde al **fallo**?» la respuesta se habría sep
 Es el patrón que hay que interiorizar: **la respuesta que sale limpia se usa; la que
 sale con confianza baja, se revisa.**
 
+### Y esto es lo que se gana frente al chat
+
+Para verlo con tus ojos, `comparar.py` coge el mismo caso y lo lanza **en los dos
+modos**, uno al lado del otro:
+
+```bash
+python comparar.py ejemplos/5_correo_soporte.txt
+```
+
+Con ese caso (una queja con cortes de conexión y un cobro duplicado), sale esto:
+
+| | decisión | chat |
+|---|---|---|
+| peticiones al servidor | **1** | 3 |
+| tiempo | **174 ms** | 2192 ms |
+| tokens escritos | **0** | 136 |
+| salida | valores | prosa |
+| ¿se puede comparar? | **sí, son números** | no, hay que leerla |
+
+**Y lo interesante no es el tiempo: es la forma de la respuesta.** A la misma pregunta
+«¿a qué área hay que enviar este correo?»:
+
+- **decisión** → `facturacion` 0.665 · `soporte` 0.296 · `comercial` 0.038 · `otros` 0.000
+- **chat** → *«Soporte Técnico de Internet. Soporte de Facturación y Cobros.»*
+
+El chat **dio dos respuestas a la vez** y no dijo con cuánta seguridad. La de decisión da
+un valor y **el reparto entero**: se ve que dudaba (0.665 no es 1.000) y se puede poner
+un umbral. La del chat hay que leerla, interpretarla y decidir a mano cuál de las dos
+vale — y si el programa tiene que actuar solo, no puede.
+
+Esa es la diferencia de fondo: **las dos responden, pero solo una es comparable.**
+
 ---
 
 ## 6. Lo mismo, pero tipado

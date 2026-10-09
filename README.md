@@ -182,6 +182,7 @@ python bench_modos.py && python rendimiento.py && python verificar.py --estricto
 preguntar.py         LA PUERTA DE ENTRADA: escribes en lenguaje natural y deduce el
                      tipo por la cabecera; una o varias preguntas en una petición
 aiom.py              el cliente y el servidor HTTP (los tres modos)
+comparar.py          el mismo caso en modo decision y en modo chat, lado a lado
 catalogs/            dos catálogos listos para usar:
                        iot.json      operación de campo (el que se usa por defecto)
                        soporte.json  triage de tickets, con los mismos ejemplos que
