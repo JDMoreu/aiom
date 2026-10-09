@@ -192,6 +192,38 @@ existencia: así acertó.
 ley — pero la dirección es clara y el error es del tipo que hace daño: una respuesta
 segura y equivocada.)*
 
+## Por qué la ventaja se encoge con un documento largo
+
+Es contraintuitivo y conviene tenerlo claro: **cuando el caso es un documento, la
+diferencia entre las dos vías baja**. Medido aquí, con las mismas tres preguntas:
+
+| caso | decisión | chat | razón |
+|---|---|---|---|
+| texto corto (128 caracteres) | 190 ms | 1451 ms | **7,6×** |
+| documento (6086 caracteres) | 391 ms | 1048 ms | **2,7×** |
+
+Y no es que el chat se vuelva mejor. Es que **cambia en qué se va el tiempo de cada uno**:
+
+- **La decisión no escribe nada**, así que su tiempo es casi todo *leer*. Su prompt pasó
+  de 451 a 1812 tokens y ella pasó de 78 a 367 ms — **4,7× más lenta**, en proporción
+  al texto que tiene que leer. Es lo esperable: no puede ahorrarse leer el documento.
+- **El chat se va en escribir.** Lee el documento también, pero su tiempo lo manda la
+  prosa que genera. Y con un documento delante **tiende a escribir menos** (mediana de
+  30 a 21 tokens en la misma pregunta), así que no crece — a veces incluso baja.
+
+**El fondo del asunto:** la ventaja de la decisión es *no generar*. Pero leer el
+documento no te lo ahorras en ninguna de las dos vías. Cuando el texto es corto, leer
+es barato y el «0 tokens» es una ventaja enorme. Cuando el caso es un documento, leer
+pasa a ser el grueso del tiempo de la decisión, y ahí la ventaja se estrecha.
+
+**Dos avisos honestos:**
+
+- El chat **no escribe siempre lo mismo**: en cinco corridas de la misma pregunta dio
+  entre 18 y 34 tokens. Con un documento, esa variación pesa más en la razón, así que
+  el «2,7×» es menos estable que el «7,6×».
+- La decisión sigue teniendo lo suyo, y no es solo la velocidad: **devuelve valores con
+  su probabilidad**, no prosa que hay que interpretar. Eso no se mide en milisegundos.
+
 ## Qué mide exactamente `tiempo_ms`
 
 **Lo que tardas en recibir la respuesta: la ida y vuelta completa al modelo**, medida
