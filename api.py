@@ -21,6 +21,7 @@ Se elige el formato con el campo `formato`, y no se adivina:
 import argparse
 import json
 import os
+import re
 import sys
 import time
 import urllib.error
@@ -35,6 +36,20 @@ import ejemplos_typesafe       # noqa: E402  (reutiliza su traductor de TypeSafe
 import preguntar               # noqa: E402
 
 FORMATOS = ("texto", "natural", "tipado")
+
+# "0 = espanol: español. 1 = ingles: ingles." -> ['espanol: español', 'ingles: ingles']
+NIVEL = re.compile(r"\d+ = ([^.]+)\.")
+
+
+def _niveles(descripcion):
+    """Las etiquetas de los niveles de un score, sacadas de la descripcion del campo.
+
+    El motor devuelve un `score` como un NUMERO (0, 1, 2...). Sin las etiquetas, un
+    "0" a secas no dice nada: no hay forma de saber que ese 0 es "espanol". La
+    descripcion del campo las lleva, y es la misma fuente que ya usa preguntar.py para
+    imprimirlas por consola.
+    """
+    return NIVEL.findall(descripcion or "")
 
 # Tope de subida. Un PDF con imagenes se va facilmente a 10 o 20 MB, asi que el tope
 # es generoso: solo esta para no llenar la memoria con un fichero que no era el que se
@@ -75,7 +90,7 @@ def _de_campos(campos, preguntas):
         f = campos.get(nombre)
         if not f:
             continue
-        salida.append({
+        r = {
             "campo": nombre,
             "tipo": TIPO_JEV.get(spec.get("type"), spec.get("type")),
             "pregunta": spec.get("pregunta") or spec.get("description", "")[:80],
@@ -83,7 +98,13 @@ def _de_campos(campos, preguntas):
             "probability": f.get("probability"),
             "probabilities": f.get("probabilities"),
             "confidence": f.get("confidence"),
-        })
+        }
+        # En un score, las etiquetas de los niveles: sin ellas el numero no significa
+        # nada para quien lee.
+        niveles = _niveles(spec.get("description"))
+        if niveles:
+            r["niveles"] = niveles
+        salida.append(r)
     return salida
 
 
@@ -104,7 +125,8 @@ def por_texto(cuerpo, catalogo, cfg):
     # servidor trae value/probabilities/confidence, pero no de que tipo es el campo.
     esquema = catalogo.get("fields", {})
     preguntas = [(k, {"type": esquema.get(k, {}).get("type"),
-                      "pregunta": esquema.get(k, {}).get("description", "")})
+                      "pregunta": esquema.get(k, {}).get("description", ""),
+                      "description": esquema.get(k, {}).get("description", "")})
                  for k in (r.get("fields") or {})]
     # wall_ms, NO total_ms: el tiempo que se publica tiene que ser el mismo reloj en
     # las dos vias (ida y vuelta completa), o la comparacion favorece a una. total_ms
@@ -144,9 +166,12 @@ def por_tipado(cuerpo, catalogo, cfg):
         cuerpo = dict(cuerpo, state=dict(cuerpo["state"], input=doc))
     res_crudo, ms = ejemplos_typesafe.ejecutar(cuerpo, timeout=cfg["timeout"])
     campos = res_crudo["results"][0]["fields"]
-    # El tipo y el enunciado salen de la PETICION: la respuesta no los trae.
+    # El tipo y el enunciado salen de la PETICION; la descripcion del esquema hace
+    # falta para las etiquetas de un score. traducir() es barato y no manda nada.
+    _, esquema = ejemplos_typesafe.traducir(cuerpo)
     preguntas = [(nombre, {"type": preg.get("type"),
-                           "pregunta": preg.get("instructions", "")})
+                           "pregunta": preg.get("instructions", ""),
+                           "description": esquema.get(nombre, {}).get("description", "")})
                  for nombre, preg in cuerpo["questions"].items()]
     return {"resultados": _de_campos(campos, preguntas),
             "tiempo_ms": round(ms, 1), "tokens": 0, "n_preguntas": len(preguntas)}
@@ -246,6 +271,7 @@ DOC = {
             "n_preguntas": "int",
             "resultados": [{"campo": "str", "tipo": "choice|score|noul",
                             "pregunta": "str", "value": "el valor elegido",
+                            "niveles": "['etiqueta', ...] (solo en score)",
                             "probability": "float", "probabilities": "{opcion: float}",
                             "confidence": "float"}],
             "tiempo_ms": "float", "tokens": "int (0 en decision)",

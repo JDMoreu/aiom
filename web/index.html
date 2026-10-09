@@ -448,17 +448,30 @@ function claseConfianza(c) {
   return c >= 0.7 ? "alta" : (c <= 0.3 ? "baja" : "");
 }
 
+// En un score el motor devuelve un NUMERO (0, 1, 2...). El numero solo no dice nada:
+// se le pega su etiqueta, que viene en q.niveles. "0" no significa nada; "0 · espanol"
+// si.
+function etiquetaNivel(q, clave) {
+  if (!q.niveles) return clave;
+  const i = Math.round(parseFloat(clave));
+  return (i >= 0 && i < q.niveles.length) ? `${i} · ${q.niveles[i]}` : clave;
+}
+
 function pintarDecision(r) {
   return r.map((q) => {
     const probs = q.probabilities || {};
-    const pares = Object.entries(probs).sort((a, b) => b[1] - a[1]);
-    const max = pares.length ? pares[0][1] : 0;
-    const barras = pares.map(([k, p]) => barra(k, p, max)).join("");
+    let pares = Object.entries(probs);
+    // Un score se lee de menor a mayor, como la escala; un choice, de mas probable
+    // a menos, que es lo que se quiere saber.
+    pares.sort(q.niveles ? (a, b) => parseFloat(a[0]) - parseFloat(b[0])
+                         : (a, b) => b[1] - a[1]);
+    const max = pares.reduce((m, [, p]) => Math.max(m, p), 0);
+    const barras = pares.map(([k, p]) => barra(etiquetaNivel(q, k), p, max)).join("");
     return `<div class="preg">
       <div class="titulo">${esc(q.pregunta || q.campo)}
         <span style="color:var(--tenue)">· ${esc(q.tipo || "")}</span></div>
       <div class="valor">
-        <span class="v">${esc(q.value)}</span>
+        <span class="v">${esc(etiquetaNivel(q, q.value))}</span>
         <span class="p">p = ${Number(q.probability).toFixed(3)}</span>
         <span class="conf ${claseConfianza(q.confidence)}">
           confianza ${Number(q.confidence).toFixed(3)}</span>

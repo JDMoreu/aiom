@@ -86,6 +86,19 @@ Siempre la misma forma, sea cual sea el formato:
 }
 ```
 
+En un `score` hay además **`niveles`**, con las etiquetas de la escala:
+
+```json
+{"campo": "q2", "tipo": "score", "pregunta": "¿En qué idioma está el documento?",
+ "value": 0.0, "probability": 0.960, "confidence": 0.329,
+ "niveles": ["espanol: idioma español", "ingles: idioma ingles", "otro: otro idioma"],
+ "probabilities": {"0.0": 0.960, "1.0": 0.025, "2.0": 0.015}}
+```
+
+Hacen falta porque el motor devuelve un **número** (0, 1, 2…) y un `0` a secas no dice
+nada: no hay forma de saber que ese 0 es «espanol». Los niveles van **de menor a
+mayor y numerados desde 0**, así que el primero es `0`.
+
 `tokens` es **0** en decisión: el valor sale de puntuar las opciones, no de escribir.
 `confidence` no es la probabilidad de acertar, es lo concentrada que está la
 distribución (ver el MANUAL, apartado 11).
