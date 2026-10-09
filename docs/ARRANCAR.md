@@ -7,7 +7,7 @@ Lo que hace falta, y para qué:
 
 | | para qué |
 |---|---|
-| **Python 3.10+** | el cliente. **Sin dependencias**: solo la biblioteca estándar. |
+| **Python 3.10+** | el cliente. La consola, el tipado y el motor: **solo biblioteca estándar**. |
 | **Una GPU con Vulkan** | el servidor. Sin GPU funciona, pero en CPU tarda mucho más. |
 | **El fork de llama.cpp** | el endpoint `/v1/decision`. **Es el requisito duro**: sin él no hay modo decisión. |
 | **El modelo** | 4,1 GB en disco, ~9 GB en VRAM con `-ngl 99`. |
@@ -157,7 +157,11 @@ Y no hace falta tocar código para escribir los tuyos: mira [`MANUAL.md`](MANUAL
 
 ### La puerta de programa: la API y la interfaz web
 
+La API es lo único del repositorio que necesita instalar algo —es FastAPI—, así que ese
+paso va primero:
+
 ```bash
+pip install fastapi "uvicorn[standard]"
 python api.py --ui        # abre http://127.0.0.1:8100/
 ```
 
@@ -214,11 +218,13 @@ winget install Python.Python.3.13
 
 Y comprueba con `python --version` en una terminal **nueva**.
 
-**El cliente no necesita instalar nada más**: todos los scripts usan solo la biblioteca
-estándar. Lo único opcional es `pymupdf`, y solo si vas a usar un **PDF** como caso:
+**Lo que se instala, y por qué.** La consola, el tipado y el motor —los tres ficheros que
+hacen las preguntas— usan **solo la biblioteca estándar**: no piden nada. Se instalan dos
+cosas, y ninguna es del proyecto:
 
 ```bash
-pip install pymupdf
+pip install fastapi "uvicorn[standard]"   # la API: es un framework web
+pip install pymupdf                       # solo si vas a usar un PDF como caso
 ```
 
 Un `.docx`, un `.txt` o un `.md` se leen sin instalar nada.

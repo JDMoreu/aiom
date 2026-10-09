@@ -1,12 +1,24 @@
 # Dependencias de AIOM.
 #
-# El cliente y todo el repositorio usan SOLO la biblioteca estandar de Python: no hace
-# falta instalar nada para usar el proyecto.
+# Dos grupos, y es util saber cual es cual:
 #
-# pymupdf es unicamente para leer documentos PDF (documento.py). Los .txt, .md, .csv,
-# .json y .docx se leen sin instalar nada: un .docx es un ZIP y se abre con la
-# biblioteca estandar. Sin pymupdf, todo lo demas funciona igual.
+# 1. LA API (api.py). Necesita FastAPI y su servidor. Es lo unico del repositorio que no
+#    es biblioteca estandar: el precio de usar un framework web en vez del servidor HTTP
+#    que trae Python. El resto de puertas -la consola, el tipado y el motor- no lo
+#    necesitan para nada.
+#
+#      pip install fastapi "uvicorn[standard]"
+#
+# 2. LEER DOCUMENTOS. pymupdf es solo para los PDF. Los .txt, .md, .csv, .json y .docx se
+#    leen sin instalar nada: un .docx es un ZIP y se abre con la biblioteca estandar.
+#
+#      pip install pymupdf
+#
+# Para todo de golpe:
 #
 #     pip install -r requirements.txt
 
+fastapi>=0.115
+uvicorn[standard]>=0.30
 pymupdf>=1.24
+

@@ -1,4 +1,4 @@
-"""API HTTP de AIOM: un endpoint, tres formatos de entrada.
+"""API HTTP de AIOM, con FastAPI: un endpoint, tres formatos de entrada.
 
 El .txt sigue siendo la puerta HUMANA (escribir una pregunta sin saber JSON), y esto
 es la puerta de PROGRAMA: otro sistema manda la pregunta por HTTP y recibe JSON.
@@ -15,7 +15,16 @@ Se elige el formato con el campo `formato`, y no se adivina:
     python api.py                    # escucha en 8100
     python api.py --port 9000
 
-    curl -s localhost:8100/          # la documentacion, en JSON
+    curl -s localhost:8100/docs      # la documentacion de esta API, en JSON
+
+Dos cosas que se conservan de la version de la biblioteca estandar, porque son parte del
+comportamiento y no del framework:
+
+  - El JSON sale INDENTADO y sin escapar los acentos, igual que antes. Los ejemplos de
+    la documentacion son literales y no habria que reescribirlos.
+  - Las rutas y los codigos no cambian: `/docs` sigue siendo la documentacion DE ESTA
+    API en JSON, no la autodocumentacion de FastAPI (que va desactivada, para no
+    pisarla).
 """
 
 import argparse
@@ -26,13 +35,18 @@ import sys
 import time
 import urllib.error
 import urllib.request
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+import uvicorn
+from fastapi import FastAPI, Request
+from fastapi.concurrency import run_in_threadpool
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse, JSONResponse
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import aiom                    # noqa: E402
 import documento as doc_mod    # noqa: E402  (saca el texto de pdf, docx, txt...)
-import tipado                    # noqa: E402  (el traductor del formato tipado)
+import tipado                  # noqa: E402  (el traductor del formato tipado)
 import preguntar               # noqa: E402
 
 FORMATOS = ("texto", "natural", "tipado")
@@ -40,26 +54,23 @@ FORMATOS = ("texto", "natural", "tipado")
 # "0 = espanol: español. 1 = ingles: ingles." -> ['espanol: español', 'ingles: ingles']
 NIVEL = re.compile(r"\d+ = ([^.]+)\.")
 
+# Tope de subida. Un PDF con imagenes se va facilmente a 10 o 20 MB, asi que el tope es
+# generoso: solo esta para no llenar la memoria con un fichero que no era el que se
+# queria. Lo que importa no es el peso, sino cuantos CARACTERES salen de el.
+LIMITE_SUBIDA = 64 * 1024 * 1024
+
+# La configuracion la rellena main() antes de arrancar.
+CFG: dict = {}
+
 
 def _niveles(descripcion):
     """Las etiquetas de los niveles de un score, sacadas de la descripcion del campo.
 
-    El motor devuelve un `score` como un NUMERO (0, 1, 2...). Sin las etiquetas, un
-    "0" a secas no dice nada: no hay forma de saber que ese 0 es "espanol". La
-    descripcion del campo las lleva, y es la misma fuente que ya usa preguntar.py para
-    imprimirlas por consola.
+    El motor devuelve un `score` como un NUMERO (0, 1, 2...). Sin las etiquetas, un "0"
+    a secas no dice nada: no hay forma de saber que ese 0 es "espanol". La descripcion
+    del campo las lleva, y es la misma fuente que ya usa preguntar.py por consola.
     """
     return NIVEL.findall(descripcion or "")
-
-# Tope de subida. Un PDF con imagenes se va facilmente a 10 o 20 MB, asi que el tope
-# es generoso: solo esta para no llenar la memoria con un fichero que no era el que se
-# queria. Lo que importa no es el peso, sino cuantos CARACTERES salen de el.
-LIMITE_SUBIDA = 64 * 1024 * 1024
-
-# El tipo del motor -> el nombre que usa JEV. Se informa con el de JEV para que los
-# dos formatos se lean igual: el natural produce enum/number/boolean y el tipado ya
-# viene con choice/score/noul, y son exactamente lo mismo.
-TIPO_JEV = {"enum": "choice", "number": "score", "boolean": "noul"}
 
 
 def _documento(cuerpo):
@@ -76,14 +87,15 @@ def _documento(cuerpo):
         raise ValueError("'documento' viene vacio")
     return d.strip()
 
+
 # --------------------------------------------------------------------------- #
 # los tres formatos -> una lista uniforme de resultados
 # --------------------------------------------------------------------------- #
 def _de_campos(campos, preguntas):
     """Respuesta del servidor -> lista de resultados, uno por pregunta.
 
-    `campos` es el bloque `fields` de /v1/decision; `preguntas` la lista
-    [(nombre, spec)] con la pregunta en lenguaje natural, para poder devolverla.
+    `campos` es el bloque `fields` de /v1/decision; `preguntas` la lista [(nombre, spec)]
+    con la pregunta en lenguaje natural, para poder devolverla.
     """
     salida = []
     for nombre, spec in preguntas:
@@ -92,7 +104,7 @@ def _de_campos(campos, preguntas):
             continue
         r = {
             "campo": nombre,
-            "tipo": TIPO_JEV.get(spec.get("type"), spec.get("type")),
+            "tipo": aiom.AL_PROYECTO.get(spec.get("type"), spec.get("type")),
             "pregunta": spec.get("pregunta") or spec.get("description", "")[:80],
             "value": f.get("value"),
             "probability": f.get("probability"),
@@ -121,16 +133,16 @@ def por_texto(cuerpo, catalogo, cfg):
         return {"resultados": [{"modo": "chat", "texto": r.get("text")}],
                 "tiempo_ms": r["timings"]["wall_ms"],
                 "tokens": r["usage"].get("tokens_generated") or 0}
-    # El `tipo` y el nombre de cada campo salen del CATALOGO: la respuesta del
-    # servidor trae value/probabilities/confidence, pero no de que tipo es el campo.
+    # El `tipo` y el nombre de cada campo salen del CATALOGO: la respuesta del servidor
+    # trae value/probabilities/confidence, pero no de que tipo es el campo.
     esquema = catalogo.get("fields", {})
     preguntas = [(k, {"type": esquema.get(k, {}).get("type"),
                       "pregunta": esquema.get(k, {}).get("description", ""),
                       "description": esquema.get(k, {}).get("description", "")})
                  for k in (r.get("fields") or {})]
-    # wall_ms, NO total_ms: el tiempo que se publica tiene que ser el mismo reloj en
-    # las dos vias (ida y vuelta completa), o la comparacion favorece a una. total_ms
-    # es lo que tarda el servidor por dentro y no cuenta la red.
+    # wall_ms, NO total_ms: el tiempo que se publica tiene que ser el mismo reloj en las
+    # dos vias (ida y vuelta completa), o la comparacion favorece a una. total_ms es lo
+    # que tarda el servidor por dentro y no cuenta la red.
     return {"resultados": _de_campos(r["fields"], preguntas),
             "tiempo_ms": r["timings"]["wall_ms"], "tokens": 0}
 
@@ -155,8 +167,8 @@ def por_natural(cuerpo, catalogo, cfg):
 def por_tipado(cuerpo, catalogo, cfg):
     """El formato de TypeSafe: state.input + questions.<nombre> con criteria.
 
-    `questions` admite varias: cada una es un campo del esquema y todas se resuelven
-    en la misma peticion.
+    `questions` admite varias: cada una es un campo del esquema y todas se resuelven en
+    la misma peticion.
     """
     if "state" not in cuerpo or "questions" not in cuerpo:
         raise ValueError("faltan 'state' y 'questions'")
@@ -167,8 +179,8 @@ def por_tipado(cuerpo, catalogo, cfg):
     res_crudo, ms = tipado.ejecutar(cuerpo, timeout=cfg["timeout"],
                                     servidor=cfg["server"])
     campos = res_crudo["results"][0]["fields"]
-    # El tipo y el enunciado salen de la PETICION; la descripcion del esquema hace
-    # falta para las etiquetas de un score. traducir() es barato y no manda nada.
+    # El tipo y el enunciado salen de la PETICION; la descripcion del esquema hace falta
+    # para las etiquetas de un score. traducir() es barato y no manda nada.
     _, esquema = tipado.traducir(cuerpo)
     preguntas = [(nombre, {"type": preg.get("type"),
                            "pregunta": preg.get("instructions", ""),
@@ -216,8 +228,8 @@ PROMPTS = {"texto": prompts_texto, "natural": prompts_natural, "tipado": prompts
 def comparar(r_decision, cuerpo, catalogo, cfg, formato):
     """Envuelve el resultado de decision y le anade la via de chat, lado a lado.
 
-    Se hace aqui y no en el cliente para que los dos tiempos sean de la MISMA
-    corrida: medir en dos llamadas separadas daria tiempos de momentos distintos.
+    Se hace aqui y no en el cliente para que los dos tiempos sean de la MISMA corrida:
+    medir en dos llamadas separadas daria tiempos de momentos distintos.
     """
     respuestas = [_chat(p, catalogo, cfg) for p in PROMPTS[formato](cuerpo, catalogo, cfg)]
     return {
@@ -240,8 +252,31 @@ def comparar(r_decision, cuerpo, catalogo, cfg, formato):
 
 
 # --------------------------------------------------------------------------- #
-# servidor
+# el servidor
 # --------------------------------------------------------------------------- #
+class JsonBonito(JSONResponse):
+    """JSON indentado y sin escapar acentos, como lo devolvia la version de la
+    biblioteca estandar: los ejemplos de la documentacion siguen siendo literales."""
+
+    def render(self, content) -> bytes:
+        return json.dumps(content, ensure_ascii=False, indent=2).encode("utf-8")
+
+
+def fallo(code: int, **campos) -> JsonBonito:
+    return JsonBonito(campos, status_code=code)
+
+
+# La autodocumentacion de FastAPI va APAGADA: `/docs` es la documentacion de esta API
+# (en JSON, la de siempre) y no se puede pisar con la de Swagger.
+app = FastAPI(title="AIOM", docs_url=None, redoc_url=None, openapi_url=None)
+
+# La interfaz la sirve esta misma API, asi que no hace falta CORS. Pero si alguien abre
+# el HTML desde el disco (file://) el navegador manda Origin: null, y sin esto la
+# peticion se cae. Es una herramienta local, no un servicio publico.
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["GET", "POST",
+                                                                      "OPTIONS"],
+                   allow_headers=["*"])
+
 DOC = {
     "POST /ask": {
         "descripcion": "Pregunta al modelo local. El formato se declara, no se adivina.",
@@ -278,183 +313,146 @@ DOC = {
             "tiempo_ms": "float", "tokens": "int (0 en decision)",
         },
     },
+    "POST /documento": "sube un fichero en crudo; el nombre va en X-Nombre o ?nombre=",
+    "GET /": "la interfaz web",
     "GET /health": "estado de aiom y de llama-server",
     "GET /catalog": "el catalogo cargado",
 }
 
 
-class Handler(BaseHTTPRequestHandler):
-    catalog: dict = {}
-    cfg: dict = {}
+def _responder(cuerpo: dict) -> JsonBonito:
+    """El trabajo de /ask: formato, conversion y, si toca, comparacion.
 
-    def _send(self, code: int, obj) -> None:
-        body = json.dumps(obj, ensure_ascii=False, indent=2).encode("utf-8")
-        self.send_response(code)
-        self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Content-Length", str(len(body)))
-        self._cors()
-        self.end_headers()
-        self.wfile.write(body)
+    Es sincrono a proposito: habla con llama-server con urllib, que es bloqueante, y
+    FastAPI lo ejecuta en su pool de hilos para no parar el bucle de eventos.
+    """
+    # El formato se declara. Si no viene, se deduce solo del campo que traiga, y si
+    # tampoco, se dice que falta en vez de adivinar.
+    formato = cuerpo.get("formato")
+    if formato is None:
+        formato = ("texto" if "question" in cuerpo else
+                   "natural" if "entrada" in cuerpo else
+                   "tipado" if "questions" in cuerpo else None)
+    if formato not in CONVERSORES:
+        return fallo(400, error=f"formato no valido: {formato!r}",
+                     formatos=list(CONVERSORES),
+                     pista="manda 'formato' junto con su campo: question / entrada / "
+                           "state+questions")
+    try:
+        r = CONVERSORES[formato](cuerpo, CFG["catalog"], CFG)
+        if cuerpo.get("comparar"):
+            return JsonBonito(comparar(r, cuerpo, CFG["catalog"], CFG, formato))
+    except ValueError as e:
+        return fallo(400, error=str(e), formato=formato)
+    except urllib.error.HTTPError as e:
+        return fallo(502, error=f"llama-server {e.code}",
+                     detail=e.read()[:300].decode("utf-8", "replace"))
+    except Exception as e:                                          # noqa: BLE001
+        return fallo(500, error=f"{type(e).__name__}: {e}")
 
-    def _cors(self) -> None:
-        # La UI la sirve esta misma API, asi que no hay CORS. Pero si alguien abre
-        # el HTML desde el disco (file://) el navegador manda Origin: null, y sin
-        # estas cabeceras la peticion se cae. Es una herramienta local, no un
-        # servicio publico: por eso el comodin es aceptable aqui.
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+    r["formato"] = formato
+    r.setdefault("n_preguntas", len(r.get("resultados") or []))
+    return JsonBonito(r)
 
-    def _html(self, ruta: str) -> None:
+
+@app.post("/ask")
+async def ask(request: Request):
+    try:
+        cuerpo = json.loads((await request.body()).decode("utf-8"))
+    except Exception as e:                                          # noqa: BLE001
+        return fallo(400, error=f"cuerpo invalido: {e}")
+    if not isinstance(cuerpo, dict):
+        return fallo(400, error="el cuerpo tiene que ser un objeto JSON")
+    return await run_in_threadpool(_responder, cuerpo)
+
+
+@app.post("/documento")
+async def subir_documento(request: Request):
+    """Sube un fichero y devuelve su texto, para poder usarlo como caso.
+
+    El cuerpo va EN CRUDO (los bytes del fichero), y el nombre en la cabecera X-Nombre o
+    en ?nombre=. De la extension sale como se lee: no se adivina por el contenido,
+    porque un .docx y un .zip empiezan igual.
+
+    Esto NO se guarda en ningun sitio: se lee, se convierte a texto y se devuelve.
+    """
+    nombre = (request.headers.get("x-nombre") or "").strip() \
+        or (request.query_params.get("nombre") or "").strip()
+    if not nombre:
+        return fallo(400, error="falta el nombre del fichero: mandalo en la cabecera "
+                                "X-Nombre, o en ?nombre=carta.pdf. De ahi sale como se lee")
+    n = int(request.headers.get("content-length") or 0)
+    if n <= 0:
+        return fallo(400, error="el cuerpo va vacio: manda los bytes del fichero en crudo")
+    # Se mira el tamano ANTES de leer: asi un fichero enorme no llega a la memoria.
+    if n > LIMITE_SUBIDA:
+        return fallo(413, error=f"el fichero pasa de {LIMITE_SUBIDA // (1024*1024)} MB",
+                     bytes=n)
+    datos = await request.body()
+
+    def extraer():
         try:
-            with open(ruta, encoding="utf-8") as f:
-                body = f.read().encode("utf-8")
-        except OSError as e:
-            return self._send(404, {"error": f"no puedo leer {ruta}: {e}"})
-        self.send_response(200)
-        self.send_header("Content-Type", "text/html; charset=utf-8")
-        self.send_header("Content-Length", str(len(body)))
-        self.end_headers()
-        self.wfile.write(body)
-
-    def do_OPTIONS(self):
-        self.send_response(204)
-        self._cors()
-        self.end_headers()
-
-    def do_GET(self):
-        if self.path.startswith("/health"):
-            # /health de llama-server es GET. Con POST devolvia 404 y el estado salia
-            # como 'unreachable' aunque el servidor estuviera perfectamente.
-            try:
-                url = self.cfg["server"].rstrip("/") + "/health"
-                with urllib.request.urlopen(url, timeout=5) as r:
-                    cuerpo = json.loads(r.read().decode("utf-8"))
-                self._send(200, {"aiom": "ok", "llama_server": cuerpo})
-            except Exception as e:                                  # noqa: BLE001
-                self._send(503, {"aiom": "ok", "llama_server": f"unreachable: {e}"})
-        elif self.path.startswith("/catalog"):
-            self._send(200, self.catalog)
-        elif self.path.startswith("/docs"):
-            self._send(200, {"api": "AIOM", "endpoints": DOC})
-        elif self.path in ("/", "/ui", "/index.html"):
-            self._html(self.cfg["ui"])
-        else:
-            self._send(404, {"error": "usa POST /ask, o GET / para la interfaz"})
-
-    def do_POST(self):
-        if self.path.startswith("/documento"):
-            return self._subir_documento()
-        if not self.path.startswith("/ask"):
-            return self._send(404, {"error": "usa POST /ask o POST /documento"})
-        try:
-            n = int(self.headers.get("Content-Length", 0))
-            cuerpo = json.loads(self.rfile.read(n).decode("utf-8"))
-        except Exception as e:                                      # noqa: BLE001
-            return self._send(400, {"error": f"cuerpo invalido: {e}"})
-
-        # El formato se declara. Si no viene, se deduce solo del campo que traiga,
-        # y si tampoco, se dice que falta en vez de adivinar.
-        formato = cuerpo.get("formato")
-        if formato is None:
-            formato = ("texto" if "question" in cuerpo else
-                       "natural" if "entrada" in cuerpo else
-                       "tipado" if "questions" in cuerpo else None)
-        if formato not in CONVERSORES:
-            return self._send(400, {
-                "error": f"formato no valido: {formato!r}",
-                "formatos": list(CONVERSORES),
-                "pista": "manda 'formato' junto con su campo: question / entrada / "
-                         "state+questions"})
-
-        try:
-            r = CONVERSORES[formato](cuerpo, self.catalog, self.cfg)
-            if cuerpo.get("comparar"):
-                r = comparar(r, cuerpo, self.catalog, self.cfg, formato)
-                return self._send(200, r)
+            return doc_mod.extraer_bytes(datos, nombre)
         except ValueError as e:
-            return self._send(400, {"error": str(e), "formato": formato})
-        except urllib.error.HTTPError as e:
-            return self._send(502, {"error": f"llama-server {e.code}",
-                                    "detail": e.read()[:300].decode("utf-8", "replace")})
-        except Exception as e:                                      # noqa: BLE001
-            return self._send(500, {"error": f"{type(e).__name__}: {e}"})
-
-        r["formato"] = formato
-        r.setdefault("n_preguntas", len(r.get("resultados") or []))
-        self._send(200, r)
-
-    def log_message(self, *a):
-        pass
-
-    def _drenar(self, n):
-        """Lee y tira el cuerpo que el cliente esta mandando.
-
-        Hace falta cuando se va a contestar un error ANTES de leerlo todo: si el
-        servidor contesta y cierra mientras el cliente sigue escribiendo, el cliente
-        ve un fallo de red y nunca llega a leer la respuesta.
-        """
-        restante = n
-        while restante > 0:
-            trozo = self.rfile.read(min(restante, 65536))
-            if not trozo:
-                break
-            restante -= len(trozo)
-
-    def _subir_documento(self):
-        """Sube un fichero y devuelve su texto, para poder usarlo como caso.
-
-        El cuerpo va EN CRUDO (los bytes del fichero), y el nombre en la cabecera
-        X-Nombre o en ?nombre=. De la extension sale como se lee: no se adivina por
-        el contenido, porque un .docx y un .zip empiezan igual.
-
-        Esto NO se guarda en ningun sitio: se lee, se convierte a texto y se devuelve.
-        """
-        nombre = (self.headers.get("X-Nombre") or "").strip()
-        if not nombre and "?" in self.path:
-            from urllib.parse import parse_qs, unquote
-            nombre = unquote((parse_qs(self.path.split("?", 1)[1]).get("nombre")
-                              or [""])[0])
-        if not nombre:
-            return self._send(400, {
-                "error": "falta el nombre del fichero: mandalo en la cabecera "
-                         "X-Nombre, o en ?nombre=carta.pdf. De ahi sale como se lee"})
-        try:
-            n = int(self.headers.get("Content-Length") or 0)
-        except ValueError:
-            n = 0
-        if n <= 0:
-            return self._send(400, {"error": "el cuerpo va vacio: manda los bytes "
-                                             "del fichero en crudo"})
-        if n > LIMITE_SUBIDA:
-            # Se lee y se tira el cuerpo ANTES de contestar. Si se contesta y se cierra
-            # sin leer lo que el cliente sigue mandando, el cliente ve un error de red
-            # ("Failed to fetch" en el navegador) en vez de este mensaje. Costo un
-            # rato encontrarlo: el fallo estaba en el cliente, no en el fichero.
-            self._drenar(n)
-            return self._send(413, {
-                "error": f"el fichero pasa de {LIMITE_SUBIDA // (1024*1024)} MB",
-                "bytes": n})
-        datos = self.rfile.read(n)
-        try:
-            r = doc_mod.extraer_bytes(datos, nombre)
-        except ValueError as e:
-            return self._send(400, {"error": str(e),
-                                    "soportados": sorted(doc_mod.SOPORTADOS)})
+            return fallo(400, error=str(e), soportados=sorted(doc_mod.SOPORTADOS))
         except Exception as e:                                      # noqa: BLE001
             # Un .docx corrupto o un PDF que no lo es lanzan cosas que no son
-            # ValueError. Sin esto la excepcion sube, el handler se cae y el navegador
-            # lo unico que ve es "Failed to fetch".
-            return self._send(400, {"error": f"no pude leer '{nombre}': "
-                                             f"{type(e).__name__}: {e}"})
-        # El contexto del modelo son 32768 tokens. A ~4 caracteres por token, un
-        # documento de mas de 100.000 caracteres puede no caber: se avisa, no se corta
-        # en silencio, porque recortar cambiaria lo que el modelo ve.
-        if r["caracteres"] > 100_000:
-            r["aviso"] = (f"{r['caracteres']} caracteres puede no caber en el contexto "
-                          f"del modelo (32768 tokens). Recorta el documento o sube "
-                          f"el contexto al arrancar llama-server")
-        self._send(200, r)
+            # ValueError. Sin esto la excepcion sube y el navegador solo ve un fallo
+            # de red en vez del motivo.
+            return fallo(400, error=f"no pude leer '{nombre}': "
+                                    f"{type(e).__name__}: {e}")
+
+    r = await run_in_threadpool(extraer)
+    if isinstance(r, JsonBonito):
+        return r
+    # El contexto del modelo son 32768 tokens. A ~4 caracteres por token, un documento de
+    # mas de 100.000 caracteres puede no caber: se avisa, no se corta en silencio,
+    # porque recortar cambiaria lo que el modelo ve.
+    if r["caracteres"] > 100_000:
+        r["aviso"] = (f"{r['caracteres']} caracteres puede no caber en el contexto "
+                      f"del modelo (32768 tokens). Recorta el documento o sube "
+                      f"el contexto al arrancar llama-server")
+    return JsonBonito(r)
+
+
+@app.get("/health")
+def health():
+    # /health de llama-server es GET. Con POST devolvia 404 y el estado salia como
+    # 'unreachable' aunque el servidor estuviera perfectamente.
+    try:
+        url = CFG["server"].rstrip("/") + "/health"
+        with urllib.request.urlopen(url, timeout=5) as r:
+            cuerpo = json.loads(r.read().decode("utf-8"))
+        return JsonBonito({"aiom": "ok", "llama_server": cuerpo})
+    except Exception as e:                                          # noqa: BLE001
+        return fallo(503, aiom="ok", llama_server=f"unreachable: {e}")
+
+
+@app.get("/catalog")
+def catalog():
+    return JsonBonito(CFG["catalog"])
+
+
+@app.get("/docs")
+def docs():
+    return JsonBonito({"api": "AIOM", "endpoints": DOC})
+
+
+@app.get("/")
+@app.get("/ui")
+@app.get("/index.html")
+def interfaz():
+    ruta = CFG["ui"]
+    try:
+        with open(ruta, encoding="utf-8") as f:
+            return HTMLResponse(f.read())
+    except OSError as e:
+        return fallo(404, error=f"no puedo leer {ruta}: {e}")
+
+
+@app.exception_handler(404)
+async def no_encontrado(request: Request, exc):
+    return fallo(404, error="usa POST /ask, o GET / para la interfaz")
 
 
 def main() -> int:
@@ -475,20 +473,17 @@ def main() -> int:
         print(f"no puedo leer el catalogo {a.catalog}: {e}", file=sys.stderr)
         return 2
 
-    Handler.catalog = catalogo
-    Handler.cfg = {"server": a.server, "model": a.model, "timeout": a.timeout,
-                   "ui": a.ui}
+    CFG.update({"server": a.server, "model": a.model, "timeout": a.timeout,
+                "ui": a.ui, "catalog": catalogo})
 
-    srv = ThreadingHTTPServer(("127.0.0.1", a.port), Handler)
     print(f"AIOM escuchando en http://127.0.0.1:{a.port}")
     print(f"  interfaz:    http://127.0.0.1:{a.port}/")
     print(f"  POST /ask    formato: {' | '.join(CONVERSORES)}   (+ \"comparar\": true)")
     print(f"  GET  /docs   la documentacion   GET /health   GET /catalog")
     print(f"  catalogo: {a.catalog}")
-    try:
-        srv.serve_forever()
-    except KeyboardInterrupt:
-        print("\nparado")
+    # access_log=False: sin una linea por peticion, como en la version anterior.
+    uvicorn.run(app, host="127.0.0.1", port=a.port, log_level="warning",
+                access_log=False)
     return 0
 
 

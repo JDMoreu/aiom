@@ -46,9 +46,9 @@ python preguntar.py ejemplos/1_opciones.txt
 
 **[→ Cómo montarlo todo paso a paso, de cero, y qué hacer si falla](docs/ARRANCAR.md)**
 
-No hace falta instalar nada para usar el cliente: **solo la biblioteca estándar de
-Python 3.10+**. De dónde sale cada pieza —el modelo, el fork, la licencia— está en
-[`CREDITOS.md`](CREDITOS.md).
+Para preguntar por consola **no hace falta instalar nada**: la consola, el tipado y el
+motor son solo biblioteca estándar. **La API sí** —es FastAPI—, y con ella su interfaz.
+De dónde sale cada pieza está en [`CREDITOS.md`](CREDITOS.md).
 
 ## Las dos formas de preguntar
 
@@ -185,7 +185,7 @@ preguntar.py         LA PUERTA DE ENTRADA: escribes en lenguaje natural y deduce
 aiom.py              el motor: los tres modos, y las dos vías del servidor
 tipado.py            el traductor del formato tipado (el de TypeSafe, tal cual)
 documento.py         saca el texto de un documento para usarlo como caso
-api.py               la API HTTP, que además sirve la interfaz web
+api.py               la API HTTP (FastAPI), que además sirve la interfaz web
 web/index.html       la interfaz: un solo fichero, HTML+CSS+JS sin dependencias
 catalogs/            dos juegos de campos de ejemplo para el modo decisión, los que usa
                      el formato `texto` de la API:
@@ -201,7 +201,10 @@ verificar.py         comprueba que los módulos importen y que los enlaces cuadr
 
 ## Requisitos
 
-- Python 3.10+ — el cliente **no tiene dependencias**, solo la biblioteca estándar.
+- Python 3.10+ — la consola, el tipado y el motor **no tienen dependencias**: solo la
+  biblioteca estándar.
+- Para la **API**: `pip install fastapi "uvicorn[standard]"`. Es lo único que no es
+  biblioteca estándar, y es de la API, no del proyecto.
 - Un `llama-server` con el endpoint `/v1/decision`, del backend
   [`parallel-decision`](https://github.com/thecodacus/llama.cpp/tree/parallel-decision).
 - Para leer **PDF** como caso, `pip install pymupdf` (un `.docx` o un `.txt` no piden nada).

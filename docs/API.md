@@ -15,10 +15,17 @@ python api.py --ui            # además abre el navegador en la interfaz
 python api.py --catalog catalogs/soporte.json   # cambia los campos del formato `texto`
 ```
 
-Es un servidor HTTP de la biblioteca estándar de Python: **sin dependencias, sin
-`requirements`, sin nada que instalar**. Escucha solo en `127.0.0.1`, así que no se
-expone a la red. Y sirve también la interfaz web en el mismo proceso, así que no hay un
-segundo servidor que arrancar.
+Es **FastAPI sobre uvicorn**. Eso son dos dependencias, y son de la API, no del
+proyecto: el resto de puertas —la consola, el tipado y el motor— siguen siendo solo
+biblioteca estándar.
+
+```bash
+pip install fastapi "uvicorn[standard]"
+python api.py                    # escucha en 127.0.0.1:8100
+```
+
+Escucha solo en `127.0.0.1`, así que no se expone a la red. Y sirve también la interfaz
+web en el mismo proceso, así que no hay un segundo servidor que arrancar.
 
 | | |
 |---|---|
@@ -35,7 +42,7 @@ curl -X POST localhost:8100/ask -H "Content-Type: application/json" \
   -d '{"formato":"natural","entrada":"input: ...\n\nask: ...\nchoice:\n  si: ..."}'
 ```
 
-Y desde Python, con la biblioteca estándar y sin instalar nada:
+Y desde Python, con la biblioteca estándar y sin instalar nada más:
 
 ```python
 import json, urllib.request
@@ -371,9 +378,13 @@ no contra un agente ya especializado en el tema.
 | | |
 |---|---|
 | `GET /` | la interfaz |
-| `GET /docs` | la documentación, en JSON |
+| `GET /docs` | la documentación de **esta** API, en JSON |
 | `GET /health` | estado de la API **y** del `llama-server` |
 | `GET /catalog` | el catálogo cargado |
+
+Los dos últimos son los mismos de siempre. De `/docs`, un aviso: la autodocumentación que
+FastAPI trae de serie (Swagger) está **apagada** a propósito, porque vive en esa misma
+ruta y no se puede pisar una que ya existía y tenía significado.
 
 ## Cuando algo va mal
 

@@ -62,6 +62,13 @@ def _post(base: str, path: str, payload: dict, timeout: int = 120):
 # leer un catalogo. Ya no: el catalogo tambien habla el idioma del proyecto.
 AL_MOTOR = {"choice": "enum", "score": "number", "noul": "boolean"}
 
+# Y al reves, para lo que se DEVUELVE: lo que manda el motor puede llegar con su nombre
+# (el formato natural arma el esquema por dentro) o con el del proyecto (el catalogo y el
+# tipado ya lo traen traducido). Esta tabla los unifica de vuelta. `integer` es un score
+# de numeros enteros, y se llama score como cualquier otro.
+AL_PROYECTO = {v: k for k, v in AL_MOTOR.items()}
+AL_PROYECTO["integer"] = "score"
+
 
 def build_schema(catalog: dict) -> dict:
     """Catalogo de campos -> esquema finito que acepta /v1/decision.

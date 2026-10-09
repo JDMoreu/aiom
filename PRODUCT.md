@@ -124,8 +124,9 @@ de una sola persona.
    decoración: se enseñan con precisión y sin redondear a lo bonito.
 3. **Una sola fuente de verdad.** El caso y las preguntas se escriben una vez; bloques,
    lenguaje natural y JSON son tres vistas de lo mismo, no tres sitios donde teclear.
-4. **Cero dependencias.** Se abre con un comando y funciona. Si necesita un build, ya
-   no es este proyecto.
+4. **Las dependencias, solo donde hacen falta.** La consola, el tipado y el motor se
+   abren y funcionan sin instalar nada. La API usa FastAPI, y eso se dice en vez de
+   esconderse: es un servidor web, y ahí un framework ahorra más de lo que cuesta.
 5. **Nada que no esté medido.** Ni cifras, ni capacidades, ni promesas.
 
 ## Accessibility & Inclusion

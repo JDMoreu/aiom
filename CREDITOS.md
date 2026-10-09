@@ -89,6 +89,7 @@ origen   : end000/Spark-X2.5-4B-Q8_0-GGUF  (coincidencia exacta de tamaño)
 | | |
 |---|---|
 | **TypeSafe / Jev** | El concepto de *System One* (un modelo que decide en vez de redactar) y las tres primitivas: choice, score y noul. <https://docs.typesafe.ai/> |
+| **FastAPI y uvicorn** | Lo que sirve la API y la interfaz. Es la única dependencia del repositorio, y es de `api.py`, no del proyecto. <https://fastapi.tiangolo.com/> |
 
 ## Lo que es de este repositorio
 
