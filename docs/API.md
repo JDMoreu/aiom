@@ -118,6 +118,32 @@ Los dos que hay son **dos ejemplos** de juego de campos, para que el formato `te
 contra qué responder sin que escribas un esquema. `GET /catalog` devuelve el que esté
 cargado.
 
+### El formato de un campo
+
+Cada campo del esquema se declara así:
+
+```json
+"magnitud": {
+  "type": "enum",
+  "choices": ["temperatura", "humedad", "bateria", "senal", "riego", "ninguna"],
+  "description": "Sobre que variable pregunta el operador? Usa 'ninguna' si no menciona una."
+}
+```
+
+| clave | cuándo | qué es |
+|---|---|---|
+| `type` | siempre | `boolean`, `enum`, `integer` o `number` |
+| `description` | siempre | el enunciado de la pregunta: **es lo que el modelo lee** |
+| `choices` | en `enum` | las opciones, en orden |
+| `minimum` / `maximum` / `step` | en `integer` y `number` | el rango y el salto de la rejilla |
+| `aggregate` | opcional | cómo se resume el campo cuando hay varios |
+
+**No hay clave `examples`.** La hubo —consultas de ejemplo para calibrar dónde está la
+frontera del `gate_field`— y **se midió: no sirve**. Alargar el enunciado con ellas no
+ayuda: con ejemplos largos el `gate_field` empeora (3 de 5 casos se vuelven «no
+respondible»), y con ejemplos cortos queda exactamente igual que sin ellos. Es la misma
+lección que está en el README, comprobada aquí: **el texto de más diluye la pregunta**.
+
 ## Los dos formatos dan lo mismo
 
 `natural` y `tipado` son dos maneras de decir lo mismo, y devuelven los mismos valores.

@@ -119,6 +119,11 @@ a cada opción, **diluyes la pregunta**: el modelo reparte su atención entre el
 las etiquetas. Hay casos que fallan *con* la descripción y acierta *sin* ella. Si un caso
 se resiste, prueba a quitarle texto, no a añadírselo.
 
+**Y no le pongas ejemplos.** Suena a que debería ayudar —consultas de ejemplo que le
+enseñen dónde está la frontera— y está medido que no: con ejemplos largos el criterio de
+«¿es respondible?» **empeora** (3 de 5 casos dejan de reconocerse como contestables), y con
+ejemplos cortos queda igual que sin ellos. Es lo mismo que arriba: el texto de más diluye.
+
 **Un rango ancho es una trampa.** Un campo numérico con muchos valores posibles obliga al
 modelo a puntuar muchos nodos y la probabilidad se reparte: la confianza se cae y el
 valor sale mal. Acótalo al rango real.
