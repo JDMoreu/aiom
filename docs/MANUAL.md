@@ -36,17 +36,19 @@ de cada capa.)*
 
 Esto es importante, y es fácil de confundir: **el modelo no lo decide.**
 
-El modelo **solo puntúa las opciones que le das**. Quien mira tu texto y decide «esto
-es un choice» es **`preguntar.py`**, leyendo **la cabecera** que has escrito:
+El modelo **solo puntúa las opciones que le das**. Quien mira tu texto y decide qué tipo
+de pregunta es —**`choice`, `score` o `noul`**— es **`preguntar.py`**, leyendo la
+**cabecera** que has escrito:
 
 | si ve esta cabecera… | …monta un campo de tipo |
 |---|---|
-| `choice:` | `enum` → **choice** |
-| `score:` | `number` → **score** |
-| `noul:` | `boolean` → **noul** |
+| `choice:` | **choice** — elegir una de una lista |
+| `score:` | **score** — una escala |
+| `noul:` | **noul** — sí o no |
 
-Después traduce eso al esquema del endpoint y el modelo responde dentro de ese esquema.
-**Por eso funciona sin declarar nada más:** la cabecera es la declaración.
+**La cabecera que escribes ES el tipo del campo.** No hay que declararlo además, y las
+tres palabras son las mismas en todo el proyecto: en esta cabecera, en el formato tipado,
+en los catálogos y en lo que devuelve la API.
 
 Y si no escribes ninguna de las tres, el sistema no se queda sin responder: lo trata
 como un sí o un no. (Si la pregunta es de texto libre, es el relevo al modo chat, ver

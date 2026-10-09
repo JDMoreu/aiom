@@ -178,7 +178,7 @@ Siempre la misma forma, sea cual sea el formato:
   "tiempo_ms": 158.0,
   "tokens": 0,
   "resultados": [
-    {"campo": "q1", "tipo": "enum", "pregunta": "¿A qué área hay que enviar este correo?",
+    {"campo": "q1", "tipo": "choice", "pregunta": "¿A qué área hay que enviar este correo?",
      "value": "facturacion", "probability": 0.665, "confidence": 0.450,
      "probabilities": {"soporte": 0.295, "facturacion": 0.665,
                        "comercial": 0.040, "otros": 0.000}}
