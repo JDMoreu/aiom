@@ -143,14 +143,22 @@ def _de_docx(datos):
 
 
 def _de_pdf(datos):
-    """PDF -> texto. Necesita pymupdf; si no esta, se dice y se para."""
+    """PDF -> texto. Necesita pymupdf; si no esta, se dice y se para.
+
+    `fitz` es el nombre viejo del modulo y sigue funcionando, pero pymupdf avisa de
+    que va a desaparecer. Se prefiere el nombre nuevo y se deja el viejo como respaldo
+    para versiones antiguas, que es lo que hace el propio proyecto.
+    """
     try:
-        import fitz                                  # pymupdf
+        import pymupdf
     except ImportError:
-        raise ValueError("para leer PDF hace falta pymupdf: pip install pymupdf")
-    with fitz.open(stream=datos, filetype="pdf") as doc:
+        try:
+            import fitz as pymupdf                 # nombre antiguo
+        except ImportError:
+            raise ValueError("para leer PDF hace falta pymupdf: pip install pymupdf")
+    with pymupdf.open(stream=datos, filetype="pdf") as doc:
         paginas = []
-        for i, pagina in enumerate(doc, 1):
+        for pagina in doc:
             t = pagina.get_text()
             if t.strip():
                 paginas.append(t)
