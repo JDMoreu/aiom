@@ -57,6 +57,13 @@ MONO = "Consolas, ui-monospace, SFMono-Regular, Menlo, monospace"
 ANCHO, ALTO = 1400, 950
 Y_ROTULO = 268                             # la linea de los rotulos de columna
 
+# La cabecera: un titulo que dice QUE es el dibujo y, debajo, una descripcion. No el
+# recorrido paso a paso -eso ya lo dicen las flechas-, sino que se esta mirando.
+TITULO = "Arquitectura general"
+DESCRIPCION = ("Un cliente, una API y un modelo local: qué entra, quién arma la petición, "
+               "quién la atiende y por dónde responde.")
+CHAPA = "local · sin red · sin nube"
+
 # Las seis columnas y sus anchos. Se declaran UNA vez: las conexiones y las
 # comprobaciones leen de aqui, asi que no pueden desincronizarse.
 COL_ENTRADA, W_ENTRADA = 40, 185           # 40 - 225
@@ -84,8 +91,14 @@ def esc(t):
     return t.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
-def ancho_texto(t, tam: float = 13, negrita: bool = False) -> float:
-    """Ancho aproximado, para no dibujar texto que no cabe."""
+def ancho_texto(t, tam: float = 13, negrita: bool = False, mono: bool = False) -> float:
+    """Ancho aproximado, para no dibujar texto que no cabe.
+
+    La monoespaciada es mas ancha por caracter que la de texto: si se midiera igual, los
+    titulos en mono -y la chapa de la cabecera- se saldrian de su caja.
+    """
+    if mono:
+        return len(t) * tam * 0.6
     return len(t) * tam * (0.58 if negrita else 0.55)
 
 
@@ -217,6 +230,16 @@ def rotulo_columna(x, numero, texto):
     ])
 
 
+def caja_chapa():
+    """La chapa de la cabecera (x, y, ancho, alto), con el ancho sacado de su texto.
+
+    Antes media 184 fijos y su texto pedia 189: se salia 5px y se montaba encima de la
+    descripcion. El ancho se calcula, no se estima a ojo.
+    """
+    an = 26 + ancho_texto(CHAPA, 11, mono=True) + 14
+    return ANCHO - 48 - an, 48, an, 26
+
+
 def pildora(x, y, texto, color):
     """La etiqueta de una flecha: una pastilla sobre el papel, con su texto."""
     an = ancho_texto(texto, 11, True) + 22
@@ -340,7 +363,7 @@ def comprobar():
     fallos = []
     for tit, x, y, w, h, lns, _c, ic, mono, _d in CAJAS:
         necesita = (54 if ic else 16) + max(
-            [ancho_texto(tit, 13.5 if mono else 14, True)]
+            [ancho_texto(tit, 13.5 if mono else 14, True, mono=mono)]
             + [ancho_texto(l, 11.5) for l in lns])
         if necesita > w - 12:
             fallos.append(f"«{tit}»: el texto pide {necesita:.0f}px, la caja tiene {w}")
@@ -399,6 +422,19 @@ def comprobar():
                     fallos.append(f"una flecha pasa por encima de «{caja[0]}»")
                     break
 
+    # La cabecera: el titulo y la descripcion tienen que caber, y la descripcion no puede
+    # llegar a la chapa. Es el mismo fallo que tenian las pildoras de las tarjetas, pero
+    # en la cabecera, y aqui no habia ninguna comprobacion.
+    cx0, cy0, cw0, _ch0 = caja_chapa()
+    if 108 + ancho_texto(TITULO, 25, True) > ANCHO - 48:
+        fallos.append("el titulo de la cabecera se sale del lienzo")
+    if 108 + ancho_texto(DESCRIPCION, 13) > cx0 - 24:
+        fallos.append("la descripcion de la cabecera llega a la chapa")
+    if 26 + ancho_texto(CHAPA, 11, mono=True) + 14 > cw0:
+        fallos.append("la chapa de la cabecera no da para su texto")
+    if cx0 < 10 or cx0 + cw0 > ANCHO - 10:
+        fallos.append("la chapa de la cabecera se sale del lienzo")
+
     if Y_ROTULO - 40 < 226:
         fallos.append("los rotulos de columna pisan las metricas")
     if FILA_VIA + H > ALTO - 90:
@@ -436,17 +472,15 @@ def main():
              f'stroke-width="2.2" stroke-linecap="round"/>')
     s.append(f'<text x="108" y="62" font-family="{SANS}" font-size="25" '
              f'font-weight="600" letter-spacing="-0.9" fill="{TINTA}">'
-             f'AIOM: las entradas, el cliente, la API, el modelo y las dos vías</text>')
+             f'{esc(TITULO)}</text>')
     s.append(f'<text x="108" y="84" font-family="{SANS}" font-size="13" '
-             f'letter-spacing="-0.1" fill="{TXT3}">Las entradas van al cliente; el '
-             f'cliente arma la petición y la manda a la API; la API se la pasa a '
-             f'llama-server, que la atiende por una de sus dos vías. La consola no pasa '
-             f'por la API.</text>')
-    s.append(f'<rect x="{ANCHO-232}" y="48" width="184" height="26" rx="2" '
+             f'letter-spacing="-0.1" fill="{TXT3}">{esc(DESCRIPCION)}</text>')
+    cx0, cy0, cw0, ch0 = caja_chapa()
+    s.append(f'<rect x="{cx0}" y="{cy0}" width="{cw0}" height="{ch0}" rx="2" '
              f'fill="{PAPEL}" stroke="{HAIRLINE2}" stroke-width="1"/>')
-    s.append(f'<circle cx="{ANCHO-212}" cy="61" r="3.5" fill="{REGLA}"/>')
-    s.append(f'<text x="{ANCHO-200}" y="65" font-family="{MONO}" font-size="11" '
-             f'fill="{TXT2}">local · sin red · sin nube</text>')
+    s.append(f'<circle cx="{cx0+14}" cy="{cy0+13}" r="3.5" fill="{REGLA}"/>')
+    s.append(f'<text x="{cx0+26}" y="{cy0+17}" font-family="{MONO}" font-size="11" '
+             f'fill="{TXT2}">{esc(CHAPA)}</text>')
 
     # ---------------------------------------------------------- metricas
     for k, (val, pie, col, ic) in enumerate((
