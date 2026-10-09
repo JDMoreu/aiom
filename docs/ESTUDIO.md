@@ -74,7 +74,7 @@ dos modelos ni dos procesos:
 | modo | cómo se le pregunta | qué devuelve |
 |---|---|---|
 | `tipado` | JSON con un esquema de campos, al estilo de la API de TypeSafe (`state.input` + `questions`) | valores tipados, con la probabilidad de **cada** opción |
-| `natural` | el mismo caso escrito con cabeceras legibles (`choice:`, `score:`, `boolean:`) | lo mismo, tras traducir el texto a un esquema |
+| `natural` | el mismo caso escrito con cabeceras legibles (`choice:`, `score:`, `noul:`) | lo mismo, tras traducir el texto a un esquema |
 | `llm` | la pregunta a pelo por el endpoint de chat, sin esquema. El uso por defecto | texto libre, del que hay que **leer** la respuesta |
 
 Las condiciones `tipado` y `natural` comparten motor y difieren solo en

@@ -2,7 +2,7 @@
 
   tipado    el formato de TypeSafe: JSON con state.input + questions.decision y
             `criteria`. El que usa quien integra por API.
-  natural   el mismo caso escrito con cabeceras (choice: / score: / boolean:).
+  natural   el mismo caso escrito con cabeceras (choice: / score: / noul:).
             El que usa quien escribe a mano.
   llm       la pregunta a pelo por /v1/chat/completions, sin esquema: es el modo por
             defecto de cualquier LLM. Hay que leerle la respuesta del texto.
@@ -63,10 +63,11 @@ def modo_tipado(caso):
                 "questions": {"decision": {"type": tipo_ts,
                                            "instructions": pregunta,
                                            "criteria": criterios}}}
-    estado2, nombre, esquema = ts.traducir(peticion)
+    estado2, esquema = ts.traducir(peticion)
     cuerpo, ms = _post("/v1/decision",
                        {"instructions": "Respondes solo con los valores del esquema.",
                         "schema": esquema, "contexts": [estado2]})
+    nombre = next(iter(esquema))
     campo = cuerpo["results"][0]["fields"][nombre]
     return campo["value"], ms, 0, campo
 
@@ -80,7 +81,7 @@ def modo_natural(caso):
                  "\n".join(f"  {n}" for n in criterios))
     elif isinstance(criterios, dict) and set(criterios) <= {"true", "false"}:
         texto = (f"input: {estado}\n\nask: {pregunta}\n"
-                 f"boolean:\n"
+                 f"noul:\n"
                  f"  false: {criterios['false']}\n  true: {criterios['true']}")
     else:
         texto = (f"input: {estado}\n\nask: {pregunta}\nchoice:\n" +

@@ -50,6 +50,23 @@ preguntas separadas por `---`, y las resuelve todas en **una sola petición**.
                                          "technical": "Errores e integraciones"}}}}
 ```
 
+`questions` admite **varias**: cada una es un campo del esquema y todas se resuelven en
+la misma petición, igual que en el formato natural.
+
+## Los dos formatos dan lo mismo
+
+`natural` y `tipado` son dos maneras de decir lo mismo, y devuelven los mismos valores.
+Con el mismo caso y los mismos nombres de campo, el esquema que recibe el modelo es
+**idéntico byte a byte**.
+
+Hay un detalle que conviene saber: **el nombre del campo también llega al modelo**. Si
+en un formato llamas `area` al campo y en el otro `q1`, los valores salen iguales pero
+las probabilidades bailan un poco. No es un error; es que el nombre forma parte del
+enunciado que ve el modelo.
+
+*(El formato natural añade además una clave `pregunta` a cada campo, para poder mostrar
+el enunciado por pantalla. Se comprobó que **no afecta** al resultado.)*
+
 ## Lo que devuelve
 
 Siempre la misma forma, sea cual sea el formato:

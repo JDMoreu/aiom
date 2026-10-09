@@ -24,10 +24,11 @@ Estos son los nombres de verdad, los que usa el código:
 |---|---|---|---|
 | elegir de una lista | **choice** | `choice:` | la opción elegida + probabilidad de cada una |
 | poner algo en una escala | **score** | `score:` | **el nivel** (y, si lo quieres, una puntuación ponderada) |
-| un sí o un no | **boolean** | `boolean:` | `true` o `false`, con su probabilidad |
+| un sí o un no | **noul** | `noul:` | `true` o `false`, con su probabilidad |
 
-*(El tipo `boolean` es el que Jev llama **noul**, y es el que el programa muestra por
-pantalla como **PROBABILITY**.)*
+*(`noul` es la primitiva que define Jev. Dentro del programa el campo se llama
+`boolean`, que es el tipo que entiende el motor — es el mismo concepto con el nombre
+de cada capa.)*
 
 ---
 
@@ -42,7 +43,7 @@ es un choice» es **`preguntar.py`**, leyendo **la cabecera** que has escrito:
 |---|---|
 | `choice:` | `enum` → **choice** |
 | `score:` | `number` → **score** |
-| `boolean:` | `boolean` → **boolean** |
+| `noul:` | `boolean` → **noul** |
 
 Después traduce eso al esquema del endpoint y el modelo responde dentro de ese esquema.
 **Por eso funciona sin declarar nada más:** la cabecera es la declaración.
@@ -173,7 +174,7 @@ el resultado. Si dudas, quédate con `value`.
 
 ## 4. Boolean (un sí o un no, con su probabilidad)
 
-Cabecera `boolean:` y debajo qué significa cada uno. **Aquí sí o sí hay
+Cabecera `noul:` y debajo qué significa cada uno. **Aquí sí o sí hay
 que poner `true:` y `false:`**, porque si no, el modelo no sabe qué estás preguntando.
 
 ```
@@ -181,7 +182,7 @@ input: Un cliente escribe diciendo que han entrado en su cuenta desde otro país
 y que no reconoce dos compras hechas esta madrugada.
 
 ask: ¿Hay indicios de que la cuenta esté comprometida?
-boolean:
+noul:
   false: No hay indicios de acceso no autorizado
   true: Hay indicios de acceso no autorizado
 ```
@@ -210,7 +211,7 @@ input: Son las 22:30. Una aplicación de calendario quiere recordar una comida
 de equipo el viernes. El usuario tiene activado el horario de descanso hasta las 07:00.
 
 ask: ¿Debe esperar esta notificación hasta que termine el horario de descanso?
-boolean:
+noul:
   false: El recordatorio es urgente y debe enviarse ahora
   true: Puede enviarse después sin perjudicar al usuario
 ```
@@ -251,7 +252,7 @@ umbral **y** la confianza pasa del suyo. Lo demás, a revisión humana.
 > contexto para contestarse. Es exactamente el tipo de sitio donde una recuperación de
 > contexto (RAG) sí ayudaría — porque falta información, no sobra.
 
-> **Y una advertencia medida en este mismo repositorio:** en `boolean`, el orden en que
+> **Y una advertencia medida en este mismo repositorio:** en `noul`, el orden en que
 > escribes `true:` y `false:` pesa. El mismo caso, con las dos opciones **intercambiadas**
 > de sitio, pasó de 0.463 (confianza 0.004) a 0.953 (confianza 0.728) para la misma
 > respuesta semántica. Si te importa el resultado, **prueba las dos redacciones**.
@@ -286,7 +287,7 @@ score:
 ---
 
 ask: ¿El cliente ya pagó el plan anual?
-boolean:
+noul:
   false: No ha pagado todavía
   true: Sí, ya lo pagó
 ```
@@ -409,7 +410,7 @@ Las equivalencias son estas:
 | `ask:` | `instructions` |
 | `choice:` + `clave: descripción` | `type: "choice"` + `criteria: {clave: descripción}` |
 | `score:` | `type: "score"` + `criteria: [lista]` |
-| `boolean:` | `type: "noul"` + `criteria: {true:…, false:…}` |
+| `noul:` | `type: "noul"` + `criteria: {true:…, false:…}` |
 
 El ejemplo 2, tipado:
 
@@ -455,10 +456,10 @@ El estándar son cinco, cortas:
 | `ask:` | la pregunta |
 | `choice:` | las opciones, para elegir de una lista |
 | `score:` | los niveles, de menor a mayor |
-| `boolean:` | el significado de `false` y de `true` |
+| `noul:` | el significado de `false` y de `true` |
 
 Las tres del medio son las que **declaran el tipo**: `choice` es una elección, `score`
-una escala y `boolean` un sí o un no. No hay que deducirlo, se lee en la cabecera.
+una escala y `noul` un sí o un no. No hay que deducirlo, se lee en la cabecera.
 
 Las formas largas en español (`Entrada:`, `Pregunta:`, `Opciones:`,
 `Niveles de puntuación:`, `Qué significa no o sí:`) **se siguen aceptando**, pero el
@@ -523,7 +524,7 @@ error 500 cada vez que intento iniciar sesión.
 |---|---|---|
 | **choice** | `choice:` | `soporte: Fallos y errores del producto` (una por línea, `clave: descripción`) |
 | **score** | `score:` | `Aviso: no afecta al servicio` (una por línea, de menor a mayor) |
-| **boolean** | `boolean:` | `true: ...` y `false: ...` |
+| **noul** | `noul:` | `true: ...` y `false: ...` |
 
 **Y esto es lo que devuelve cada uno**, ejecutado de verdad:
 
@@ -555,7 +556,7 @@ SCORE  ·  ¿Qué gravedad tiene el incidente?
 
 En JSON: `"value": 3.0`, `"probabilities": {"0.0": 0.0088, "1.0": 0.0089, "2.0": 0.1651, "3.0": 0.8172}`
 
-**boolean** → da un **`true` o `false`**, con su probabilidad
+**noul** → da un **`true` o `false`**, con su probabilidad
 
 ```
 PROBABILITY  ·  ¿Hay indicios de que la cuenta esté comprometida?
@@ -637,7 +638,7 @@ el ganador.
 
 Aquí hay un caso que merece la pena porque **depende del tipo**:
 
-- **En `boolean`, la confianza no aporta NADA.** Con dos opciones (n=2, `ln(2)`) la
+- **En `noul`, la confianza no aporta NADA.** Con dos opciones (n=2, `ln(2)`) la
   confianza queda determinada por la probabilidad: no hay información nueva. Comprobado:
   con `p = 0.534130` la fórmula da `0.003364`, y es exactamente lo que devuelve el
   servidor. Si tienes la probabilidad, la confianza es un cálculo de más.
@@ -652,7 +653,7 @@ Aquí hay un caso que merece la pena porque **depende del tipo**:
   Con solo la probabilidad mayor esos dos casos parecerían el mismo; con la confianza se
   distingue cuál es más de fiar.
 
-**La regla:** en boolean, quédate con la probabilidad. En choice, mira las dos.
+**La regla:** en noul, quédate con la probabilidad. En choice, mira las dos.
 
 Y esto deja en su sitio lo de `puntuacion` del apartado 3: **es una operación derivada,
 igual que `value`, `probability` y `interval_p10_p90`.** La diferencia no es que unas
@@ -665,7 +666,7 @@ nunca.
 
 1. **Entrada** + **Pregunta** + **una cabecera** que dice qué tipo es. La cabecera es
    lo único que hace falta para declarar el tipo: no hay que escribir JSON.
-2. **Choice** devuelve una clave; **score** un número; **boolean** un `true`/`false`.
+2. **Choice** devuelve una clave; **score** un número; **noul** un `true`/`false`.
    Los tres devuelven además **la probabilidad de cada opción y una confianza**.
 3. **Probabilidad** es qué prefiere; **confianza** es cuánto se lo cree. Son distintas y
    las dos importan.

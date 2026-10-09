@@ -98,51 +98,62 @@ CASOS = [
 # traductor: formato TypeSafe -> peticion del servidor local
 # --------------------------------------------------------------------------- #
 def traducir(peticion):
-    """Devuelve (estado, nombre_del_campo, esquema) listo para /v1/decision.
+    """Devuelve (estado, esquema) listo para /v1/decision.
 
-    TypeSafe agrupa todo en UNA pregunta con `criteria`. El servidor local pide un
-    esquema de campos `{nombre: {type, description, ...}}`, asi que se construye uno
-    de un solo campo, y la pregunta de TypeSafe pasa a ser la `description` de ese
-    campo. Los `criteria` se convierten segun el tipo.
+    TypeSafe agrupa las preguntas en `questions: {id: {type, instructions, criteria}}`,
+    y ese diccionario puede llevar VARIAS. Cada una pasa a ser un campo del esquema,
+    asi que N preguntas se resuelven en UNA sola peticion — que es justo la ventaja de
+    tener un modelo sirviendo varios campos a la vez.
+
+    Los `criteria` se convierten segun el tipo:
+
+        choice  {id: descripcion}  -> enum con choices = ids
+        score   [nivel0, nivel1…]  -> rejilla numerica 0..n-1, el nivel i vale i
+        noul    {true: …, false: …} -> booleano, con el significado en el enunciado
     """
     estado = peticion["state"]["input"] if isinstance(peticion["state"], dict) \
         else peticion["state"]
 
-    (nombre, pregunta), = peticion["questions"].items()
-    tipo = pregunta["type"]
-    instrucciones = pregunta["instructions"]
-    criterios = pregunta.get("criteria")
+    esquema = {}
+    for nombre, pregunta in peticion["questions"].items():
+        tipo = pregunta["type"]
+        instrucciones = pregunta["instructions"]
+        criterios = pregunta.get("criteria")
 
-    if tipo == "choice":
-        # {id: descripcion} -> choices = ids, y las descripciones al enunciado
-        opciones = list(criterios.keys())
-        detalle = " ".join(f"'{k}' = {v}." for k, v in criterios.items())
-        campo = {"type": "enum", "choices": opciones,
-                 "description": f"{instrucciones} {detalle}"}
+        if tipo == "choice":
+            # {id: descripcion} -> choices = ids, y las descripciones al enunciado
+            opciones = list(criterios.keys())
+            detalle = " ".join(f"'{k}' = {v}." for k, v in criterios.items())
+            campo = {"type": "enum", "choices": opciones,
+                     "description": f"{instrucciones} {detalle}"}
 
-    elif tipo == "score":
-        # [nivel0, nivel1, ...] -> rejilla numerica 0..n-1, el nivel i vale i
-        n = len(criterios)
-        detalle = " ".join(f"{i} = {t}." for i, t in enumerate(criterios))
-        campo = {"type": "number", "minimum": 0, "maximum": n - 1, "step": 1,
-                 "description": f"{instrucciones} Niveles, de menor a mayor: {detalle}"}
+        elif tipo == "score":
+            # [nivel0, nivel1, ...] -> rejilla numerica 0..n-1, el nivel i vale i
+            n = len(criterios)
+            detalle = " ".join(f"{i} = {t}." for i, t in enumerate(criterios))
+            campo = {"type": "number", "minimum": 0, "maximum": n - 1, "step": 1,
+                     "description": f"{instrucciones} Niveles, de menor a mayor: {detalle}"}
 
-    elif tipo == "noul":
-        # {true: ..., false: ...} -> booleano, con el significado en el enunciado
-        v = criterios.get("true", "") if criterios else ""
-        f = criterios.get("false", "") if criterios else ""
-        detalle = f"true = {v}. false = {f}." if criterios else ""
-        campo = {"type": "boolean", "description": f"{instrucciones} {detalle}"}
+        elif tipo == "noul":
+            # {true: ..., false: ...} -> booleano, con el significado en el enunciado
+            v = criterios.get("true", "") if criterios else ""
+            f = criterios.get("false", "") if criterios else ""
+            detalle = f"true = {v}. false = {f}." if criterios else ""
+            campo = {"type": "boolean", "description": f"{instrucciones} {detalle}"}
 
-    else:
-        raise ValueError(f"tipo desconocido: {tipo}")
+        else:
+            raise ValueError(f"tipo desconocido: {tipo}")
 
-    return estado, nombre, {nombre: campo}
+        esquema[nombre] = campo
+
+    if not esquema:
+        raise ValueError("'questions' esta vacio")
+    return estado, esquema
 
 
 def ejecutar(peticion, timeout=120):
-    """Manda la peticion traducida y devuelve la respuesta cruda del servidor."""
-    estado, nombre, esquema = traducir(peticion)
+    """Manda la peticion traducida y devuelve (respuesta cruda, milisegundos)."""
+    estado, esquema = traducir(peticion)
     payload = {"instructions": "Respondes solo con los valores del esquema.",
                "schema": esquema, "contexts": [estado]}
     req = urllib.request.Request(
@@ -152,7 +163,7 @@ def ejecutar(peticion, timeout=120):
     t0 = time.perf_counter()
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         cuerpo = json.loads(resp.read().decode("utf-8"))
-    return cuerpo, (time.perf_counter() - t0) * 1000.0, nombre
+    return cuerpo, (time.perf_counter() - t0) * 1000.0
 
 
 # --------------------------------------------------------------------------- #
@@ -186,7 +197,7 @@ def en_lenguaje_natural(caso):
         for t in q["criteria"]:
             print(f"  {t}")
     else:
-        print("boolean:")
+        print("noul:")
         for k in ("false", "true"):
             print(f"  {k}: {q['criteria'][k]}")
 
@@ -244,10 +255,14 @@ def main():
 
         print()
         try:
-            cuerpo, ms, nombre = ejecutar(caso["code"])
+            cuerpo, ms = ejecutar(caso["code"])
         except Exception as e:                                    # noqa: BLE001
             print(f"ERROR al ejecutar: {type(e).__name__}: {e}")
             continue
+
+        # Los casos de aqui llevan una sola pregunta, llamada "decision".
+        _, esquema = traducir(caso["code"])
+        nombre = next(iter(esquema))
 
         if a.json:
             print(json.dumps(cuerpo, ensure_ascii=False, indent=2))

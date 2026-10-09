@@ -1284,7 +1284,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > ¡GANADOR! Has sido seleccionado para recibir un iPhone gratis. Haz clic aquí para reclamarlo antes de 24 horas.
 
-**boolean:**
+**noul:**
 
 - `true` — Es spam, fraude o intento de estafa
 - `false` — Es un mensaje legítimo
@@ -1302,7 +1302,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Tu pedido 4471 ha salido de nuestro almacén y llegará el jueves.
 
-**boolean:**
+**noul:**
 
 - `true` — Es spam, fraude o intento de estafa
 - `false` — Es un mensaje legítimo
@@ -1320,7 +1320,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Haga clic en este enlace para verificar su cuenta bancaria o será suspendida.
 
-**boolean:**
+**noul:**
 
 - `true` — Es spam, fraude o intento de estafa
 - `false` — Es un mensaje legítimo
@@ -1338,7 +1338,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Gracias por tu compra. Adjuntamos la factura del pedido 3312.
 
-**boolean:**
+**noul:**
 
 - `true` — Es spam, fraude o intento de estafa
 - `false` — Es un mensaje legítimo
@@ -1356,7 +1356,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > URGENTE: su suscripción caduca hoy, introduzca sus datos de tarjeta para renovarla al instante.
 
-**boolean:**
+**noul:**
 
 - `true` — Es spam, fraude o intento de estafa
 - `false` — Es un mensaje legítimo
@@ -1374,7 +1374,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > I have asked three times now. Can I please just talk to a real person?
 
-**boolean:**
+**noul:**
 
 - `true` — Pide explícitamente un agente humano
 - `false` — No lo pide
@@ -1392,7 +1392,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > ¿Podríais indicarme cómo cambiar mi dirección de facturación?
 
-**boolean:**
+**noul:**
 
 - `true` — Pide explícitamente un agente humano
 - `false` — No lo pide
@@ -1410,7 +1410,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Quiero hablar con un responsable, esto no lo soluciona un bot.
 
-**boolean:**
+**noul:**
 
 - `true` — Pide explícitamente un agente humano
 - `false` — No lo pide
@@ -1428,7 +1428,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > ¿Hay alguna forma de descargar la factura en PDF?
 
-**boolean:**
+**noul:**
 
 - `true` — Pide explícitamente un agente humano
 - `false` — No lo pide
@@ -1446,7 +1446,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Pásenme con alguien de verdad, por favor.
 
-**boolean:**
+**noul:**
 
 - `true` — Pide explícitamente un agente humano
 - `false` — No lo pide
@@ -1464,7 +1464,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Como ya comenté la semana pasada, el problema sigue exactamente igual.
 
-**boolean:**
+**noul:**
 
 - `true` — Menciona un intento o ticket previo
 - `false` — No hay señal de contacto anterior
@@ -1482,7 +1482,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Acabo de registrarme y no encuentro la opción de cambiar el idioma.
 
-**boolean:**
+**noul:**
 
 - `true` — Menciona un intento o ticket previo
 - `false` — No hay señal de contacto anterior
@@ -1500,7 +1500,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Es la cuarta vez que escribo sobre este mismo asunto.
 
-**boolean:**
+**noul:**
 
 - `true` — Menciona un intento o ticket previo
 - `false` — No hay señal de contacto anterior
@@ -1518,7 +1518,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Perdón por insistir, ya abrí un ticket el lunes con el número 8823.
 
-**boolean:**
+**noul:**
 
 - `true` — Menciona un intento o ticket previo
 - `false` — No hay señal de contacto anterior
@@ -1536,7 +1536,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Necesito ayuda con la configuración inicial del dispositivo.
 
-**boolean:**
+**noul:**
 
 - `true` — Menciona un intento o ticket previo
 - `false` — No hay señal de contacto anterior
@@ -1554,7 +1554,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Me llamo Ana García, mi correo es ana.garcia@ejemplo.com y mi teléfono es 612345678.
 
-**boolean:**
+**noul:**
 
 - `true` — Contiene datos personales como nombre, correo o teléfono
 - `false` — No contiene datos personales
@@ -1572,7 +1572,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El pedido número 4471 sigue sin llegar y ya han pasado dos semanas.
 
-**boolean:**
+**noul:**
 
 - `true` — Contiene datos personales como nombre, correo o teléfono
 - `false` — No contiene datos personales
@@ -1590,7 +1590,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Adjunto mi DNI 12345678Z para verificar la titularidad de la cuenta.
 
-**boolean:**
+**noul:**
 
 - `true` — Contiene datos personales como nombre, correo o teléfono
 - `false` — No contiene datos personales
@@ -1608,7 +1608,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > La aplicación va lenta desde la última actualización.
 
-**boolean:**
+**noul:**
 
 - `true` — Contiene datos personales como nombre, correo o teléfono
 - `false` — No contiene datos personales
@@ -1626,7 +1626,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Soy Juan Pérez y quiero cancelar mi suscripción.
 
-**boolean:**
+**noul:**
 
 - `true` — Contiene datos personales como nombre, correo o teléfono
 - `false` — No contiene datos personales
@@ -1644,7 +1644,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Se ha caído la base de datos de producción y ningún cliente puede acceder.
 
-**boolean:**
+**noul:**
 
 - `true` — Requiere que una persona actúe ya
 - `false` — Puede gestionarse sin intervención humana
@@ -1662,7 +1662,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > ¿Podéis confirmarme si el envío incluye seguimiento?
 
-**boolean:**
+**noul:**
 
 - `true` — Requiere que una persona actúe ya
 - `false` — Puede gestionarse sin intervención humana
@@ -1680,7 +1680,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Hay un cargo de 4.500 euros que no reconozco en mi tarjeta corporativa.
 
-**boolean:**
+**noul:**
 
 - `true` — Requiere que una persona actúe ya
 - `false` — Puede gestionarse sin intervención humana
@@ -1698,7 +1698,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Quería saber cuál es la política de devoluciones para productos abiertos.
 
-**boolean:**
+**noul:**
 
 - `true` — Requiere que una persona actúe ya
 - `false` — Puede gestionarse sin intervención humana
@@ -1716,7 +1716,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Un cliente ha denunciado una brecha de datos y hay que avisar a protección de datos hoy mismo.
 
-**boolean:**
+**noul:**
 
 - `true` — Requiere que una persona actúe ya
 - `false` — Puede gestionarse sin intervención humana
@@ -1734,7 +1734,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El usuario pregunta si el plan anual se puede pagar en dos plazos.
 
-**boolean:**
+**noul:**
 
 - `true` — Es solo una pregunta informativa
 - `false` — Requiere una acción, no solo información
@@ -1752,7 +1752,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > El usuario pide que le devolvamos el importe del pedido 3312.
 
-**boolean:**
+**noul:**
 
 - `true` — Es solo una pregunta informativa
 - `false` — Requiere una acción, no solo información
@@ -1770,7 +1770,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > ¿Cada cuánto se renueva automáticamente la suscripción?
 
-**boolean:**
+**noul:**
 
 - `true` — Es solo una pregunta informativa
 - `false` — Requiere una acción, no solo información
@@ -1788,7 +1788,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > Necesito que me emitan una factura rectificativa del mes pasado.
 
-**boolean:**
+**noul:**
 
 - `true` — Es solo una pregunta informativa
 - `false` — Requiere una acción, no solo información
@@ -1806,7 +1806,7 @@ antes de eso es pagar complejidad por un problema que no existe.
 
 > ¿Tenéis tienda física en Bogotá?
 
-**boolean:**
+**noul:**
 
 - `true` — Es solo una pregunta informativa
 - `false` — Requiere una acción, no solo información
@@ -1903,7 +1903,7 @@ Una manzana es **dulce** (no cítrica), de forma **redonda**, y al decir «roja�
 
 > una manzana roja
 
-**boolean:**
+**noul:**
 
 - `true` — Un solo tono en toda la superficie
 - `false` — Varios tonos o manchas
@@ -2005,7 +2005,7 @@ Un plátano maduro es **dulce**; su forma es **alargada**, no esférica. El amar
 
 > un plátano amarillo maduro
 
-**boolean:**
+**noul:**
 
 - `true` — Un solo tono en toda la superficie
 - `false` — Varios tonos o manchas
@@ -2107,7 +2107,7 @@ El limón es el caso **cítrico** por antonomasia. Su forma es **redonda** u ova
 
 > un limón verde
 
-**boolean:**
+**noul:**
 
 - `true` — Un solo tono en toda la superficie
 - `false` — Varios tonos o manchas
@@ -2209,7 +2209,7 @@ La naranja es **cítrica** aunque sea dulce al paladar: la pregunta es por el sa
 
 > una naranja
 
-**boolean:**
+**noul:**
 
 - `true` — Un solo tono en toda la superficie
 - `false` — Varios tonos o manchas
@@ -2311,7 +2311,7 @@ La sandía es **dulce** (de ahí que se coma como postre) y **redonda**, pero al
 
 > una sandía partida por la mitad
 
-**boolean:**
+**noul:**
 
 - `true` — Un solo tono en toda la superficie
 - `false` — Varios tonos o manchas
@@ -2413,7 +2413,7 @@ Las uvas son **dulces**; cada uva es **redonda** aunque el racimo no lo sea, y e
 
 > un racimo de uvas moradas
 
-**boolean:**
+**noul:**
 
 - `true` — Un solo tono en toda la superficie
 - `false` — Varios tonos o manchas
@@ -2515,7 +2515,7 @@ La fresa es **dulce**; su forma es **irregular** (no es una esfera ni un alargad
 
 > una fresa roja con las hojas verdes
 
-**boolean:**
+**noul:**
 
 - `true` — Un solo tono en toda la superficie
 - `false` — Varios tonos o manchas
@@ -2617,7 +2617,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > una pera verde alargada
 
-**boolean:**
+**noul:**
 
 - `true` — Un solo tono en toda la superficie
 - `false` — Varios tonos o manchas
@@ -2706,7 +2706,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > Me cobraron dos veces la suscripción este mes y necesito que me devuelvan el dinero antes del viernes.
 
-**boolean:**
+**noul:**
 
 - `true` — Sí, conviene revisión humana
 - `false` — No hace falta, puede automatizarse
@@ -2785,7 +2785,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > La aplicación no arranca desde esta mañana y toda la plantilla está parada sin poder facturar. Esto es inaceptable.
 
-**boolean:**
+**noul:**
 
 - `true` — Sí, conviene revisión humana
 - `false` — No hace falta, puede automatizarse
@@ -2864,7 +2864,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > ¿Cuál es vuestro horario de atención telefónica los sábados?
 
-**boolean:**
+**noul:**
 
 - `true` — Sí, conviene revisión humana
 - `false` — No hace falta, puede automatizarse
@@ -2943,7 +2943,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > El botón de exportar no hace nada en Safari. En Chrome sí funciona.
 
-**boolean:**
+**noul:**
 
 - `true` — Sí, conviene revisión humana
 - `false` — No hace falta, puede automatizarse
@@ -3022,7 +3022,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > Llevo tres semanas esperando el reembolso y nadie me contesta. Quiero hablar con un responsable.
 
-**boolean:**
+**noul:**
 
 - `true` — Sí, conviene revisión humana
 - `false` — No hace falta, puede automatizarse
@@ -3101,7 +3101,7 @@ Una pera es **dulce**, de forma **alargada**, y el enunciado fija el **verde**. 
 
 > Quería saber si el plan anual se puede pagar en dos plazos.
 
-**boolean:**
+**noul:**
 
 - `true` — Sí, conviene revisión humana
 - `false` — No hace falta, puede automatizarse

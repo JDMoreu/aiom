@@ -1,6 +1,6 @@
 input: Un cliente escribe diciendo que han entrado en su cuenta desde otro país y que no reconoce dos compras hechas esta madrugada.
 
 ask: ¿Hay indicios de que la cuenta esté comprometida?
-boolean:
+noul:
   false: No hay indicios de acceso no autorizado
   true: Hay indicios de acceso no autorizado

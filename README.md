@@ -67,7 +67,7 @@ La cabecera decide el tipo de pregunta:
 |---|---|---|
 | `choice:` | **choice** | la opción elegida + probabilidad de todas + confianza |
 | `score:` | **score** | posición en la escala (puede caer entre dos niveles) |
-| `boolean:` | **boolean** | un valor entre 0 y 1 |
+| `noul:` | **noul** | un valor entre 0 y 1 |
 
 Si la pregunta **no cabe** en ningún campo conocido, se releva al modo chat sobre el
 **mismo** modelo. Una sola pasada decide las dos cosas: si era respondible, y cuáles

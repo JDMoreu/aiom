@@ -201,21 +201,44 @@ score:
 ---
 
 ask: ¿Amenaza el cliente con darse de baja?
-boolean:
+noul:
   false: No lo menciona
   true: Sí lo menciona`;
 
+// El mismo caso que arriba, pero en el formato de TypeSafe. Los dos textos son
+// equivalentes a proposito: cambiar de pestana debe mostrar el mismo caso, no otro.
+//
+// Los campos se llaman q1/q2/q3 a proposito, y no area/urgencia/baja: el NOMBRE del
+// campo tambien llega al modelo, asi que con nombres distintos los numeros bailan un
+// poco. Con los mismos, los dos formatos dan exactamente el mismo resultado.
 const TIPADO = JSON.stringify({
-  state: {input: "Me cobraron dos veces la suscripción. ¿Pueden ayudarme?"},
+  state: {
+    input: "Buenas tardes. Escribo porque estoy bastante molesto: contraté el plan de 20 GB el mes pasado y llevo una semana con cortes de conexión casi todas las noches. He llamado tres veces y nadie me ha dado una solución. Además me han cobrado dos veces la factura de este mes. Si esto sigue así me voy a dar de baja."
+  },
   questions: {
-    decision: {
+    q1: {
       type: "choice",
-      instructions: "¿Qué equipo debe atenderlo?",
+      instructions: "¿A qué área hay que enviar este correo?",
       criteria: {
-        billing: "Pagos y reembolsos",
-        technical: "Errores e integraciones",
-        general: "Otras consultas"
+        soporte: "Fallos y errores del producto",
+        facturacion: "Cobros, facturas y reembolsos",
+        comercial: "Ventas, planes y bajas",
+        otros: "Todo lo demás"
       }
+    },
+    q2: {
+      type: "score",
+      instructions: "¿Qué urgencia tiene?",
+      criteria: [
+        "Baja: puede esperar",
+        "Media: conviene atenderlo esta semana",
+        "Alta: hay una fecha límite encima"
+      ]
+    },
+    q3: {
+      type: "noul",
+      instructions: "¿Amenaza el cliente con darse de baja?",
+      criteria: {"false": "No lo menciona", "true": "Sí lo menciona"}
     }
   }
 }, null, 2);
@@ -230,7 +253,7 @@ function pintarFormato() {
   $("etiqueta-entrada").textContent = formato === "natural"
     ? "Escribe el caso" : "Pega el JSON";
   $("pista").textContent = formato === "natural"
-    ? "cabeceras: input / ask / choice / score / boolean"
+    ? "cabeceras: input / ask / choice / score / noul"
     : "formato de TypeSafe: state + questions";
   ajustarAlto();
 }

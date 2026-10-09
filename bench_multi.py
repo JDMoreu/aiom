@@ -83,7 +83,7 @@ def modo_natural(estado, preguntas):
             partes.append(f"---\nask: {p}\nscore:\n"
                           + "\n".join(f"  {n}" for n in c))
         elif isinstance(c, dict) and set(c) <= {"true", "false"}:
-            partes.append(f"---\nask: {p}\nboolean:\n"
+            partes.append(f"---\nask: {p}\nnoul:\n"
                           f"  false: {c['false']}\n  true: {c['true']}")
         else:
             partes.append(f"---\nask: {p}\nchoice:\n"

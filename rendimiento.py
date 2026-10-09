@@ -206,7 +206,7 @@ def main():
              "TypeSafe (`state.input` + `questions`) | valores tipados, con la "
              "probabilidad de **cada** opción |")
     L.append("| `natural` | el mismo caso escrito con cabeceras legibles "
-             "(`choice:`, `score:`, `boolean:`) | "
+             "(`choice:`, `score:`, `noul:`) | "
              "lo mismo, tras traducir el texto a un esquema |")
     L.append("| `llm` | la pregunta a pelo por el endpoint de chat, sin esquema. "
              "El uso por defecto | texto libre, del que hay que **leer** la respuesta |")

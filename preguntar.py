@@ -13,7 +13,7 @@ No hay que escribir JSON. Se escribe el caso asi:
       otros: Todo lo demás
 
 El tipo se DECLARA con la cabecera: `choice` elige de una lista, `score` pone algo en
-una escala y `boolean` es un si o un no.
+una escala y `noul` es un si o un no.
 
     ask: ¿Qué urgencia tiene?
     score:
@@ -22,12 +22,12 @@ una escala y `boolean` es un si o un no.
       Alta: hay una fecha límite encima
 
     ask: ¿Amenaza el cliente con darse de baja?
-    boolean:
+    noul:
       false: No lo menciona
       true: Sí lo menciona
 
 `score` va de menor a mayor y se numera desde 0, asi que en el ejemplo Baja=0, Media=1
-y Alta=2. Y `boolean` escribe primero el significado de false y luego el de true.
+y Alta=2. Y `noul` escribe primero el significado de false y luego el de true.
 
 Se pueden poner varias preguntas separadas por una linea con ---, y se mandan TODAS
 en una sola peticion: es la ventaja de tener un solo modelo sirviendo varios campos.
@@ -65,8 +65,8 @@ TITULOS = {
     "opciones": ("choice", "opciones", "choices", "criterios"),
     "niveles": ("score", "niveles", "niveles de puntuación", "niveles de puntuacion",
                 "escala", "niveles de score"),
-    "sino": ("boolean", "qué significa no o sí", "que significa no o si", "no o sí",
-             "no o si", "significado", "noul", "sí o no", "si o no"),
+    "sino": ("noul", "boolean", "qué significa no o sí", "que significa no o si",
+             "no o sí", "no o si", "significado", "sí o no", "si o no"),
 }
 
 
@@ -213,7 +213,7 @@ def barra(p):
 
 
 def mostrar(estado, preguntas, cuerpo, ms):
-    tipos = {"enum": "CHOICE", "number": "SCORE", "boolean": "PROBABILITY"}
+    tipos = {"enum": "CHOICE", "number": "SCORE", "boolean": "NOUL"}
     campos = cuerpo["results"][0]["fields"]
 
     print(f"input: {estado}")

@@ -35,6 +35,11 @@ import preguntar               # noqa: E402
 
 FORMATOS = ("texto", "natural", "tipado")
 
+# El tipo del motor -> el nombre que usa JEV. Se informa con el de JEV para que los
+# dos formatos se lean igual: el natural produce enum/number/boolean y el tipado ya
+# viene con choice/score/noul, y son exactamente lo mismo.
+TIPO_JEV = {"enum": "choice", "number": "score", "boolean": "noul"}
+
 # --------------------------------------------------------------------------- #
 # los tres formatos -> una lista uniforme de resultados
 # --------------------------------------------------------------------------- #
@@ -51,7 +56,7 @@ def _de_campos(campos, preguntas):
             continue
         salida.append({
             "campo": nombre,
-            "tipo": spec.get("type"),
+            "tipo": TIPO_JEV.get(spec.get("type"), spec.get("type")),
             "pregunta": spec.get("pregunta") or spec.get("description", "")[:80],
             "value": f.get("value"),
             "probability": f.get("probability"),
@@ -96,17 +101,21 @@ def por_natural(cuerpo, catalogo, cfg):
 
 
 def por_tipado(cuerpo, catalogo, cfg):
-    """El formato de TypeSafe: state.input + questions.<nombre> con criteria."""
+    """El formato de TypeSafe: state.input + questions.<nombre> con criteria.
+
+    `questions` admite varias: cada una es un campo del esquema y todas se resuelven
+    en la misma peticion.
+    """
     if "state" not in cuerpo or "questions" not in cuerpo:
         raise ValueError("faltan 'state' y 'questions'")
-    res_crudo, ms, nombre = ejemplos_typesafe.ejecutar(cuerpo, timeout=cfg["timeout"])
+    res_crudo, ms = ejemplos_typesafe.ejecutar(cuerpo, timeout=cfg["timeout"])
     campos = res_crudo["results"][0]["fields"]
-    # El tipo sale de la PETICION: la respuesta del servidor no lo trae.
-    spec_pedida = cuerpo["questions"].get(nombre, {})
-    spec = {"type": spec_pedida.get("type"),
-            "pregunta": spec_pedida.get("instructions", "")}
-    return {"resultados": _de_campos(campos, [(nombre, spec)]),
-            "tiempo_ms": round(ms, 1), "tokens": 0, "n_preguntas": 1}
+    # El tipo y el enunciado salen de la PETICION: la respuesta no los trae.
+    preguntas = [(nombre, {"type": preg.get("type"),
+                           "pregunta": preg.get("instructions", "")})
+                 for nombre, preg in cuerpo["questions"].items()]
+    return {"resultados": _de_campos(campos, preguntas),
+            "tiempo_ms": round(ms, 1), "tokens": 0, "n_preguntas": len(preguntas)}
 
 
 CONVERSORES = {"texto": por_texto, "natural": por_natural, "tipado": por_tipado}
@@ -198,7 +207,7 @@ DOC = {
         "respuesta": {
             "formato": "el que mandaste",
             "n_preguntas": "int",
-            "resultados": [{"campo": "str", "tipo": "enum|number|boolean",
+            "resultados": [{"campo": "str", "tipo": "choice|score|noul",
                             "pregunta": "str", "value": "el valor elegido",
                             "probability": "float", "probabilities": "{opcion: float}",
                             "confidence": "float"}],
