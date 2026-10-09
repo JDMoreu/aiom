@@ -1,0 +1,7 @@
+Entrada: Me cobraron dos veces la suscripción. ¿Pueden ayudarme?
+
+Pregunta: ¿Qué equipo debe atenderlo?
+Opciones:
+  billing: Pagos y reembolsos
+  technical: Errores e integraciones
+  general: Otras consultas

@@ -1,0 +1,22 @@
+Entrada: Un cliente escribe: llevo tres días sin poder entrar a la aplicación y ya me cobraron la renovación.
+
+Pregunta: ¿Qué equipo debe atenderlo?
+Opciones:
+  billing: Pagos y reembolsos
+  technical: Errores e integraciones
+  general: Otras consultas
+
+---
+
+Pregunta: ¿Qué urgencia tiene?
+Niveles de puntuación:
+  Baja
+  Media
+  Alta
+
+---
+
+Pregunta: ¿Hay que responder al cliente hoy?
+Qué significa no o sí:
+  false: Puede esperar sin perjudicarle
+  true: Necesita respuesta hoy

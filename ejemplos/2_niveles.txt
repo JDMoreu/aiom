@@ -1,0 +1,7 @@
+Entrada: Búsqueda: zapatillas de senderismo ligeras para días de lluvia. Resultado: una ficha de zapatillas de trail impermeables con guía de tallas y reseñas.
+
+Pregunta: ¿Qué relevancia tiene este elemento para la solicitud?
+Niveles de puntuación:
+  No relevante
+  Algo relevante
+  Muy relevante

@@ -1,0 +1,3964 @@
+{
+  "config": {
+    "server": "http://127.0.0.1:8096",
+    "model": null,
+    "props_error": "HTTP Error 501: Not Implemented"
+  },
+  "dataset": {
+    "total": 26,
+    "respondibles": 20,
+    "no_respondibles": 6
+  },
+  "bloques": [
+    {
+      "modo": "decision",
+      "concurrencia": 1,
+      "consultas": 26,
+      "pared_s": 2.46,
+      "caudal_qs": 10.57,
+      "latencia_ms": {
+        "media": 94.5,
+        "p50": 93.8,
+        "p95": 112.7,
+        "min": 72.9,
+        "max": 114.9
+      },
+      "tokens_generados": 0,
+      "tokens_por_consulta": 0.0,
+      "prompt_tokens": 380,
+      "cached_tokens": 355,
+      "acierto_campos": "53/53",
+      "acierto_pct": 100.0,
+      "ruteo_no_respondibles_pct": 100.0,
+      "detalle": [
+        {
+          "q": "el sensor del predio 3 lleva dos dias sin reportar temperatura, ",
+          "ms": 73.0,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 3,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 3,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta humedad promedio tuvimos en el predio 7 la semana pasada?",
+          "ms": 92.3,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 7,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "humedad",
+            "predio": 7,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "como va la bateria de los nodos del predio 2",
+          "ms": 93.8,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 2
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "bateria",
+            "predio": 2,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "se cayo la senal en el predio 11, es grave",
+          "ms": 92.4,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 11,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "senal",
+            "predio": 11,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "el nodo 4 del predio 9 manda lecturas raras de humedad",
+          "ms": 114.9,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 9,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "humedad",
+            "predio": 9,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "revisen la temperatura del predio 1, esta muy alta",
+          "ms": 109.9,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 1,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 1,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta agua se aplico en el riego del predio 5?",
+          "ms": 110.2,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 5
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "riego",
+            "predio": 5,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "la bateria del predio 12 esta por debajo del veinte por ciento",
+          "ms": 91.0,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 12,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "bateria",
+            "predio": 12,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "hay perdida de senal en el predio 6?",
+          "ms": 93.8,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 6
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "senal",
+            "predio": 6,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "dame la humedad del predio 4",
+          "ms": 93.7,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 4,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "humedad",
+            "predio": 4,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "el predio 8 no reporta desde ayer, se perdio la senal",
+          "ms": 95.2,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 8,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "senal",
+            "predio": 8,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "como estuvo el riego en el predio 10 esta semana",
+          "ms": 72.9,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 10
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "riego",
+            "predio": 10,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "alerta por temperatura en el predio 2",
+          "ms": 87.7,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 2,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 2,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta bateria le queda al nodo del predio 3",
+          "ms": 94.2,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 3
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "bateria",
+            "predio": 3,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "promedio de humedad del predio 12 del ultimo mes",
+          "ms": 98.2,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 12,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "humedad",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "temperaturas registradas en el predio 6 durante la madrugada",
+          "ms": 87.3,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 6
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 6,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "el riego del predio 9 no arranco esta manana",
+          "ms": 88.4,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 9,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "riego",
+            "predio": 9,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "la senal del predio 1 va intermitente",
+          "ms": 104.0,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 1
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "senal",
+            "predio": 1,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "bateria critica en el predio 5, cambienla",
+          "ms": 82.0,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 5,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "bateria",
+            "predio": 5,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "necesito el historico de temperatura del predio 11",
+          "ms": 94.4,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 11,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 11,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "redactame un informe para el cliente sobre el estado de la red",
+          "ms": 89.6,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "explicame por que se descargan tan rapido las baterias de los no",
+          "ms": 107.8,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "que me recomiendas para mejorar el rendimiento de toda la red?",
+          "ms": 94.1,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "escribeme un correo para el proveedor de los nodos",
+          "ms": 85.5,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cual es la mejor epoca del ano para sembrar maiz en esta region?",
+          "ms": 112.7,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "resumeme en un parrafo el historial de mantenimiento del ultimo ",
+          "ms": 97.5,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        }
+      ]
+    },
+    {
+      "modo": "decision",
+      "concurrencia": 2,
+      "consultas": 26,
+      "pared_s": 2.029,
+      "caudal_qs": 12.82,
+      "latencia_ms": {
+        "media": 153.2,
+        "p50": 152.1,
+        "p95": 174.6,
+        "min": 78.8,
+        "max": 184.3
+      },
+      "tokens_generados": 0,
+      "tokens_por_consulta": 0.0,
+      "prompt_tokens": 380,
+      "cached_tokens": 355,
+      "acierto_campos": "53/53",
+      "acierto_pct": 100.0,
+      "ruteo_no_respondibles_pct": 100.0,
+      "detalle": [
+        {
+          "q": "el sensor del predio 3 lleva dos dias sin reportar temperatura, ",
+          "ms": 78.8,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 3,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 3,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta humedad promedio tuvimos en el predio 7 la semana pasada?",
+          "ms": 174.6,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 7,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "humedad",
+            "predio": 7,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "como va la bateria de los nodos del predio 2",
+          "ms": 184.3,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 2
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "bateria",
+            "predio": 2,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "se cayo la senal en el predio 11, es grave",
+          "ms": 169.9,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 11,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "senal",
+            "predio": 11,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "el nodo 4 del predio 9 manda lecturas raras de humedad",
+          "ms": 160.0,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 9,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "humedad",
+            "predio": 9,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "revisen la temperatura del predio 1, esta muy alta",
+          "ms": 156.8,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 1,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 1,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta agua se aplico en el riego del predio 5?",
+          "ms": 157.2,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 5
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "riego",
+            "predio": 5,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "la bateria del predio 12 esta por debajo del veinte por ciento",
+          "ms": 161.1,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 12,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "bateria",
+            "predio": 12,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "hay perdida de senal en el predio 6?",
+          "ms": 168.1,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 6
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "senal",
+            "predio": 6,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "dame la humedad del predio 4",
+          "ms": 162.5,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 4,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "humedad",
+            "predio": 4,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "el predio 8 no reporta desde ayer, se perdio la senal",
+          "ms": 152.5,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 8,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "senal",
+            "predio": 8,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "como estuvo el riego en el predio 10 esta semana",
+          "ms": 151.5,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 10
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "riego",
+            "predio": 10,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "alerta por temperatura en el predio 2",
+          "ms": 150.9,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 2,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 2,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta bateria le queda al nodo del predio 3",
+          "ms": 147.0,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 3
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "bateria",
+            "predio": 3,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "promedio de humedad del predio 12 del ultimo mes",
+          "ms": 143.2,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 12,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "humedad",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "temperaturas registradas en el predio 6 durante la madrugada",
+          "ms": 146.7,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 6
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 6,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "el riego del predio 9 no arranco esta manana",
+          "ms": 146.9,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 9,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "riego",
+            "predio": 9,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "la senal del predio 1 va intermitente",
+          "ms": 149.2,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 1
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "senal",
+            "predio": 1,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "bateria critica en el predio 5, cambienla",
+          "ms": 153.5,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 5,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "bateria",
+            "predio": 5,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "necesito el historico de temperatura del predio 11",
+          "ms": 152.1,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 11,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 11,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "redactame un informe para el cliente sobre el estado de la red",
+          "ms": 147.8,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "explicame por que se descargan tan rapido las baterias de los no",
+          "ms": 147.4,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "que me recomiendas para mejorar el rendimiento de toda la red?",
+          "ms": 162.1,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "escribeme un correo para el proveedor de los nodos",
+          "ms": 161.4,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cual es la mejor epoca del ano para sembrar maiz en esta region?",
+          "ms": 150.2,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "resumeme en un parrafo el historial de mantenimiento del ultimo ",
+          "ms": 146.5,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        }
+      ]
+    },
+    {
+      "modo": "decision",
+      "concurrencia": 4,
+      "consultas": 26,
+      "pared_s": 1.929,
+      "caudal_qs": 13.48,
+      "latencia_ms": {
+        "media": 279.1,
+        "p50": 294.2,
+        "p95": 309.1,
+        "min": 75.3,
+        "max": 309.1
+      },
+      "tokens_generados": 0,
+      "tokens_por_consulta": 0.0,
+      "prompt_tokens": 380,
+      "cached_tokens": 355,
+      "acierto_campos": "53/53",
+      "acierto_pct": 100.0,
+      "ruteo_no_respondibles_pct": 100.0,
+      "detalle": [
+        {
+          "q": "el sensor del predio 3 lleva dos dias sin reportar temperatura, ",
+          "ms": 147.0,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 3,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 3,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta humedad promedio tuvimos en el predio 7 la semana pasada?",
+          "ms": 75.3,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 7,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "humedad",
+            "predio": 7,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "como va la bateria de los nodos del predio 2",
+          "ms": 217.9,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 2
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "bateria",
+            "predio": 2,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "se cayo la senal en el predio 11, es grave",
+          "ms": 289.3,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 11,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "senal",
+            "predio": 11,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "el nodo 4 del predio 9 manda lecturas raras de humedad",
+          "ms": 293.8,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 9,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "humedad",
+            "predio": 9,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "revisen la temperatura del predio 1, esta muy alta",
+          "ms": 298.3,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 1,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 1,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta agua se aplico en el riego del predio 5?",
+          "ms": 308.4,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 5
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "riego",
+            "predio": 5,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "la bateria del predio 12 esta por debajo del veinte por ciento",
+          "ms": 308.3,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 12,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "bateria",
+            "predio": 12,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "hay perdida de senal en el predio 6?",
+          "ms": 300.1,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 6
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "senal",
+            "predio": 6,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "dame la humedad del predio 4",
+          "ms": 295.6,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 4,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "humedad",
+            "predio": 4,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "el predio 8 no reporta desde ayer, se perdio la senal",
+          "ms": 288.5,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 8,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "senal",
+            "predio": 8,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "como estuvo el riego en el predio 10 esta semana",
+          "ms": 288.3,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 10
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "riego",
+            "predio": 10,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "alerta por temperatura en el predio 2",
+          "ms": 288.4,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 2,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 2,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta bateria le queda al nodo del predio 3",
+          "ms": 288.9,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 3
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "bateria",
+            "predio": 3,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "promedio de humedad del predio 12 del ultimo mes",
+          "ms": 286.0,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 12,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "humedad",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "temperaturas registradas en el predio 6 durante la madrugada",
+          "ms": 288.6,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 6
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 6,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "el riego del predio 9 no arranco esta manana",
+          "ms": 291.0,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 9,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "riego",
+            "predio": 9,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "la senal del predio 1 va intermitente",
+          "ms": 294.2,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 1
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "senal",
+            "predio": 1,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "bateria critica en el predio 5, cambienla",
+          "ms": 300.9,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 5,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "bateria",
+            "predio": 5,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "necesito el historico de temperatura del predio 11",
+          "ms": 298.3,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 11,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 11,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "redactame un informe para el cliente sobre el estado de la red",
+          "ms": 297.5,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "explicame por que se descargan tan rapido las baterias de los no",
+          "ms": 294.5,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "que me recomiendas para mejorar el rendimiento de toda la red?",
+          "ms": 299.1,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "escribeme un correo para el proveedor de los nodos",
+          "ms": 299.8,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cual es la mejor epoca del ano para sembrar maiz en esta region?",
+          "ms": 309.1,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "resumeme en un parrafo el historial de mantenimiento del ultimo ",
+          "ms": 309.1,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        }
+      ]
+    },
+    {
+      "modo": "decision",
+      "concurrencia": 8,
+      "consultas": 26,
+      "pared_s": 2.031,
+      "caudal_qs": 12.8,
+      "latencia_ms": {
+        "media": 541.7,
+        "p50": 622.8,
+        "p95": 639.3,
+        "min": 74.7,
+        "max": 641.2
+      },
+      "tokens_generados": 0,
+      "tokens_por_consulta": 0.0,
+      "prompt_tokens": 380,
+      "cached_tokens": 355,
+      "acierto_campos": "53/53",
+      "acierto_pct": 100.0,
+      "ruteo_no_respondibles_pct": 100.0,
+      "detalle": [
+        {
+          "q": "el sensor del predio 3 lleva dos dias sin reportar temperatura, ",
+          "ms": 147.7,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 3,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 3,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta humedad promedio tuvimos en el predio 7 la semana pasada?",
+          "ms": 74.7,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 7,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "humedad",
+            "predio": 7,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "como va la bateria de los nodos del predio 2",
+          "ms": 235.4,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 2
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "bateria",
+            "predio": 2,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "se cayo la senal en el predio 11, es grave",
+          "ms": 307.2,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 11,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "senal",
+            "predio": 11,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "el nodo 4 del predio 9 manda lecturas raras de humedad",
+          "ms": 379.2,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 9,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "humedad",
+            "predio": 9,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "revisen la temperatura del predio 1, esta muy alta",
+          "ms": 472.8,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 1,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 1,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta agua se aplico en el riego del predio 5?",
+          "ms": 551.1,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 5
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "riego",
+            "predio": 5,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "la bateria del predio 12 esta por debajo del veinte por ciento",
+          "ms": 623.8,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 12,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "bateria",
+            "predio": 12,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "hay perdida de senal en el predio 6?",
+          "ms": 632.4,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 6
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "senal",
+            "predio": 6,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "dame la humedad del predio 4",
+          "ms": 631.7,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 4,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "humedad",
+            "predio": 4,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "el predio 8 no reporta desde ayer, se perdio la senal",
+          "ms": 615.9,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 8,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "senal",
+            "predio": 8,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "como estuvo el riego en el predio 10 esta semana",
+          "ms": 627.4,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 10
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "riego",
+            "predio": 10,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "alerta por temperatura en el predio 2",
+          "ms": 626.6,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 2,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 2,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta bateria le queda al nodo del predio 3",
+          "ms": 610.9,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 3
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "bateria",
+            "predio": 3,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "promedio de humedad del predio 12 del ultimo mes",
+          "ms": 616.3,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 12,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "humedad",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "temperaturas registradas en el predio 6 durante la madrugada",
+          "ms": 622.8,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 6
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 6,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "el riego del predio 9 no arranco esta manana",
+          "ms": 622.4,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 9,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "riego",
+            "predio": 9,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "la senal del predio 1 va intermitente",
+          "ms": 622.8,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 1
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "senal",
+            "predio": 1,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "bateria critica en el predio 5, cambienla",
+          "ms": 632.5,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 5,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "bateria",
+            "predio": 5,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "necesito el historico de temperatura del predio 11",
+          "ms": 625.9,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 11,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 11,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "redactame un informe para el cliente sobre el estado de la red",
+          "ms": 639.3,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "explicame por que se descargan tan rapido las baterias de los no",
+          "ms": 641.2,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "que me recomiendas para mejorar el rendimiento de toda la red?",
+          "ms": 637.6,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "escribeme un correo para el proveedor de los nodos",
+          "ms": 631.2,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cual es la mejor epoca del ano para sembrar maiz en esta region?",
+          "ms": 627.9,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "resumeme en un parrafo el historial de mantenimiento del ultimo ",
+          "ms": 627.6,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        }
+      ]
+    },
+    {
+      "modo": "decision",
+      "concurrencia": 16,
+      "consultas": 26,
+      "pared_s": 1.981,
+      "caudal_qs": 13.12,
+      "latencia_ms": {
+        "media": 866.2,
+        "p50": 994.6,
+        "p95": 1213.4,
+        "min": 83.1,
+        "max": 1215.0
+      },
+      "tokens_generados": 0,
+      "tokens_por_consulta": 0.0,
+      "prompt_tokens": 380,
+      "cached_tokens": 355,
+      "acierto_campos": "53/53",
+      "acierto_pct": 100.0,
+      "ruteo_no_respondibles_pct": 100.0,
+      "detalle": [
+        {
+          "q": "el sensor del predio 3 lleva dos dias sin reportar temperatura, ",
+          "ms": 83.1,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 3,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 3,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta humedad promedio tuvimos en el predio 7 la semana pasada?",
+          "ms": 161.6,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 7,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "humedad",
+            "predio": 7,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "como va la bateria de los nodos del predio 2",
+          "ms": 238.7,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 2
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "bateria",
+            "predio": 2,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "se cayo la senal en el predio 11, es grave",
+          "ms": 314.4,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 11,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "senal",
+            "predio": 11,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "el nodo 4 del predio 9 manda lecturas raras de humedad",
+          "ms": 394.9,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 9,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "humedad",
+            "predio": 9,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "revisen la temperatura del predio 1, esta muy alta",
+          "ms": 542.7,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 1,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 1,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta agua se aplico en el riego del predio 5?",
+          "ms": 465.9,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 5
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "riego",
+            "predio": 5,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "la bateria del predio 12 esta por debajo del veinte por ciento",
+          "ms": 619.6,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 12,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "bateria",
+            "predio": 12,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "hay perdida de senal en el predio 6?",
+          "ms": 692.9,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 6
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "senal",
+            "predio": 6,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "dame la humedad del predio 4",
+          "ms": 765.9,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 4,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "humedad",
+            "predio": 4,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "el predio 8 no reporta desde ayer, se perdio la senal",
+          "ms": 841.2,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 8,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "senal",
+            "predio": 8,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "como estuvo el riego en el predio 10 esta semana",
+          "ms": 918.2,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 10
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "riego",
+            "predio": 10,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "alerta por temperatura en el predio 2",
+          "ms": 994.6,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 2,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 2,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta bateria le queda al nodo del predio 3",
+          "ms": 1070.8,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 3
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "bateria",
+            "predio": 3,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "promedio de humedad del predio 12 del ultimo mes",
+          "ms": 1142.5,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 12,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "humedad",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "temperaturas registradas en el predio 6 durante la madrugada",
+          "ms": 1215.0,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 6
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 6,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "el riego del predio 9 no arranco esta manana",
+          "ms": 1213.4,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 9,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "riego",
+            "predio": 9,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "la senal del predio 1 va intermitente",
+          "ms": 1211.8,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 1
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "senal",
+            "predio": 1,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "bateria critica en el predio 5, cambienla",
+          "ms": 1209.2,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 5,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "bateria",
+            "predio": 5,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "necesito el historico de temperatura del predio 11",
+          "ms": 1205.1,
+          "tok": 0,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 11,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "respondible": true,
+            "magnitud": "temperatura",
+            "predio": 11,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "redactame un informe para el cliente sobre el estado de la red",
+          "ms": 1200.9,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "explicame por que se descargan tan rapido las baterias de los no",
+          "ms": 1206.4,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "que me recomiendas para mejorar el rendimiento de toda la red?",
+          "ms": 1202.8,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "escribeme un correo para el proveedor de los nodos",
+          "ms": 1197.7,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cual es la mejor epoca del ano para sembrar maiz en esta region?",
+          "ms": 1200.2,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "resumeme en un parrafo el historial de mantenimiento del ultimo ",
+          "ms": 1211.0,
+          "tok": 0,
+          "esperado": {},
+          "vals": {
+            "respondible": false,
+            "magnitud": "ninguna",
+            "predio": 12,
+            "urgencia": "baja"
+          }
+        }
+      ]
+    },
+    {
+      "modo": "chat",
+      "concurrencia": 1,
+      "consultas": 26,
+      "pared_s": 12.047,
+      "caudal_qs": 2.16,
+      "latencia_ms": {
+        "media": 463.2,
+        "p50": 470.1,
+        "p95": 510.9,
+        "min": 327.9,
+        "max": 535.4
+      },
+      "tokens_generados": 862,
+      "tokens_por_consulta": 33.2,
+      "prompt_tokens": 137,
+      "cached_tokens": 0,
+      "acierto_campos": "49/53",
+      "acierto_pct": 92.5,
+      "ruteo_no_respondibles_pct": 0.0,
+      "detalle": [
+        {
+          "q": "el sensor del predio 3 lleva dos dias sin reportar temperatura, ",
+          "ms": 510.9,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 3,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 3,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta humedad promedio tuvimos en el predio 7 la semana pasada?",
+          "ms": 471.2,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 7,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "magnitud": "humedad",
+            "predio": 7,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "como va la bateria de los nodos del predio 2",
+          "ms": 470.0,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 2
+          },
+          "vals": {
+            "magnitud": "bateria",
+            "predio": 2,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "se cayo la senal en el predio 11, es grave",
+          "ms": 465.7,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 11,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "senal",
+            "predio": 11,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "el nodo 4 del predio 9 manda lecturas raras de humedad",
+          "ms": 463.9,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 9,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "humedad",
+            "predio": 9,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "revisen la temperatura del predio 1, esta muy alta",
+          "ms": 452.1,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 1,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 1,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta agua se aplico en el riego del predio 5?",
+          "ms": 447.3,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 5
+          },
+          "vals": {
+            "magnitud": "riego",
+            "predio": 5,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "la bateria del predio 12 esta por debajo del veinte por ciento",
+          "ms": 486.8,
+          "tok": 35,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 12,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "bateria",
+            "predio": 12,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "hay perdida de senal en el predio 6?",
+          "ms": 470.1,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 6
+          },
+          "vals": {
+            "magnitud": "senal",
+            "predio": 6,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "dame la humedad del predio 4",
+          "ms": 466.9,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 4,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "magnitud": "humedad",
+            "predio": 4,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "el predio 8 no reporta desde ayer, se perdio la senal",
+          "ms": 479.1,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 8,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "senal",
+            "predio": 8,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "como estuvo el riego en el predio 10 esta semana",
+          "ms": 486.0,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 10
+          },
+          "vals": {
+            "magnitud": "riego",
+            "predio": 10,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "alerta por temperatura en el predio 2",
+          "ms": 472.7,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 2,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 2,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta bateria le queda al nodo del predio 3",
+          "ms": 459.6,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 3
+          },
+          "vals": {
+            "magnitud": "bateria",
+            "predio": 3,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "promedio de humedad del predio 12 del ultimo mes",
+          "ms": 454.7,
+          "tok": 35,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 12,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "magnitud": "humedad",
+            "predio": 12,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "temperaturas registradas en el predio 6 durante la madrugada",
+          "ms": 462.8,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 6
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 6,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "el riego del predio 9 no arranco esta manana",
+          "ms": 472.9,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 9,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "riego",
+            "predio": 9,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "la senal del predio 1 va intermitente",
+          "ms": 471.6,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 1
+          },
+          "vals": {
+            "magnitud": "senal",
+            "predio": 1,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "bateria critica en el predio 5, cambienla",
+          "ms": 475.9,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 5,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "bateria",
+            "predio": 5,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "necesito el historico de temperatura del predio 11",
+          "ms": 476.5,
+          "tok": 35,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 11,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 11,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "redactame un informe para el cliente sobre el estado de la red",
+          "ms": 443.2,
+          "tok": 33,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "explicame por que se descargan tan rapido las baterias de los no",
+          "ms": 535.4,
+          "tok": 39,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "que me recomiendas para mejorar el rendimiento de toda la red?",
+          "ms": 327.9,
+          "tok": 20,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "escribeme un correo para el proveedor de los nodos",
+          "ms": 506.6,
+          "tok": 38,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "cual es la mejor epoca del ano para sembrar maiz en esta region?",
+          "ms": 335.1,
+          "tok": 20,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "resumeme en un parrafo el historial de mantenimiento del ultimo ",
+          "ms": 478.6,
+          "tok": 34,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "baja"
+          }
+        }
+      ]
+    },
+    {
+      "modo": "chat",
+      "concurrencia": 2,
+      "consultas": 26,
+      "pared_s": 10.373,
+      "caudal_qs": 2.51,
+      "latencia_ms": {
+        "media": 795.8,
+        "p50": 833.2,
+        "p95": 880.6,
+        "min": 520.1,
+        "max": 958.7
+      },
+      "tokens_generados": 895,
+      "tokens_por_consulta": 34.4,
+      "prompt_tokens": 137,
+      "cached_tokens": 0,
+      "acierto_campos": "49/53",
+      "acierto_pct": 92.5,
+      "ruteo_no_respondibles_pct": 0.0,
+      "detalle": [
+        {
+          "q": "el sensor del predio 3 lleva dos dias sin reportar temperatura, ",
+          "ms": 623.3,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 3,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 3,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta humedad promedio tuvimos en el predio 7 la semana pasada?",
+          "ms": 635.2,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 7,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "magnitud": "humedad",
+            "predio": 7,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "como va la bateria de los nodos del predio 2",
+          "ms": 861.9,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 2
+          },
+          "vals": {
+            "magnitud": "bateria",
+            "predio": 2,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "se cayo la senal en el predio 11, es grave",
+          "ms": 848.3,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 11,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "senal",
+            "predio": 11,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "el nodo 4 del predio 9 manda lecturas raras de humedad",
+          "ms": 878.3,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 9,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "humedad",
+            "predio": 9,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "revisen la temperatura del predio 1, esta muy alta",
+          "ms": 878.3,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 1,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 1,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta agua se aplico en el riego del predio 5?",
+          "ms": 858.8,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 5
+          },
+          "vals": {
+            "magnitud": "riego",
+            "predio": 5,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "la bateria del predio 12 esta por debajo del veinte por ciento",
+          "ms": 880.6,
+          "tok": 35,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 12,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "bateria",
+            "predio": 12,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "hay perdida de senal en el predio 6?",
+          "ms": 840.0,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 6
+          },
+          "vals": {
+            "magnitud": "senal",
+            "predio": 6,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "dame la humedad del predio 4",
+          "ms": 830.4,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 4,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "magnitud": "humedad",
+            "predio": 4,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "el predio 8 no reporta desde ayer, se perdio la senal",
+          "ms": 834.3,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 8,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "senal",
+            "predio": 8,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "como estuvo el riego en el predio 10 esta semana",
+          "ms": 833.2,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 10
+          },
+          "vals": {
+            "magnitud": "riego",
+            "predio": 10,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "alerta por temperatura en el predio 2",
+          "ms": 853.6,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 2,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 2,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta bateria le queda al nodo del predio 3",
+          "ms": 840.0,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 3
+          },
+          "vals": {
+            "magnitud": "bateria",
+            "predio": 3,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "promedio de humedad del predio 12 del ultimo mes",
+          "ms": 860.0,
+          "tok": 35,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 12,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "magnitud": "humedad",
+            "predio": 12,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "temperaturas registradas en el predio 6 durante la madrugada",
+          "ms": 845.6,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 6
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 6,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "el riego del predio 9 no arranco esta manana",
+          "ms": 810.7,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 9,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "riego",
+            "predio": 9,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "la senal del predio 1 va intermitente",
+          "ms": 798.7,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 1
+          },
+          "vals": {
+            "magnitud": "senal",
+            "predio": 1,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "bateria critica en el predio 5, cambienla",
+          "ms": 808.9,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 5,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "bateria",
+            "predio": 5,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "necesito el historico de temperatura del predio 11",
+          "ms": 820.8,
+          "tok": 35,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 11,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 11,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "redactame un informe para el cliente sobre el estado de la red",
+          "ms": 808.3,
+          "tok": 33,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "explicame por que se descargan tan rapido las baterias de los no",
+          "ms": 958.7,
+          "tok": 39,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "que me recomiendas para mejorar el rendimiento de toda la red?",
+          "ms": 684.7,
+          "tok": 39,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "escribeme un correo para el proveedor de los nodos",
+          "ms": 665.7,
+          "tok": 38,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "cual es la mejor epoca del ano para sembrar maiz en esta region?",
+          "ms": 611.4,
+          "tok": 34,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "resumeme en un parrafo el historial de mantenimiento del ultimo ",
+          "ms": 520.1,
+          "tok": 34,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "baja"
+          }
+        }
+      ]
+    },
+    {
+      "modo": "chat",
+      "concurrencia": 4,
+      "consultas": 26,
+      "pared_s": 10.825,
+      "caudal_qs": 2.4,
+      "latencia_ms": {
+        "media": 1632.5,
+        "p50": 1522.0,
+        "p95": 2606.0,
+        "min": 582.2,
+        "max": 2720.5
+      },
+      "tokens_generados": 876,
+      "tokens_por_consulta": 33.7,
+      "prompt_tokens": 137,
+      "cached_tokens": 0,
+      "acierto_campos": "49/53",
+      "acierto_pct": 92.5,
+      "ruteo_no_respondibles_pct": 0.0,
+      "detalle": [
+        {
+          "q": "el sensor del predio 3 lleva dos dias sin reportar temperatura, ",
+          "ms": 1188.6,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 3,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 3,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta humedad promedio tuvimos en el predio 7 la semana pasada?",
+          "ms": 1189.6,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 7,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "magnitud": "humedad",
+            "predio": 7,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "como va la bateria de los nodos del predio 2",
+          "ms": 1192.1,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 2
+          },
+          "vals": {
+            "magnitud": "bateria",
+            "predio": 2,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "se cayo la senal en el predio 11, es grave",
+          "ms": 1190.4,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 11,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "senal",
+            "predio": 11,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "el nodo 4 del predio 9 manda lecturas raras de humedad",
+          "ms": 2035.4,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 9,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "humedad",
+            "predio": 9,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "revisen la temperatura del predio 1, esta muy alta",
+          "ms": 2033.0,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 1,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 1,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta agua se aplico en el riego del predio 5?",
+          "ms": 1712.4,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 5
+          },
+          "vals": {
+            "magnitud": "riego",
+            "predio": 5,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "la bateria del predio 12 esta por debajo del veinte por ciento",
+          "ms": 2606.0,
+          "tok": 35,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 12,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "bateria",
+            "predio": 12,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "hay perdida de senal en el predio 6?",
+          "ms": 2720.5,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 6
+          },
+          "vals": {
+            "magnitud": "senal",
+            "predio": 6,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "dame la humedad del predio 4",
+          "ms": 2417.8,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 4,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "magnitud": "humedad",
+            "predio": 4,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "el predio 8 no reporta desde ayer, se perdio la senal",
+          "ms": 2401.1,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 8,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "senal",
+            "predio": 8,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "como estuvo el riego en el predio 10 esta semana",
+          "ms": 2512.3,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 10
+          },
+          "vals": {
+            "magnitud": "riego",
+            "predio": 10,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "alerta por temperatura en el predio 2",
+          "ms": 1444.3,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 2,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 2,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta bateria le queda al nodo del predio 3",
+          "ms": 1445.6,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 3
+          },
+          "vals": {
+            "magnitud": "bateria",
+            "predio": 3,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "promedio de humedad del predio 12 del ultimo mes",
+          "ms": 1444.2,
+          "tok": 35,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 12,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "magnitud": "humedad",
+            "predio": 12,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "temperaturas registradas en el predio 6 durante la madrugada",
+          "ms": 1328.6,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 6
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 6,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "el riego del predio 9 no arranco esta manana",
+          "ms": 1523.0,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 9,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "riego",
+            "predio": 9,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "la senal del predio 1 va intermitente",
+          "ms": 1522.0,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 1
+          },
+          "vals": {
+            "magnitud": "senal",
+            "predio": 1,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "bateria critica en el predio 5, cambienla",
+          "ms": 1523.0,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 5,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "bateria",
+            "predio": 5,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "necesito el historico de temperatura del predio 11",
+          "ms": 1826.9,
+          "tok": 35,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 11,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 11,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "redactame un informe para el cliente sobre el estado de la red",
+          "ms": 1650.1,
+          "tok": 33,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "explicame por que se descargan tan rapido las baterias de los no",
+          "ms": 1857.2,
+          "tok": 39,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "que me recomiendas para mejorar el rendimiento de toda la red?",
+          "ms": 1294.0,
+          "tok": 20,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "escribeme un correo para el proveedor de los nodos",
+          "ms": 1027.6,
+          "tok": 38,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "cual es la mejor epoca del ano para sembrar maiz en esta region?",
+          "ms": 777.7,
+          "tok": 34,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "resumeme en un parrafo el historial de mantenimiento del ultimo ",
+          "ms": 582.2,
+          "tok": 34,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "baja"
+          }
+        }
+      ]
+    },
+    {
+      "modo": "chat",
+      "concurrencia": 8,
+      "consultas": 26,
+      "pared_s": 8.992,
+      "caudal_qs": 2.89,
+      "latencia_ms": {
+        "media": 2564.0,
+        "p50": 2342.8,
+        "p95": 3667.5,
+        "min": 1696.3,
+        "max": 4038.0
+      },
+      "tokens_generados": 876,
+      "tokens_por_consulta": 33.7,
+      "prompt_tokens": 137,
+      "cached_tokens": 0,
+      "acierto_campos": "49/53",
+      "acierto_pct": 92.5,
+      "ruteo_no_respondibles_pct": 0.0,
+      "detalle": [
+        {
+          "q": "el sensor del predio 3 lleva dos dias sin reportar temperatura, ",
+          "ms": 1843.7,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 3,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 3,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta humedad promedio tuvimos en el predio 7 la semana pasada?",
+          "ms": 1840.7,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 7,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "magnitud": "humedad",
+            "predio": 7,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "como va la bateria de los nodos del predio 2",
+          "ms": 1844.4,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 2
+          },
+          "vals": {
+            "magnitud": "bateria",
+            "predio": 2,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "se cayo la senal en el predio 11, es grave",
+          "ms": 1841.3,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 11,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "senal",
+            "predio": 11,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "el nodo 4 del predio 9 manda lecturas raras de humedad",
+          "ms": 3667.5,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 9,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "humedad",
+            "predio": 9,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "revisen la temperatura del predio 1, esta muy alta",
+          "ms": 3665.9,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 1,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 1,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta agua se aplico en el riego del predio 5?",
+          "ms": 3640.3,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 5
+          },
+          "vals": {
+            "magnitud": "riego",
+            "predio": 5,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "la bateria del predio 12 esta por debajo del veinte por ciento",
+          "ms": 4038.0,
+          "tok": 35,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 12,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "bateria",
+            "predio": 12,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "hay perdida de senal en el predio 6?",
+          "ms": 3051.1,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 6
+          },
+          "vals": {
+            "magnitud": "senal",
+            "predio": 6,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "dame la humedad del predio 4",
+          "ms": 3128.8,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 4,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "magnitud": "humedad",
+            "predio": 4,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "el predio 8 no reporta desde ayer, se perdio la senal",
+          "ms": 3022.3,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 8,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "senal",
+            "predio": 8,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "como estuvo el riego en el predio 10 esta semana",
+          "ms": 3225.3,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 10
+          },
+          "vals": {
+            "magnitud": "riego",
+            "predio": 10,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "alerta por temperatura en el predio 2",
+          "ms": 2218.8,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 2,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 2,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta bateria le queda al nodo del predio 3",
+          "ms": 2289.3,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 3
+          },
+          "vals": {
+            "magnitud": "bateria",
+            "predio": 3,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "promedio de humedad del predio 12 del ultimo mes",
+          "ms": 2289.4,
+          "tok": 35,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 12,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "magnitud": "humedad",
+            "predio": 12,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "temperaturas registradas en el predio 6 durante la madrugada",
+          "ms": 2314.6,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 6
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 6,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "el riego del predio 9 no arranco esta manana",
+          "ms": 2323.6,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 9,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "riego",
+            "predio": 9,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "la senal del predio 1 va intermitente",
+          "ms": 2397.6,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 1
+          },
+          "vals": {
+            "magnitud": "senal",
+            "predio": 1,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "bateria critica en el predio 5, cambienla",
+          "ms": 2412.9,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 5,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "bateria",
+            "predio": 5,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "necesito el historico de temperatura del predio 11",
+          "ms": 2510.6,
+          "tok": 35,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 11,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 11,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "redactame un informe para el cliente sobre el estado de la red",
+          "ms": 2528.3,
+          "tok": 33,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "explicame por que se descargan tan rapido las baterias de los no",
+          "ms": 2710.5,
+          "tok": 39,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "que me recomiendas para mejorar el rendimiento de toda la red?",
+          "ms": 2117.8,
+          "tok": 20,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "escribeme un correo para el proveedor de los nodos",
+          "ms": 2342.8,
+          "tok": 38,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "cual es la mejor epoca del ano para sembrar maiz en esta region?",
+          "ms": 1696.3,
+          "tok": 34,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "resumeme en un parrafo el historial de mantenimiento del ultimo ",
+          "ms": 1701.4,
+          "tok": 34,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "baja"
+          }
+        }
+      ]
+    },
+    {
+      "modo": "chat",
+      "concurrencia": 16,
+      "consultas": 26,
+      "pared_s": 8.818,
+      "caudal_qs": 2.95,
+      "latencia_ms": {
+        "media": 4417.8,
+        "p50": 4843.5,
+        "p95": 6169.5,
+        "min": 1907.0,
+        "max": 6369.4
+      },
+      "tokens_generados": 875,
+      "tokens_por_consulta": 33.7,
+      "prompt_tokens": 137,
+      "cached_tokens": 0,
+      "acierto_campos": "49/53",
+      "acierto_pct": 92.5,
+      "ruteo_no_respondibles_pct": 0.0,
+      "detalle": [
+        {
+          "q": "el sensor del predio 3 lleva dos dias sin reportar temperatura, ",
+          "ms": 1908.5,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 3,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 3,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta humedad promedio tuvimos en el predio 7 la semana pasada?",
+          "ms": 1907.0,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 7,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "magnitud": "humedad",
+            "predio": 7,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "como va la bateria de los nodos del predio 2",
+          "ms": 1909.6,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 2
+          },
+          "vals": {
+            "magnitud": "bateria",
+            "predio": 2,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "se cayo la senal en el predio 11, es grave",
+          "ms": 1910.8,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 11,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "senal",
+            "predio": 11,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "el nodo 4 del predio 9 manda lecturas raras de humedad",
+          "ms": 3647.0,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 9,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "humedad",
+            "predio": 9,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "revisen la temperatura del predio 1, esta muy alta",
+          "ms": 3648.1,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 1,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 1,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta agua se aplico en el riego del predio 5?",
+          "ms": 3614.2,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 5
+          },
+          "vals": {
+            "magnitud": "riego",
+            "predio": 5,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "la bateria del predio 12 esta por debajo del veinte por ciento",
+          "ms": 5307.8,
+          "tok": 35,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 12,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "bateria",
+            "predio": 12,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "hay perdida de senal en el predio 6?",
+          "ms": 5091.2,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 6
+          },
+          "vals": {
+            "magnitud": "senal",
+            "predio": 6,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "dame la humedad del predio 4",
+          "ms": 3643.7,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 4,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "magnitud": "humedad",
+            "predio": 4,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "el predio 8 no reporta desde ayer, se perdio la senal",
+          "ms": 5121.7,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 8,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "senal",
+            "predio": 8,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "como estuvo el riego en el predio 10 esta semana",
+          "ms": 5202.2,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 10
+          },
+          "vals": {
+            "magnitud": "riego",
+            "predio": 10,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "alerta por temperatura en el predio 2",
+          "ms": 6075.6,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 2,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 2,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "cuanta bateria le queda al nodo del predio 3",
+          "ms": 6105.4,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 3
+          },
+          "vals": {
+            "magnitud": "bateria",
+            "predio": 3,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "promedio de humedad del predio 12 del ultimo mes",
+          "ms": 6369.4,
+          "tok": 35,
+          "esperado": {
+            "magnitud": "humedad",
+            "predio": 12,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "magnitud": "humedad",
+            "predio": 12,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "temperaturas registradas en el predio 6 durante la madrugada",
+          "ms": 6169.5,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 6
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 6,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "el riego del predio 9 no arranco esta manana",
+          "ms": 5150.9,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "riego",
+            "predio": 9,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "riego",
+            "predio": 9,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "la senal del predio 1 va intermitente",
+          "ms": 5180.7,
+          "tok": 33,
+          "esperado": {
+            "magnitud": "senal",
+            "predio": 1
+          },
+          "vals": {
+            "magnitud": "senal",
+            "predio": 1,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "bateria critica en el predio 5, cambienla",
+          "ms": 5361.6,
+          "tok": 34,
+          "esperado": {
+            "magnitud": "bateria",
+            "predio": 5,
+            "urgencia": "alta"
+          },
+          "vals": {
+            "magnitud": "bateria",
+            "predio": 5,
+            "urgencia": "alta"
+          }
+        },
+        {
+          "q": "necesito el historico de temperatura del predio 11",
+          "ms": 5583.3,
+          "tok": 35,
+          "esperado": {
+            "magnitud": "temperatura",
+            "predio": 11,
+            "urgencia": "baja"
+          },
+          "vals": {
+            "magnitud": "temperatura",
+            "predio": 11,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "redactame un informe para el cliente sobre el estado de la red",
+          "ms": 4620.5,
+          "tok": 33,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "explicame por que se descargan tan rapido las baterias de los no",
+          "ms": 4843.5,
+          "tok": 39,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "que me recomiendas para mejorar el rendimiento de toda la red?",
+          "ms": 4267.2,
+          "tok": 20,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "escribeme un correo para el proveedor de los nodos",
+          "ms": 4900.7,
+          "tok": 38,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "media"
+          }
+        },
+        {
+          "q": "cual es la mejor epoca del ano para sembrar maiz en esta region?",
+          "ms": 3629.9,
+          "tok": 34,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "baja"
+          }
+        },
+        {
+          "q": "resumeme en un parrafo el historial de mantenimiento del ultimo ",
+          "ms": 3692.1,
+          "tok": 33,
+          "esperado": {},
+          "vals": {
+            "magnitud": "ninguna",
+            "predio": 0,
+            "urgencia": "media"
+          }
+        }
+      ]
+    }
+  ]
+}

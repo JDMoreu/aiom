@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Entornos de editor
+.vscode/
+.idea/
+*.swp
+
+# Locales
+*.log
+*.tmp
+
+# Candado de los benchmarks: evita que las dos instancias que lanza el terminal
+# midan a la vez. Es de la maquina, no del proyecto.
+*.lock
+.cascada.lock
+
+# Nota: results/ SI se versiona. Es la evidencia del benchmark y el README
+# cita sus numeros; si se borra, las cifras quedan sin respaldo.
