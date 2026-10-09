@@ -266,9 +266,21 @@ def fallo(code: int, **campos) -> JsonBonito:
     return JsonBonito(campos, status_code=code)
 
 
-# La autodocumentacion de FastAPI va APAGADA: `/docs` es la documentacion de esta API
-# (en JSON, la de siempre) y no se puede pisar con la de Swagger.
-app = FastAPI(title="AIOM", docs_url=None, redoc_url=None, openapi_url=None)
+# La autodocumentacion de FastAPI va ENCENDIDA: `/docs` es Swagger, con la guia de los
+# tres formatos y un boton para probar cada uno desde el navegador. La version anterior
+# tenia ahi su propia lista de endpoints en JSON, que no usaba nadie: subir un documento,
+# sacarle el texto y pasarlo como caso es otro camino, y ese esta en POST /documento.
+app = FastAPI(
+    title="AIOM",
+    version="1.0",
+    description=(
+        "La puerta de programa: otro sistema manda la pregunta por HTTP y recibe JSON.\n\n"
+        "**Un modelo, dos formas de preguntar.** La via de decision puntua las opciones y "
+        "devuelve un valor sin generar un token; la de chat escribe prosa. El modo no es "
+        "del sistema: es **una propiedad de la peticion**, y por eso se pueden pedir las "
+        "dos a la vez y compararlas."
+    ),
+)
 
 # La interfaz la sirve esta misma API, asi que no hace falta CORS. Pero si alguien abre
 # el HTML desde el disco (file://) el navegador manda Origin: null, y sin esto la
@@ -277,47 +289,61 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["GET", "P
                                                                       "OPTIONS"],
                    allow_headers=["*"])
 
-DOC = {
-    "POST /ask": {
-        "descripcion": "Pregunta al modelo local. El formato se declara, no se adivina.",
-        "formatos": {
-            "texto": {
-                "cuerpo": {"formato": "texto", "question": "¿...?", "mode": "auto"},
-                "nota": "una pregunta suelta, contra los campos del CATALOGO. "
-                        "mode: auto | decision | chat",
-            },
-            "natural": {
-                "cuerpo": {"formato": "natural",
-                           "entrada": "input: ...\n\nask: ...\nchoice:\n  a: ..."},
-                "nota": "el contenido de un .txt: una o varias preguntas separadas por "
-                        "---. Trae su propio esquema, no usa el catalogo.",
-            },
-            "tipado": {
-                "cuerpo": {"formato": "tipado",
-                           "state": {"input": "..."},
-                           "questions": {"decision": {
-                               "type": "choice|score|noul",
-                               "instructions": "...",
-                               "criteria": {"a": "...", "b": "..."}}}},
-                "nota": "el formato de TypeSafe/Jev, tal cual.",
-            },
-        },
-        "respuesta": {
-            "formato": "el que mandaste",
-            "n_preguntas": "int",
-            "resultados": [{"campo": "str", "tipo": "choice|score|noul",
-                            "pregunta": "str", "value": "el valor elegido",
-                            "niveles": "['etiqueta', ...] (solo en score)",
-                            "probability": "float", "probabilities": "{opcion: float}",
-                            "confidence": "float"}],
-            "tiempo_ms": "float", "tokens": "int (0 en decision)",
-        },
+GUIA_FORMATOS = """
+El campo `formato` dice cual es, y **no se adivina**: si falta o no es uno de los tres,
+la API contesta con un error y la lista de los que acepta.
+
+- **`texto`** — una pregunta suelta, contra los campos del catalogo (`--catalog`).
+- **`natural`** — el contenido de un `.txt`: una o varias preguntas separadas por `---`.
+- **`tipado`** — el formato de TypeSafe/Jev, tal cual.
+
+Los tres aceptan ademas:
+
+- **`documento`** — el texto sacado de un fichero con `POST /documento`. Ese texto pasa a
+  ser el caso, y las preguntas van sobre el en vez de escribirlo.
+- **`comparar: true`** — resuelve la misma pregunta por las dos vias y las devuelve
+  juntas, para que los tiempos sean de la misma corrida.
+"""
+
+EJEMPLOS_ASK = {
+    "texto": {
+        "summary": "Una pregunta suelta, contra el catalogo",
+        "value": {"formato": "texto",
+                  "question": "El sensor del predio 3 lleva dos dias sin reportar",
+                  "mode": "decision"},
     },
-    "POST /documento": "sube un fichero en crudo; el nombre va en X-Nombre o ?nombre=",
-    "GET /": "la interfaz web",
-    "GET /health": "estado de aiom y de llama-server",
-    "GET /catalog": "el catalogo cargado",
+    "natural": {
+        "summary": "El contenido de un .txt, entero",
+        "value": {"formato": "natural",
+                  "entrada": "input: Llevo desde ayer sin poder entrar: me sale un "
+                             "error 500 cada vez que inicio sesion.\n\n"
+                             "ask: ¿A que area hay que enviar este correo?\n"
+                             "choice:\n"
+                             "  soporte: Fallos y errores del producto\n"
+                             "  facturacion: Cobros, facturas y reembolsos"},
+    },
+    "tipado": {
+        "summary": "El formato de TypeSafe, tal cual",
+        "value": {"formato": "tipado",
+                  "state": {"input": "Me cobraron dos veces la suscripcion"},
+                  "questions": {"area": {
+                      "type": "choice",
+                      "instructions": "¿Que area debe atenderlo?",
+                      "criteria": {"billing": "Pagos y reembolsos",
+                                   "technical": "Errores e integraciones"}}}},
+    },
+    "comparar": {
+        "summary": "La misma pregunta por las dos vias, en una sola corrida",
+        "value": {"formato": "natural", "comparar": True,
+                  "entrada": "input: Se cayo la senal en el predio 11.\n\n"
+                             "ask: ¿Es urgente?\n"
+                             "noul:\n  si: Si, hay una falla activa\n  no: No corre prisa"},
+    },
 }
+
+
+def _ejemplos_ask():
+    return {"application/json": {"examples": EJEMPLOS_ASK}}
 
 
 def _responder(cuerpo: dict) -> JsonBonito:
@@ -355,7 +381,8 @@ def _responder(cuerpo: dict) -> JsonBonito:
     return JsonBonito(r)
 
 
-@app.post("/ask")
+@app.post("/ask", summary="Pregunta al modelo local", description=GUIA_FORMATOS,
+          openapi_extra={"requestBody": {"required": True, "content": _ejemplos_ask()}})
 async def ask(request: Request):
     try:
         cuerpo = json.loads((await request.body()).decode("utf-8"))
@@ -366,7 +393,17 @@ async def ask(request: Request):
     return await run_in_threadpool(_responder, cuerpo)
 
 
-@app.post("/documento")
+@app.post("/documento", summary="Sube un fichero y devuelve su texto",
+          description="""El cuerpo va **en crudo** (los bytes del fichero) y el nombre en la
+cabecera `X-Nombre` o en `?nombre=`. De la extension sale como se lee: no se adivina por
+el contenido, porque un `.docx` y un `.zip` empiezan igual.
+
+El texto que devuelve es el que se pasa luego como `documento` en `POST /ask`: eso es el
+caso, y las preguntas van sobre el. **No se guarda nada**: se lee, se convierte a texto y
+se devuelve.""",
+          openapi_extra={"requestBody": {"required": True, "content": {
+              "application/octet-stream": {
+                  "schema": {"type": "string", "format": "binary"}}}}})
 async def subir_documento(request: Request):
     """Sube un fichero y devuelve su texto, para poder usarlo como caso.
 
@@ -415,7 +452,7 @@ async def subir_documento(request: Request):
     return JsonBonito(r)
 
 
-@app.get("/health")
+@app.get("/health", summary="Estado de la API y del llama-server")
 def health():
     # /health de llama-server es GET. Con POST devolvia 404 y el estado salia como
     # 'unreachable' aunque el servidor estuviera perfectamente.
@@ -428,19 +465,14 @@ def health():
         return fallo(503, aiom="ok", llama_server=f"unreachable: {e}")
 
 
-@app.get("/catalog")
+@app.get("/catalog", summary="El catalogo cargado")
 def catalog():
     return JsonBonito(CFG["catalog"])
 
 
-@app.get("/docs")
-def docs():
-    return JsonBonito({"api": "AIOM", "endpoints": DOC})
-
-
-@app.get("/")
-@app.get("/ui")
-@app.get("/index.html")
+@app.get("/", summary="La interfaz web")
+@app.get("/ui", include_in_schema=False)
+@app.get("/index.html", include_in_schema=False)
 def interfaz():
     ruta = CFG["ui"]
     try:
@@ -479,7 +511,8 @@ def main() -> int:
     print(f"AIOM escuchando en http://127.0.0.1:{a.port}")
     print(f"  interfaz:    http://127.0.0.1:{a.port}/")
     print(f"  POST /ask    formato: {' | '.join(CONVERSORES)}   (+ \"comparar\": true)")
-    print(f"  GET  /docs   la documentacion   GET /health   GET /catalog")
+    print(f"  GET  /docs   Swagger: la documentacion y las pruebas de la API")
+    print(f"  GET  /health   GET /catalog")
     print(f"  catalogo: {a.catalog}")
     # access_log=False: sin una linea por peticion, como en la version anterior.
     uvicorn.run(app, host="127.0.0.1", port=a.port, log_level="warning",

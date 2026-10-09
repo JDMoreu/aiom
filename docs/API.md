@@ -15,9 +15,7 @@ python api.py --ui            # además abre el navegador en la interfaz
 python api.py --catalog catalogs/soporte.json   # cambia los campos del formato `texto`
 ```
 
-Es **FastAPI sobre uvicorn**. Eso son dos dependencias, y son de la API, no del
-proyecto: el resto de puertas —la consola, el tipado y el motor— siguen siendo solo
-biblioteca estándar.
+Es **FastAPI sobre uvicorn**, así que la API necesita instalar algo:
 
 ```bash
 pip install fastapi "uvicorn[standard]"
@@ -31,7 +29,6 @@ web en el mismo proceso, así que no hay un segundo servidor que arrancar.
 |---|---|
 | `AIOM_SERVER` | dónde está el `llama-server` (por defecto `http://127.0.0.1:8096`) |
 | `AIOM_CATALOG` | qué catálogo usar, si no se pasa `--catalog` |
-| `GET /docs` | la documentación de los endpoints, en JSON, desde la propia API |
 
 ## Consumirla
 
@@ -378,13 +375,16 @@ no contra un agente ya especializado en el tema.
 | | |
 |---|---|
 | `GET /` | la interfaz |
-| `GET /docs` | la documentación de **esta** API, en JSON |
+| `GET /docs` | **Swagger**: la documentación *y* las pruebas de la API |
+| `GET /redoc` | lo mismo, en el formato de ReDoc |
+| `GET /openapi.json` | el esquema, para generar un cliente |
 | `GET /health` | estado de la API **y** del `llama-server` |
 | `GET /catalog` | el catálogo cargado |
 
-Los dos últimos son los mismos de siempre. De `/docs`, un aviso: la autodocumentación que
-FastAPI trae de serie (Swagger) está **apagada** a propósito, porque vive en esa misma
-ruta y no se puede pisar una que ya existía y tenía significado.
+`/docs` es Swagger desde que la API es FastAPI. Ahí está la guía de los tres formatos y
+un botón para probar cada uno sin escribir una línea de código: se elige un ejemplo, se
+cambia el texto y se lanza. La lista de endpoints que había antes en JSON no la usaba
+nadie, y esta hace lo mismo y además ejecuta.
 
 ## Cuando algo va mal
 

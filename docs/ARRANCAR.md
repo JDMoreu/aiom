@@ -157,8 +157,7 @@ Y no hace falta tocar código para escribir los tuyos: mira [`MANUAL.md`](MANUAL
 
 ### La puerta de programa: la API y la interfaz web
 
-La API es lo único del repositorio que necesita instalar algo —es FastAPI—, así que ese
-paso va primero:
+La API es FastAPI, así que ese paso va primero:
 
 ```bash
 pip install fastapi "uvicorn[standard]"
@@ -218,9 +217,8 @@ winget install Python.Python.3.13
 
 Y comprueba con `python --version` en una terminal **nueva**.
 
-**Lo que se instala, y por qué.** La consola, el tipado y el motor —los tres ficheros que
-hacen las preguntas— usan **solo la biblioteca estándar**: no piden nada. Se instalan dos
-cosas, y ninguna es del proyecto:
+**Lo que se instala.** La consola, el tipado y el motor —los tres ficheros que hacen las
+preguntas— usan **solo la biblioteca estándar**. Se instalan dos cosas más:
 
 ```bash
 pip install fastapi "uvicorn[standard]"   # la API: es un framework web

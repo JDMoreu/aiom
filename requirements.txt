@@ -1,11 +1,7 @@
 # Dependencias de AIOM.
 #
-# Dos grupos, y es util saber cual es cual:
-#
-# 1. LA API (api.py). Necesita FastAPI y su servidor. Es lo unico del repositorio que no
-#    es biblioteca estandar: el precio de usar un framework web en vez del servidor HTTP
-#    que trae Python. El resto de puertas -la consola, el tipado y el motor- no lo
-#    necesitan para nada.
+# 1. LA API (api.py). FastAPI y su servidor, uvicorn. El resto de puertas -la consola, el
+#    tipado y el motor- no los necesitan: son biblioteca estandar.
 #
 #      pip install fastapi "uvicorn[standard]"
 #

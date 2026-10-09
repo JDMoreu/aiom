@@ -47,8 +47,9 @@ python preguntar.py ejemplos/1_opciones.txt
 **[→ Cómo montarlo todo paso a paso, de cero, y qué hacer si falla](docs/ARRANCAR.md)**
 
 Para preguntar por consola **no hace falta instalar nada**: la consola, el tipado y el
-motor son solo biblioteca estándar. **La API sí** —es FastAPI—, y con ella su interfaz.
-De dónde sale cada pieza está en [`CREDITOS.md`](CREDITOS.md).
+motor son solo biblioteca estándar. La API usa **FastAPI**, y con ella trae su propia
+página de pruebas en `http://127.0.0.1:8100/docs`. De dónde sale cada pieza está en
+[`CREDITOS.md`](CREDITOS.md).
 
 ## Las dos formas de preguntar
 
@@ -203,8 +204,7 @@ verificar.py         comprueba que los módulos importen y que los enlaces cuadr
 
 - Python 3.10+ — la consola, el tipado y el motor **no tienen dependencias**: solo la
   biblioteca estándar.
-- Para la **API**: `pip install fastapi "uvicorn[standard]"`. Es lo único que no es
-  biblioteca estándar, y es de la API, no del proyecto.
+- Para la **API**: `pip install fastapi "uvicorn[standard]"`.
 - Un `llama-server` con el endpoint `/v1/decision`, del backend
   [`parallel-decision`](https://github.com/thecodacus/llama.cpp/tree/parallel-decision).
 - Para leer **PDF** como caso, `pip install pymupdf` (un `.docx` o un `.txt` no piden nada).
