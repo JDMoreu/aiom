@@ -224,6 +224,47 @@ pasa a ser el grueso del tiempo de la decisión, y ahí la ventaja se estrecha.
 - La decisión sigue teniendo lo suyo, y no es solo la velocidad: **devuelve valores con
   su probabilidad**, no prosa que hay que interpretar. Eso no se mide en milisegundos.
 
+## Muchas preguntas a la vez: rápido, pero ojo
+
+Agrupar es lo que hace rápida a la decisión: **doce preguntas en una sola petición**.
+Medido sobre un currículum real (3910 caracteres), las mismas doce preguntas:
+
+| | peticiones | tiempo | tokens |
+|---|---|---|---|
+| decisión | **1** | **510 ms** | **0** |
+| chat | 12 | 6717 ms | 541 |
+
+**13,2× menos**, y escala: el chat hace una petición por pregunta, la decisión una sola.
+
+Pero hay un pero, y es importante. **Las preguntas se estorban entre sí**, y no todas
+igual. Sobre el mismo currículum:
+
+| pregunta | sola | en el lote de 12 |
+|---|---|---|
+| ¿Qué tipo de documento es? | curriculum 0.870 | **informe 0.788** |
+| ¿Cuánta experiencia declara? | mucha 3.0 | **media 2.0** |
+| ¿Cuántos empleos enumera? | 3.0 | **2.0** |
+| ¿Menciona nube? | si 1.000 | si 0.990 |
+| ¿Menciona hardware? | si 1.000 | si 0.957 |
+| ¿Es para un reclutador? | True 0.618 | True 0.824 |
+
+Se separan solas en dos grupos:
+
+- **«¿aparece X?»** (contacto, estudios, nube, IA, publicaciones, hardware) → **no se
+  mueven**. Agruparlas no cuesta nada.
+- **De juicio** (qué tipo de documento es, cuánta experiencia, cuántos empleos) →
+  **cambian** según con cuántas vayan.
+
+No es azar: el lote de doce da exactamente lo mismo en tres corridas seguidas. Es un
+efecto sistemático de meterlas juntas, no ruido. *Por qué* pasa no lo he medido — la
+explicación que le veo es que los campos de «¿aparece X?» anclan al modelo en el
+contenido del documento y los de juicio se dejan arrastrar, pero eso es una hipótesis
+mía, no un dato.
+
+**Lo práctico:** agrupa para velocidad y para las de «¿aparece X?»; si una respuesta de
+juicio te importa, **pregúntala sola** — una petición de ~40 ms, y da `curriculum` 0.870
+en vez de `informe` 0.788.
+
 ## Qué mide exactamente `tiempo_ms`
 
 **Lo que tardas en recibir la respuesta: la ida y vuelta completa al modelo**, medida

@@ -509,6 +509,9 @@ python preguntar.py --texto "input: ... ask: ... choice: ..."
 # (ejemplos/6_preguntas_sobre_un_documento.txt es uno de esos, listo para probar)
 python preguntar.py mis_preguntas.txt --documento carta.pdf
 
+# doce preguntas de golpe sobre un curriculum, para medir velocidad y acierto
+python preguntar.py ejemplos/7_preguntas_curriculum.txt --documento mi_cv.pdf
+
 # con el JSON crudo del servidor (probabilidades completas, tiempos)
 python preguntar.py --json
 ```

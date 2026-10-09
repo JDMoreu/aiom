@@ -1,0 +1,105 @@
+# Doce preguntas sobre un curriculum, para probar la velocidad con un documento.
+#
+# OJO CON EL LOTE. Agrupar es lo que hace rapida a la decision: doce preguntas en UNA
+# peticion. Pero las preguntas se estorban entre si, y de forma desigual:
+#
+#   - las de "¿aparece X?" (contacto, estudios, nube, IA, publicaciones, hardware)
+#     NO se mueven al agruparlas. Estables: agrupalas sin miedo.
+#   - las de JUICIO (que tipo de documento es, cuanta experiencia declara, cuantos
+#     empleos enumera) SI cambian segun con cuantas vayan. Medido sobre el mismo
+#     curriculum: "que tipo de documento es" da 'curriculum' 0.870 sola y 'informe'
+#     0.788 acompanada de dos mas. No es azar: el lote de doce da lo mismo tres veces.
+#
+# Asi que: agrupa para MEDIR VELOCIDAD, que es para lo que sirve este fichero; y si
+# una respuesta de juicio te importa de verdad, preguntala sola (~40 ms, una peticion).
+
+ask: ¿Qué tipo de documento es?
+choice:
+  carta: una carta, un correo o una reclamación
+  informe: un informe, un estudio, un documento técnico o una propuesta
+  curriculum: un currículum, una hoja de vida o un perfil profesional
+  otro: otra cosa
+
+---
+
+ask: ¿En qué idioma está escrito?
+score:
+  español: está escrito en español
+  inglés: está escrito en inglés
+  otro: está escrito en otro idioma
+
+---
+
+ask: ¿Cuánta experiencia profesional declara?
+score:
+  ninguna: no la menciona
+  poca: menos de 3 años
+  media: entre 3 y 5 años
+  mucha: más de 5 años
+
+---
+
+ask: ¿Aparece algún dato de contacto?
+choice:
+  si: Sí, aparece correo, teléfono o ciudad
+  no: No aparece ninguno
+
+---
+
+ask: ¿Aparecen estudios o títulos académicos?
+choice:
+  si: Sí, menciona universidad, carrera o título
+  no: No menciona ninguno
+
+---
+
+ask: ¿Cuántos empleos o cargos distintos enumera?
+score:
+  ninguno: no enumera ninguno
+  uno: uno o dos
+  varios: entre tres y cinco
+  muchos: más de cinco
+
+---
+
+ask: ¿Menciona tecnologías de nube o contenedores?
+choice:
+  si: Sí, aparece algo de nube, Docker, Kubernetes o similar
+  no: No aparece nada de eso
+
+---
+
+ask: ¿Menciona trabajo con inteligencia artificial o modelos?
+choice:
+  si: Sí, aparece machine learning, IA, LLM o modelos
+  no: No aparece nada de eso
+
+---
+
+ask: ¿Menciona publicaciones o investigación?
+choice:
+  si: Sí, aparece alguna publicación, paper o investigación
+  no: No aparece ninguna
+
+---
+
+ask: ¿Menciona hardware o electrónica?
+choice:
+  si: Sí, aparece PCB, firmware, sensores o microcontroladores
+  no: No aparece nada de eso
+
+---
+
+ask: ¿A qué área encaja mejor el perfil?
+choice:
+  iot: IoT, electrónica o sistemas embebidos
+  datos: inteligencia artificial o ciencia de datos
+  web: desarrollo web o frontend
+  devops: infraestructura, nube o DevOps
+
+---
+
+ask: ¿El documento está pensado para que lo lea un reclutador?
+noul:
+  false: No lo parece
+  true: Sí lo parece

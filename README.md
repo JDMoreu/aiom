@@ -222,10 +222,11 @@ catalogs/            dos catálogos listos para usar:
                        soporte.json  triage de tickets, con los mismos ejemplos que
                                      publica TypeSafe, para comparar respuesta a respuesta
                      se elige con la variable AIOM_CATALOG o el argumento del script
-ejemplos/            seis casos: cinco sobre correos de soporte (uno por tipo de
-                     pregunta, y uno con las tres de golpe) y uno con SOLO las
-                     preguntas, para usarlo con un documento:
-                       6_preguntas_sobre_un_documento.txt
+ejemplos/            siete casos: cinco sobre correos de soporte (uno por tipo de
+                     pregunta, y uno con las tres de golpe) y dos con SOLO las
+                     preguntas, para usarlos con un documento:
+                       6_preguntas_sobre_un_documento.txt  tres preguntas
+                       7_preguntas_curriculum.txt          doce, para medir velocidad
 ```
 
 **Lo que produjo los resultados** — no hace falta para usar el proyecto; está aquí
