@@ -344,35 +344,56 @@ sale con confianza baja, se revisa.**
 
 ### Y esto es lo que se gana frente al chat
 
-Para verlo con tus ojos, `comparar.py` coge el mismo caso y lo lanza **en los dos
-modos**, uno al lado del otro:
+Se puede comprobar a mano, con dos comandos. El caso es
+`ejemplos/5_correo_soporte.txt` (una queja con cortes de conexión y un cobro duplicado).
+
+**1. En modo decisión** — las tres preguntas de una vez:
 
 ```bash
-python comparar.py ejemplos/5_correo_soporte.txt
+python preguntar.py ejemplos/5_correo_soporte.txt
 ```
 
-Con ese caso (una queja con cortes de conexión y un cobro duplicado), sale esto:
+**2. En modo chat** — la misma primera pregunta, en prosa:
 
-| | decisión | chat |
-|---|---|---|
-| peticiones al servidor | **1** | 3 |
-| tiempo | **174 ms** | 2192 ms |
-| tokens escritos | **0** | 136 |
-| salida | valores | prosa |
-| ¿se puede comparar? | **sí, son números** | no, hay que leerla |
+```bash
+python aiom.py --catalog catalogs/soporte.json ask "Buenas tardes. Contraté el plan de
+20 GB el mes pasado y llevo una semana con cortes de conexión casi todas las noches.
+Además me han cobrado dos veces la factura de este mes.
 
-**Y lo interesante no es el tiempo: es la forma de la respuesta.** A la misma pregunta
-«¿a qué área hay que enviar este correo?»:
+Pregunta: ¿A qué área hay que enviar este correo?" --mode chat
+```
 
-- **decisión** → `facturacion` 0.665 · `soporte` 0.296 · `comercial` 0.038 · `otros` 0.000
-- **chat** → *«Soporte Técnico de Internet. Soporte de Facturación y Cobros.»*
+> **Ojo con la posición de `--catalog`:** va **antes** de `ask`. Después, `argparse`
+> no lo reconoce. Y sí importa: el catálogo trae el *system prompt* del chat, así que
+> con el de IoT el modelo contesta como si fueran sensores de campo.
 
-El chat **dio dos respuestas a la vez** y no dijo con cuánta seguridad. La de decisión da
-un valor y **el reparto entero**: se ve que dudaba (0.665 no es 1.000) y se puede poner
-un umbral. La del chat hay que leerla, interpretarla y decidir a mano cuál de las dos
-vale — y si el programa tiene que actuar solo, no puede.
+Lo que sale, medido aquí:
+
+**Decisión** — 1 petición, 181 ms, **0 tokens**:
+
+```
+CHOICE  ·  ¿A qué área hay que enviar este correo?
+  facturacion     0.665  <-
+  soporte         0.296
+  comercial       0.038
+  otros           0.000
+  confianza = 0.453
+```
+
+**Chat** — prosa, y sin decir con cuánto acierta:
+
+> **Área: Soporte Técnico / Resolución de Problemas**
+> *(Nota: Si tu sistema de soporte tiene un área más específica, como «Tecnología de
+> la Información» o «Soporte de Servicios», también es válido.)*
+
+**La diferencia no es el tiempo, es la forma.** Decisión da **un valor y el reparto
+entero**: se ve que dudaba (0.665 no es 1.000) y se le puede poner un umbral. El chat da
+una respuesta **y una nota al margen** diciendo que otra también valdría — hay que leerla,
+decidir a mano cuál vale, y un programa no puede hacerlo.
 
 Esa es la diferencia de fondo: **las dos responden, pero solo una es comparable.**
+
+*(En el chat la redacción cambia de una corrida a otra; la de decisión es estable.)*
 
 ---
 
