@@ -291,12 +291,25 @@ se tarda en tener las N respuestas, que es justo lo que se compara.
 ## La interfaz
 
 `GET /` sirve `web/index.html`: un solo fichero, sin dependencias ni compilación, que
-usa esta misma API. Se elige el formato de la vía de decisión (natural o tipado), se
-activa «Comparar» y se ven las dos respuestas con su tiempo y sus tokens.
+usa esta misma API.
 
-En la cabecera aparece **el catálogo cargado**, y no es un adorno: la vía de chat usa
-su *persona*. Con el catálogo de IoT por defecto, un caso de facturación hace que el
-chat conteste como agente de campo. Para eso está `--catalog catalogs/soporte.json`.
+El caso y las preguntas se escriben **una sola vez**, y hay tres formas de hacerlo —
+**por bloques**, en **lenguaje natural** o en **JSON tipado**— que son tres vistas del
+mismo contenido, no tres sitios donde teclear por separado. Se cambia de pestaña y lo
+escrito aparece en la otra forma. Con «Comparar» activado se pregunta lo mismo por las
+dos vías y se ven juntas.
+
+El **caso** puede ser un documento: se sube, se extrae su texto en el servidor y se
+enseña una vista previa con lo que se extrajo (caracteres, palabras, páginas y el texto),
+que es exactamente lo que recibe el modelo.
+
+Arriba, una banda pegada al armazón enseña la comparación con sus números. Antes de la
+primera medición muestra la cifra ya medida en el repositorio, dicha como lo que es: una
+medición publicada, no la de ahora.
+
+El **catálogo** no se enseña en la interfaz, pero sigue importando: la vía de chat usa su
+*persona*. Con el catálogo de IoT por defecto, un caso de facturación hace que el chat
+conteste como agente de campo. Para eso está `--catalog catalogs/soporte.json`.
 
 ## Los otros endpoints
 

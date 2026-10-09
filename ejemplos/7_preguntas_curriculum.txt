@@ -1,22 +1,7 @@
-# Doce preguntas sobre un curriculum, para probar la velocidad con un documento.
-#
-# OJO CON EL LOTE. Agrupar es lo que hace rapida a la decision: doce preguntas en UNA
-# peticion. Pero las preguntas se estorban entre si, y de forma desigual:
-#
-#   - las de "¿aparece X?" (contacto, estudios, nube, IA, publicaciones, hardware)
-#     NO se mueven al agruparlas. Estables: agrupalas sin miedo.
-#   - las de JUICIO (que tipo de documento es, cuanta experiencia declara, cuantos
-#     empleos enumera) SI cambian segun con cuantas vayan. Medido sobre el mismo
-#     curriculum: "que tipo de documento es" da 'curriculum' 0.870 sola y 'informe'
-#     0.788 acompanada de dos mas. No es azar: el lote de doce da lo mismo tres veces.
-#
-# Asi que: agrupa para MEDIR VELOCIDAD, que es para lo que sirve este fichero; y si
-# una respuesta de juicio te importa de verdad, preguntala sola (~40 ms, una peticion).
-
 ask: ¿Qué tipo de documento es?
 choice:
   carta: una carta, un correo o una reclamación
-  informe: un informe, un estudio, un documento técnico o una propuesta
+  PQR: Pregunta, queja o reclamo
   curriculum: un currículum, una hoja de vida o un perfil profesional
   otro: otra cosa
 

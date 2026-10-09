@@ -171,7 +171,9 @@ no hay un segundo servidor ni un paso de compilación:
 python api.py          # y abre http://127.0.0.1:8100/
 ```
 
-La interfaz deja escribir el caso **en lenguaje natural o en JSON tipado**, y con
+La interfaz deja escribir el caso y las preguntas **una sola vez**, de tres formas
+distintas —**por bloques**, en **lenguaje natural** o en **JSON tipado**— que son tres
+vistas de lo mismo: se cambia de pestaña y lo escrito aparece en la otra forma. Con
 «Comparar» activado pregunta lo mismo por las dos vías y las pone lado a lado: qué
 responde cada modo y cuánto tarda cada uno.
 

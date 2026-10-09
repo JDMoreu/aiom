@@ -21,3 +21,6 @@ env/
 
 # Nota: results/ SI se versiona. Es la evidencia del benchmark y el README
 # cita sus numeros; si se borra, las cifras quedan sin respaldo.
+
+# Estado de las herramientas de diseno (impeccable): es proceso, no producto.
+.impeccable/

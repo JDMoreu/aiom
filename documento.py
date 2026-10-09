@@ -165,10 +165,16 @@ def _de_pdf(datos):
         if not paginas:
             raise ValueError("el PDF no tiene capa de texto (sera un escaneo): "
                              "habria que pasarle un OCR antes")
-    return "\n\n".join(paginas)
+    # El numero de paginas solo es un dato REAL en un PDF. En un .txt o un .docx no
+    # hay paginas hasta que alguien lo maqueta, asi que ahi no se inventa.
+    return "\n\n".join(paginas), {"paginas": len(paginas)}
 
 
-LECTORES = {"texto": _de_texto, "docx": _de_docx, "pdf": _de_pdf}
+# Cada lector devuelve (texto, extras). Los extras son los datos que SOLO ese formato
+# puede saber de verdad -- hoy, las paginas de un PDF.
+LECTORES = {"texto": lambda d: (_de_texto(d), {}),
+            "docx": lambda d: (_de_docx(d), {}),
+            "pdf": _de_pdf}
 
 
 # --------------------------------------------------------------------------- #
@@ -184,13 +190,15 @@ def extraer_bytes(datos, nombre):
     if not ok:
         raise ValueError(motivo)
     modo = SOPORTADOS[extension(nombre)][0]
-    crudo = LECTORES[modo](datos)
+    crudo, extras = LECTORES[modo](datos)
     texto = limpiar(crudo)
     if not texto:
         raise ValueError(f"'{nombre}' se leyo bien pero no tiene texto")
-    return {"texto": texto, "nombre": os.path.basename(nombre or ""),
-            "tipo": modo, "caracteres": len(texto),
-            "palabras": len(texto.split()), "lineas": texto.count("\n") + 1}
+    datos = {"texto": texto, "nombre": os.path.basename(nombre or ""),
+             "tipo": modo, "caracteres": len(texto),
+             "palabras": len(texto.split()), "lineas": texto.count("\n") + 1}
+    datos.update(extras)
+    return datos
 
 
 def extraer(ruta):

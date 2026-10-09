@@ -3,399 +3,663 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AIOM</title>
+<title>AIOM — un modelo, dos formas de preguntar</title>
 <style>
-  /* Una sola hoja, sin dependencias: el repositorio es Python puro y esto se sirve
-     desde la propia API, asi que no hay build ni segundo servidor que arrancar. */
-  :root{
-    --fondo:#08090a; --panel:#0f1011; --superficie:#141516; --superficie2:#1a1b1d;
-    --borde:rgba(255,255,255,.08); --borde2:rgba(255,255,255,.14);
-    --texto:#f7f8f8; --apagado:#8a8f98; --tenue:#5c6169;
-    --acento:#7170ff; --acento-suave:rgba(113,112,255,.14);
-    --ok:#4cb782; --aviso:#e0a458; --malo:#e5484d;
-    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
-    --sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--fondo);color:var(--texto);font-family:var(--sans);
-       font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
-  header{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 14px;
-         padding:18px clamp(14px,3vw,30px);border-bottom:1px solid var(--borde)}
-  header h1{margin:0;font-size:16px;font-weight:600;letter-spacing:-.01em}
-  header .sub{color:var(--apagado);font-size:12.5px}
-  header .estado{margin-left:auto;font-size:12px;color:var(--apagado);
-                 display:flex;align-items:center;gap:7px}
-  @media (max-width:620px){
-    header .estado{margin-left:0;width:100%}
-    header .sub#catalogo{width:100%}
-  }
-  .punto{width:7px;height:7px;border-radius:50%;background:var(--tenue);flex:none}
-  .punto.ok{background:var(--ok)} .punto.malo{background:var(--malo)}
+/* Un solo fichero, sin dependencias ni build: el repositorio es Python puro y esto lo
+   sirve la propia API. Nada de CDN ni de fuentes de fuera.
 
-  /* Una sola columna: el caso arriba y las respuestas debajo, en el mismo eje.
-     Con dos columnas el area de escritura quedaba estrecha y el texto incomodo. */
-  main{display:flex;flex-direction:column;gap:clamp(18px,3vw,30px);
-       max-width:1220px;margin:0 auto;padding:clamp(16px,3vw,30px) clamp(14px,3vw,30px) 40px}
-  .panel{min-width:0}
-  .entrada{display:flex;flex-direction:column}
+   El mundo es el de un instrumento de precision: panel gris claro, tinta grabada,
+   verde de escala profundo en el armazon y rojo de cursor reservado para la marca.
+   Entra por tipo, paleta, densidad y una sola marca -- la escala graduada. La
+   disposicion y los controles son los de siempre en la web: pestanas, formulario,
+   botones, tabla. */
+:root{
+  --panel:#E4E5DF;          /* el panel donde se apoya el instrumento */
+  --papel:#FAFAF7;          /* la cara de la regla: donde se lee */
+  --papel-hundido:#F2F3EE;
+  --tinta:#1A1C1B;
+  --apagado:#4A4F49;        /* secundario */
+  --tenue:#606560;          /* terciario: el mas claro que aun pasa 4.5:1 sobre el panel */
+  --hairline:#CFD1C9;
+  --hairline-fuerte:#B9BDB3;
+  --regla:#1B4D3E;          /* color comprometido del armazon */
+  --regla-claro:#2A6A55;
+  --regla-borde:rgba(0,0,0,.28);   /* el filo oscuro bajo el armazon */
+  --regla-texto:rgba(255,255,255,.78);  /* texto de apoyo sobre el verde */
+  --regla-punto:rgba(255,255,255,.4);   /* el punto de estado, en reposo */
+  --regla-tenue:rgba(27,77,62,.09);
+  --cursor:#B4321F;         /* solo la marca */
+  --estado-ok:#1B6B4A; --estado-aviso:#8A6412; --estado-malo:#A32B22;
+  --tipo-choice:#1B4D3E; --tipo-score:#1E3A6E; --tipo-noul:#7A3E12;
+  --sans:"Bahnschrift","DIN Alternate","Roboto Condensed","Arial Narrow",
+         system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"Cascadia Mono",Consolas,monospace;
+  --ancho:1180px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--panel);color:var(--tinta);font-family:var(--sans);
+     font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;
+     font-variant-numeric:tabular-nums}
+::selection{background:var(--regla);color:var(--papel)}
+:focus-visible{outline:2px solid var(--cursor);outline-offset:2px;border-radius:2px}
+h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.005em}
+button,input,textarea,select{font:inherit;color:inherit}
 
-  .etiqueta{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
-            color:var(--apagado);margin:0 0 9px}
+/* ---------------------------------------------------------------- armazon */
+.rail{background:var(--regla);color:var(--papel);position:sticky;top:0;z-index:30;
+      border-bottom:2px solid var(--regla-borde)}
+.rail-in{max-width:var(--ancho);margin:0 auto;padding:11px clamp(14px,3vw,26px);
+         display:flex;align-items:center;gap:8px 20px;flex-wrap:wrap}
+.marca{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;min-width:0}
+.marca b{font-size:19px;font-weight:600;letter-spacing:.16em}
+.marca span{font-size:12.5px;color:var(--regla-texto);letter-spacing:.01em}
+.rail-der{margin-left:auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.estado{display:flex;align-items:center;gap:7px;font-size:12px;
+        color:var(--regla-texto);letter-spacing:.02em}
+.punto{width:7px;height:7px;border-radius:50%;background:var(--regla-punto);flex:none}
+.punto.ok{background:#7BE0B0} .punto.malo{background:#FF9A8F}
+.principal{background:var(--papel);color:var(--regla);border:0;border-radius:2px;
+           padding:9px 22px;font-weight:600;letter-spacing:.04em;cursor:pointer;
+           text-transform:uppercase;font-size:12.5px}
+.principal:hover{background:var(--papel-hundido)}
+.principal:disabled{opacity:.55;cursor:default}
 
-  /* --- el documento --- */
-  .doc{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;
-       padding:12px 14px;border:1px dashed var(--borde2);border-radius:9px;
-       background:var(--superficie)}
-  .doc.cargado{border-style:solid;border-color:var(--acento);
-               background:var(--acento-suave)}
-  .doc .icono{font-family:var(--mono);font-size:15px;color:var(--apagado);flex:none}
-  .doc .quien{font-size:12.5px;color:var(--apagado);line-height:1.45}
-  .doc .quien b{color:var(--texto);font-weight:600}
-  .doc .quien .medida{font-family:var(--mono);font-size:11.5px;color:var(--tenue)}
-  .doc .acciones{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
-  .doc button{background:var(--superficie2);color:var(--texto);border:1px solid var(--borde2);
-              border-radius:7px;padding:7px 13px;font:inherit;font-size:12.5px;
-              cursor:pointer;transition:border-color .12s,background .12s}
-  .doc button:hover{border-color:var(--acento)}
-  .doc button.principal{background:var(--acento);border-color:var(--acento);color:#fff;
-                        font-weight:600}
-  .doc input[type=file]{display:none}
-  .doc .nota-doc{width:100%;font-size:11.5px;color:var(--tenue);margin-top:2px}
+/* ---------------------------------------------------------------- la banda */
+.banda{background:var(--papel);border-bottom:1px solid var(--hairline-fuerte);
+       position:sticky;top:52px;z-index:20}
+.banda-in{max-width:var(--ancho);margin:0 auto;padding:0 clamp(14px,3vw,26px);
+          display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
+.banda .rot{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+            color:var(--tenue);padding:9px 18px 9px 0;display:flex;align-items:center;
+            border-right:1px solid var(--hairline);max-width:210px}
+.banda .dato{padding:8px 18px;border-right:1px solid var(--hairline);min-width:96px}
+.banda .dato i{display:block;font-style:normal;font-size:11.5px;letter-spacing:.12em;
+               text-transform:uppercase;color:var(--tenue);margin-bottom:1px}
+.banda .dato b{font-size:19px;font-weight:600;letter-spacing:-.01em;line-height:1.15}
+.banda .ratio{margin-left:auto;display:flex;align-items:center;gap:12px;
+              padding:6px 0 6px 18px;border-left:2px solid var(--cursor)}
+.banda .ratio b{font-size:30px;font-weight:600;letter-spacing:-.03em;color:var(--cursor);
+                line-height:1}
+.banda .ratio i{font-style:normal;font-size:11.5px;color:var(--apagado);
+                max-width:130px;line-height:1.3}
+.banda .ratio b small{font-size:15px;letter-spacing:0}
 
-  /* control segmentado: el formato de la via de decision */
-  .seg{display:flex;gap:2px;background:var(--superficie);border:1px solid var(--borde);
-       border-radius:8px;padding:3px;margin-bottom:18px}
-  .seg button{flex:1;background:none;border:0;color:var(--apagado);font:inherit;
-              font-size:13px;padding:7px 10px;border-radius:6px;cursor:pointer;
-              transition:background .12s,color .12s}
-  .seg button:hover{color:var(--texto)}
-  .seg button[aria-pressed="true"]{background:var(--acento-suave);color:var(--texto);
-                                   box-shadow:inset 0 0 0 1px var(--borde2)}
+/* ---------------------------------------------------------------- cuerpo */
+main{max-width:var(--ancho);margin:0 auto;padding:clamp(16px,3vw,26px)
+     clamp(14px,3vw,26px) 60px;display:flex;flex-direction:column;
+     gap:clamp(16px,2.5vw,24px)}
 
-  textarea{width:100%;background:var(--superficie);color:var(--texto);
-           border:1px solid var(--borde);border-radius:8px;padding:14px 15px;
-           font-family:var(--mono);font-size:13px;line-height:1.7;resize:vertical;
-           min-height:clamp(300px,44vh,520px)}
-  textarea:focus{outline:none;border-color:var(--acento);
-                 box-shadow:0 0 0 3px var(--acento-suave)}
+.modos{display:flex;gap:0;border-bottom:2px solid var(--hairline-fuerte)}
+.modos button{background:none;border:0;border-bottom:2px solid transparent;
+              margin-bottom:-2px;padding:10px 18px;cursor:pointer;color:var(--apagado);
+              font-size:13.5px;letter-spacing:.02em}
+.modos button:hover{color:var(--tinta)}
+.modos button[aria-selected="true"]{color:var(--tinta);font-weight:600;
+                                    border-bottom-color:var(--regla)}
+.modos .cinta{margin-left:auto;display:flex;align-items:center;gap:8px;padding-right:2px}
+.cinta span{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;
+            color:var(--tenue);border:1px solid var(--hairline-fuerte);border-radius:2px;
+            padding:2px 7px}
 
-  .fila{display:flex;align-items:center;gap:12px 14px;flex-wrap:wrap;margin:18px 0}
-  .interruptor{display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none;
-               font-size:13px;color:var(--texto)}
-  .interruptor input{appearance:none;width:34px;height:19px;border-radius:99px;
-                     background:var(--superficie2);border:1px solid var(--borde2);
-                     position:relative;cursor:pointer;transition:background .15s;flex:none}
-  .interruptor input::after{content:"";position:absolute;top:2px;left:2px;width:13px;
-                            height:13px;border-radius:50%;background:var(--apagado);
-                            transition:transform .15s,background .15s}
-  .interruptor input:checked{background:var(--acento-suave);border-color:var(--acento)}
-  .interruptor input:checked::after{transform:translateX(15px);background:var(--acento)}
-  .pista{font-size:11.5px;color:var(--tenue)}
+.caja{background:var(--papel);border:1px solid var(--hairline-fuerte);border-radius:3px;
+      padding:16px 18px}
+.rotulo{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+        color:var(--tenue);margin:0 0 10px;display:flex;align-items:center;gap:10px}
+.rotulo .raya{flex:1;height:1px;background:var(--hairline)}
+.ayuda{font-size:12px;color:var(--tenue);line-height:1.45}
 
-  button.enviar{background:var(--acento);color:#fff;border:0;border-radius:8px;
-                padding:11px 26px;font:inherit;font-size:13.5px;font-weight:600;
-                cursor:pointer;transition:filter .12s;margin-left:auto;min-width:180px}
-  button.enviar:hover{filter:brightness(1.12)}
-  button.enviar:disabled{opacity:.5;cursor:default;filter:none}
-  @media (max-width:560px){
-    button.enviar{width:100%;margin-left:0;min-width:0}
-    .pista{width:100%}
-  }
+/* ---------------------------------------------------------------- documento */
+.doc{border:1px dashed var(--hairline-fuerte);border-radius:3px;padding:12px 14px;
+     display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--papel-hundido)}
+.doc.cargado{border-style:solid;border-color:var(--regla);background:var(--regla-tenue)}
+.doc .icono{font-family:var(--mono);font-size:13.5px;color:var(--regla);flex:none;
+            border:1px solid currentColor;border-radius:2px;padding:1px 5px}
+.doc .quien{font-size:13.5px;min-width:0;flex:1 1 240px}
+.doc .quien b{font-weight:600;word-break:break-all}
+.doc .quien .medida{font-family:var(--mono);font-size:11.5px;color:var(--apagado)}
+.doc .acciones{display:flex;gap:8px;flex-wrap:wrap}
+.btn{background:var(--papel);border:1px solid var(--hairline-fuerte);border-radius:2px;
+     padding:7px 13px;font-size:12.5px;cursor:pointer}
+.btn:hover{border-color:var(--regla);color:var(--regla)}
+.btn.fuerte{background:var(--regla);border-color:var(--regla);color:var(--papel);font-weight:600}
+.btn.fuerte:hover{background:var(--regla-claro);color:var(--papel)}
+.btn.chico{padding:3px 8px;font-size:11.5px}
+.doc input[type=file]{display:none}
+.extraido{margin-top:12px;border-top:1px solid var(--hairline);padding-top:10px}
+.extraido pre{margin:10px 0 0;max-height:280px;overflow:auto;background:var(--papel-hundido);
+              border:1px solid var(--hairline);border-radius:2px;padding:12px;
+              font-family:var(--mono);font-size:12px;line-height:1.6;
+              white-space:pre-wrap;word-break:break-word;color:var(--apagado)}
 
-  .error{margin-top:14px;padding:11px 13px;border-radius:8px;font-size:12.5px;
-         background:rgba(229,72,77,.1);border:1px solid rgba(229,72,77,.3);
-         color:#ffb4b6;font-family:var(--mono);white-space:pre-wrap}
+/* ---------------------------------------------------------------- bloques */
+.bloques{display:flex;flex-direction:column;gap:14px}
+.bloque{border:1px solid var(--hairline);border-radius:3px;background:var(--papel);
+        padding:13px 15px}
+.bloque-cab{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:11px}
+.bloque-cab .num{font-family:var(--mono);font-size:11.5px;color:var(--tenue);
+                 min-width:22px}
+.tipo-sel{display:flex;border:1px solid var(--hairline-fuerte);border-radius:2px;overflow:hidden}
+.tipo-sel button{background:var(--papel);border:0;border-right:1px solid var(--hairline-fuerte);
+                 padding:4px 11px;font-size:11.5px;letter-spacing:.04em;cursor:pointer;
+                 color:var(--apagado);text-transform:uppercase}
+.tipo-sel button:last-child{border-right:0}
+.tipo-sel button[aria-pressed="true"]{color:var(--papel);font-weight:600}
+.tipo-sel button[data-t="choice"][aria-pressed="true"]{background:var(--tipo-choice)}
+.tipo-sel button[data-t="score"][aria-pressed="true"]{background:var(--tipo-score)}
+.tipo-sel button[data-t="noul"][aria-pressed="true"]{background:var(--tipo-noul)}
+.bloque-cab .quitar{margin-left:auto}
+.campo{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.campo label{font-size:11.5px;color:var(--tenue);letter-spacing:.08em;
+             text-transform:uppercase;min-width:58px}
+input[type=text],textarea{background:var(--papel-hundido);border:1px solid var(--hairline);
+     border-radius:2px;padding:7px 10px;font-size:13.5px;width:100%}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--regla);
+     background:var(--papel)}
+.opciones{display:flex;flex-direction:column;gap:6px;margin:4px 0 8px}
+.opcion{display:flex;gap:8px;align-items:center}
+.opcion input.clave{flex:0 0 34%;font-family:var(--mono);font-size:12.5px}
+.opcion input.texto{flex:1}
+textarea.mono{font-family:var(--mono);font-size:13.5px;line-height:1.65;
+              resize:vertical;min-height:230px;white-space:pre}
+.nota{font-size:12px;color:var(--tenue);margin:8px 0 0}
 
-  /* --- resultados --- */
-  .salida{min-width:0}
-  .vacio{color:var(--tenue);font-size:13px;padding:36px 0;text-align:center}
-  .rejilla{display:grid;gap:18px;align-items:start}
-  .rejilla.dos{grid-template-columns:1fr 1fr}
-  @media (max-width:1000px){.rejilla.dos{grid-template-columns:1fr}}
+.fila{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.interruptor{display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none;
+             font-size:13.5px}
+.interruptor input{appearance:none;width:34px;height:19px;border-radius:99px;
+     background:var(--hairline-fuerte);border:0;position:relative;cursor:pointer;flex:none;
+     transition:background .15s}
+.interruptor input::after{content:"";position:absolute;top:2px;left:2px;width:15px;
+     height:15px;border-radius:50%;background:var(--papel);transition:transform .15s}
+.interruptor input:checked{background:var(--regla)}
+.interruptor input:checked::after{transform:translateX(15px)}
+.error{margin-top:12px;padding:11px 13px;border-radius:2px;font-size:12.5px;
+       background:rgba(163,43,34,.09);border:1px solid rgba(163,43,34,.35);
+       color:#7E1F18;font-family:var(--mono);white-space:pre-wrap}
+.aviso-formato{margin-top:8px;font-size:12px;color:var(--estado-aviso)}
 
-  .tarjeta{background:var(--panel);border:1px solid var(--borde);border-radius:11px;
-           overflow:hidden}
-  .tarjeta .cab{display:flex;align-items:center;gap:9px;padding:12px 15px;
-                border-bottom:1px solid var(--borde);background:var(--superficie);
-                flex-wrap:wrap}
-  .tarjeta .cab h2{margin:0;font-size:13px;font-weight:600}
-  .tarjeta .cab .tipo{font-size:10.5px;font-weight:600;letter-spacing:.05em;
-                      text-transform:uppercase;padding:2px 7px;border-radius:5px;
-                      background:var(--acento-suave);color:#b6b5ff}
-  .tarjeta.chat .cab .tipo{background:rgba(255,255,255,.07);color:var(--apagado)}
-  .metricas{margin-left:auto;display:flex;gap:14px;font-family:var(--mono);font-size:11.5px;
-            color:var(--apagado)}
-  .metricas b{color:var(--texto);font-weight:600}
-  .cuerpo{padding:15px}
+/* ---------------------------------------------------------------- lectura */
+.vacio{border:1px dashed var(--hairline-fuerte);border-radius:3px;padding:34px 20px;
+       text-align:center;color:var(--tenue);font-size:13.5px;line-height:1.6}
+.rejilla{display:grid;gap:16px;align-items:start}
+.rejilla.dos{grid-template-columns:1fr 1fr}
+@media (max-width:940px){.rejilla.dos{grid-template-columns:1fr}}
+.lectura{background:var(--papel);border:1px solid var(--hairline-fuerte);border-radius:3px}
+.lectura>header{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+     padding:10px 14px;border-bottom:1px solid var(--hairline);
+     background:var(--papel-hundido)}
+.lectura>header h2{font-size:13.5px;letter-spacing:.02em}
+.lectura>header .et{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;
+     padding:2px 7px;border-radius:2px;color:var(--papel)}
+.et-choice{background:var(--tipo-choice)} .et-score{background:var(--tipo-score)}
+.et-noul{background:var(--tipo-noul)} .et-chat{background:var(--apagado)}
+.lectura>header .cifras{margin-left:auto;display:flex;gap:14px;font-family:var(--mono);
+     font-size:11.5px;color:var(--apagado)}
+.lectura>header .cifras b{color:var(--tinta);font-weight:600}
+.lectura .cuerpo{padding:14px}
 
-  .preg{margin-bottom:18px}
-  .preg:last-child{margin-bottom:0}
-  .preg .titulo{font-size:12.5px;color:var(--apagado);margin-bottom:9px}
-  .valor{display:flex;align-items:baseline;gap:9px;margin-bottom:11px}
-  .valor .v{font-family:var(--mono);font-size:19px;font-weight:600;letter-spacing:-.02em}
-  .valor .p{font-family:var(--mono);font-size:12px;color:var(--apagado)}
-  .valor .conf{margin-left:auto;font-family:var(--mono);font-size:11.5px;
-               padding:2px 8px;border-radius:5px;background:var(--superficie2);
-               color:var(--apagado)}
-  .valor .conf.alta{color:var(--ok)} .valor .conf.baja{color:var(--aviso)}
+/* --- LA MARCA: la respuesta se lee como una escala graduada --- */
+.preg{border-bottom:1px solid var(--hairline);padding-bottom:18px;margin-bottom:18px}
+.preg:last-child{border-bottom:0;padding-bottom:0;margin-bottom:0}
+.preg .enunciado{font-size:13.5px;margin-bottom:2px}
+.preg .leido{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+             margin-bottom:12px}
+.preg .leido .v{font-size:21px;font-weight:600;letter-spacing:-.015em}
+.preg .leido .p{font-family:var(--mono);font-size:12px;color:var(--apagado)}
+.preg .leido .c{margin-left:auto;font-family:var(--mono);font-size:11.5px;
+     letter-spacing:.04em;padding:2px 8px;border:1px solid var(--hairline-fuerte);
+     border-radius:2px;color:var(--apagado)}
+.preg .leido .c.alta{border-color:var(--estado-ok);color:var(--estado-ok)}
+.preg .leido .c.baja{border-color:var(--estado-aviso);color:var(--estado-aviso)}
 
-  .barra{display:grid;grid-template-columns:minmax(0,auto) 1fr auto;gap:10px;
-         align-items:center;font-family:var(--mono);font-size:11.5px;margin:3px 0}
-  .barra .k{color:var(--apagado);text-align:right;max-width:130px;overflow:hidden;
-            text-overflow:ellipsis;white-space:nowrap}
-  .barra .pista{height:5px;border-radius:99px;background:var(--superficie2);overflow:hidden}
-  .barra .pista i{display:block;height:100%;border-radius:99px;background:var(--tenue)}
-  .barra.primera .pista i{background:var(--acento)}
-  .barra.primera .k,.barra.primera .n{color:var(--texto)}
-  .barra .n{color:var(--tenue);min-width:46px}
+/* la regla: linea base con graduaciones finas, un trazo por opcion y el cursor */
+.regla{position:relative;height:78px;margin:0 0 4px;padding:0 2px}
+.regla .base{position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--hairline-fuerte)}
+/* La linea base lleva graduaciones dibujadas -- un SVG de verdad, no un gradiente a
+   rayas -- con cada quinta mas larga, como en una regla de verdad. */
+.regla .tics{position:absolute;left:0;right:0;bottom:0;height:11px;
+     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='45' height='11'><path d='M0 0v11M9 5v6M18 5v6M27 5v6M36 5v6' stroke='%23CFD1C9' stroke-width='1'/></svg>");
+     background-repeat:repeat-x}
+.regla .trazo{position:absolute;left:0;right:0;bottom:1px;top:0;display:flex;
+              align-items:flex-end}
+.regla .trazo .g{flex:1;display:flex;justify-content:center;align-items:flex-end;
+                 height:100%;padding:0 3px}
+.regla .trazo .g i{display:block;width:100%;max-width:74px;
+     height:calc(var(--h) * 100%);min-height:2px;background:var(--hairline-fuerte);
+     border-radius:0}
+.regla .trazo .g.marcada i{background:var(--regla)}
+.regla .cursor{position:absolute;bottom:0;width:2px;height:100%;background:var(--cursor);
+     left:var(--x);transform:translateX(-1px);pointer-events:none}
+.regla .cursor::after{content:"";position:absolute;top:0;left:-4px;width:10px;height:5px;
+     background:var(--cursor);clip-path:polygon(0 0,100% 0,50% 100%)}
+.etiquetas{display:flex;margin-top:7px}
+.etiquetas .e{flex:1;padding:0 4px;text-align:center;font-size:11.5px;color:var(--apagado);
+     line-height:1.3;overflow-wrap:anywhere}
+.etiquetas .e b{display:block;font-family:var(--mono);font-size:11.5px;
+     color:var(--tenue);font-weight:400}
+.etiquetas .e.marcada{color:var(--tinta)}
+.etiquetas .e.marcada b{color:var(--regla)}
 
-  .prosa{font-size:13.5px;line-height:1.68;white-space:pre-wrap;color:#e4e6e8}
-  .nota{font-size:11.5px;color:var(--tenue);margin-top:13px;padding-top:12px;
-        border-top:1px solid var(--borde)}
-  .resumen{display:flex;gap:20px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;
-           color:var(--apagado);margin-bottom:16px;padding:12px 15px;border-radius:9px;
-           background:var(--superficie);border:1px solid var(--borde)}
-  .resumen b{color:var(--texto)}
-  .resumen .mejor{color:var(--ok)}
+.prosa{font-size:15px;line-height:1.66;white-space:pre-wrap}
+.pie{font-size:11.5px;color:var(--tenue);margin-top:12px;padding-top:10px;
+     border-top:1px solid var(--hairline);line-height:1.5}
+@media (max-width:640px){
+  .banda .ratio{margin-left:0;padding-left:0;border-left:0;width:100%;
+                border-top:2px solid var(--cursor);padding-top:8px}
+  .banda,.rail{position:static}
+  .modos .cinta{display:none}
+  .opcion input.clave{flex:0 0 40%}
+  .preg .leido .c{margin-left:0}
+}
 </style>
 </head>
 <body>
 
-<header>
-  <h1>AIOM</h1>
-  <span class="sub">un modelo, dos formas de preguntar</span>
-  <span class="sub" id="catalogo" style="color:var(--tenue)"></span>
-  <span class="estado"><i class="punto" id="punto"></i><span id="texto-estado">comprobando…</span></span>
+<header class="rail">
+  <div class="rail-in">
+    <span class="marca">
+      <b>AIOM</b>
+      <span>un modelo, dos formas de preguntar: <strong>valores</strong> o prosa</span>
+    </span>
+    <span class="rail-der">
+      <span class="estado"><i class="punto" id="punto"></i><span id="texto-estado">comprobando</span></span>
+      <button class="principal" id="enviar">Preguntar</button>
+    </span>
+  </div>
 </header>
 
+<div class="banda">
+  <div class="banda-in" id="banda-in"></div>
+</div>
+
 <main>
-  <section class="panel entrada">
-    <p class="etiqueta">El caso</p>
+  <nav class="modos" role="tablist">
+    <button role="tab" id="tab-bloques" aria-selected="true" aria-controls="vista-bloques">Bloques</button>
+    <button role="tab" id="tab-natural" aria-selected="false" aria-controls="vista-natural">Lenguaje natural</button>
+    <button role="tab" id="tab-tipado" aria-selected="false" aria-controls="vista-tipado">JSON tipado</button>
+    <span class="cinta" id="cinta"></span>
+  </nav>
+
+  <section class="caja" id="caja-caso">
+    <p class="rotulo">El caso <span class="raya"></span></p>
     <div class="doc" id="doc">
-      <span class="icono" id="doc-icono">&#9671;</span>
-      <span class="quien" id="doc-quien">
-        <b>Escrito aquí abajo.</b>
-        <span class="medida">o carga un documento y las preguntas van sobre él</span>
-      </span>
+      <span class="icono" id="doc-icono">txt</span>
+      <span class="quien" id="doc-quien"></span>
       <span class="acciones">
-        <button class="principal" id="doc-elegir">Cargar documento</button>
-        <button id="doc-quitar" hidden>Quitar</button>
+        <button class="btn fuerte" id="doc-elegir">Cargar documento</button>
+        <button class="btn" id="doc-quitar" hidden>Quitar</button>
       </span>
       <input type="file" id="doc-fichero"
              accept=".txt,.md,.markdown,.csv,.json,.log,.docx,.pdf">
-      <span class="nota-doc" id="doc-nota">
-        txt · md · csv · json · log · docx · pdf
-      </span>
     </div>
-
-    <p class="etiqueta" id="etiqueta-entrada">Escribe el caso y las preguntas</p>
-    <textarea id="entrada" spellcheck="false"></textarea>
-
-    <div class="fila">
-      <div class="seg" role="group" style="margin:0;flex:0 0 auto">
-        <button id="btn-natural" aria-pressed="true">Lenguaje natural</button>
-        <button id="btn-tipado" aria-pressed="false">JSON tipado</button>
-      </div>
-      <label class="interruptor">
-        <input type="checkbox" id="comparar" checked>
-        Comparar con el chat
-      </label>
-      <button class="enviar" id="enviar">Preguntar</button>
-    </div>
-    <p class="pista" id="pista">cabeceras: input / ask / choice / score / noul</p>
-    <div id="error"></div>
+    <div class="extraido" id="doc-extraido" hidden></div>
+    <p class="nota" id="doc-nota">Sin documento, el caso es lo que escribas abajo.</p>
   </section>
 
-  <section class="panel salida" id="salida">
-    <p class="vacio">Escribe un caso y pulsa Preguntar.<br>
-      Con «Comparar» activado se pregunta lo mismo por las dos vías y se ven juntas.</p>
+  <section id="vista-bloques">
+    <div class="caja" style="margin-bottom:16px">
+      <p class="rotulo">El caso escrito a mano <span class="raya"></span></p>
+      <textarea id="caso-texto" rows="4"
+        placeholder="Pega aquí el texto sobre el que vas a preguntar. Si has cargado un documento, esto se ignora: el caso es el documento."></textarea>
+      <p class="nota">Con un documento cargado, este campo no se usa.</p>
+    </div>
+
+    <p class="rotulo">Las preguntas <span class="raya"></span>
+      <span class="ayuda" id="cuenta-preguntas"></span></p>
+    <div class="bloques" id="bloques"></div>
+    <div class="fila" style="margin-top:14px">
+      <button class="btn" id="anadir-pregunta">Añadir pregunta</button>
+      <span class="ayuda">Cada pregunta es una fila del esquema. Todas se resuelven en
+        una sola petición.</span>
+    </div>
+  </section>
+
+  <section id="vista-natural" hidden>
+    <div class="caja">
+      <p class="rotulo">Lenguaje natural <span class="raya"></span>
+        <span class="ayuda">cabeceras: input · ask · choice · score · noul</span></p>
+      <textarea id="natural-texto" class="mono" spellcheck="false"></textarea>
+      <p class="nota">Las preguntas se separan con una línea de tres guiones. La
+        cabecera declara el tipo: no se adivina.</p>
+      <div class="aviso-formato" id="natural-aviso" hidden></div>
+    </div>
+  </section>
+
+  <section id="vista-tipado" hidden>
+    <div class="caja">
+      <p class="rotulo">JSON tipado <span class="raya"></span>
+        <span class="ayuda">state.input + questions</span></p>
+      <textarea id="tipado-texto" class="mono" spellcheck="false"></textarea>
+      <p class="nota">El mismo caso en el formato de TypeSafe. Las claves de los campos
+        llegan al modelo, así que se numeran q1, q2, q3.</p>
+      <div class="aviso-formato" id="tipado-aviso" hidden></div>
+    </div>
+  </section>
+
+  <div class="fila">
+    <label class="interruptor">
+      <input type="checkbox" id="comparar" checked>
+      Comparar con el chat
+    </label>
+    <span class="ayuda">Se pregunta lo mismo por las dos vías, en la misma corrida, y se
+      miden juntas.</span>
+  </div>
+  <div id="error"></div>
+
+  <section id="salida">
+    <p class="vacio">Escribe o carga un caso, marca tus preguntas y pulsa Preguntar.<br>
+      La decisión resuelve todas en una petición y no escribe nada; el chat escribe una
+      respuesta por pregunta.</p>
   </section>
 </main>
 
 <script>
 "use strict";
-
-// Los dos textos de arranque son casos del propio repositorio, para que lo que se
-// ve al abrir sea exactamente lo que documenta el manual.
-const NATURAL = `input: Buenas tardes. Escribo porque estoy bastante molesto: contraté el plan de 20 GB el mes pasado y llevo una semana con cortes de conexión casi todas las noches. He llamado tres veces y nadie me ha dado una solución. Además me han cobrado dos veces la factura de este mes. Si esto sigue así me voy a dar de baja.
-
-ask: ¿A qué área hay que enviar este correo?
-choice:
-  soporte: Fallos y errores del producto
-  facturacion: Cobros, facturas y reembolsos
-  comercial: Ventas, planes y bajas
-  otros: Todo lo demás
-
----
-
-ask: ¿Qué urgencia tiene?
-score:
-  Baja: puede esperar
-  Media: conviene atenderlo esta semana
-  Alta: hay una fecha límite encima
-
----
-
-ask: ¿Amenaza el cliente con darse de baja?
-noul:
-  false: No lo menciona
-  true: Sí lo menciona`;
-
-// El mismo caso que arriba, pero en el formato de TypeSafe. Los dos textos son
-// equivalentes a proposito: cambiar de pestana debe mostrar el mismo caso, no otro.
-//
-// Los campos se llaman q1/q2/q3 a proposito, y no area/urgencia/baja: el NOMBRE del
-// campo tambien llega al modelo, asi que con nombres distintos los numeros bailan un
-// poco. Con los mismos, los dos formatos dan exactamente el mismo resultado.
-const TIPADO = JSON.stringify({
-  state: {
-    input: "Buenas tardes. Escribo porque estoy bastante molesto: contraté el plan de 20 GB el mes pasado y llevo una semana con cortes de conexión casi todas las noches. He llamado tres veces y nadie me ha dado una solución. Además me han cobrado dos veces la factura de este mes. Si esto sigue así me voy a dar de baja."
-  },
-  questions: {
-    q1: {
-      type: "choice",
-      instructions: "¿A qué área hay que enviar este correo?",
-      criteria: {
-        soporte: "Fallos y errores del producto",
-        facturacion: "Cobros, facturas y reembolsos",
-        comercial: "Ventas, planes y bajas",
-        otros: "Todo lo demás"
-      }
-    },
-    q2: {
-      type: "score",
-      instructions: "¿Qué urgencia tiene?",
-      criteria: [
-        "Baja: puede esperar",
-        "Media: conviene atenderlo esta semana",
-        "Alta: hay una fecha límite encima"
-      ]
-    },
-    q3: {
-      type: "noul",
-      instructions: "¿Amenaza el cliente con darse de baja?",
-      criteria: {"false": "No lo menciona", "true": "Sí lo menciona"}
-    }
-  }
-}, null, 2);
-
-// Las mismas preguntas SIN el caso: es lo que se usa cuando el caso es un documento.
-const SOLO_PREGUNTAS = NATURAL.split("\n\n").slice(1).join("\n\n");
-
-// Preguntas neutras, que valen para cualquier documento. Se ponen al cargar uno si
-// el area de texto todavia tiene el ejemplo sin tocar.
-//
-// OJO con la segunda: es `choice` y no `noul` A PROPOSITO. Medido sobre un documento
-// largo, `noul` acierta 4 de 9 preguntas del tipo "¿aparece X?" y falla con
-// probabilidad 0.99; con `choice` (si/no como opciones) acierta 7 de 9. Preguntar
-// "¿menciona fechas?" con noul da "no" aunque las fechas esten a la vista.
-const GENERICAS = `ask: ¿Qué tipo de documento es?
-choice:
-  carta: una carta, un correo o una reclamación
-  informe: un informe, un estudio o una propuesta
-  curriculum: un currículum o una hoja de vida
-  otro: otra cosa
-
----
-
-ask: ¿Aparecen fechas en el documento?
-choice:
-  si: Sí, aparece alguna fecha
-  no: No aparece ninguna
-
----
-
-ask: ¿Qué longitud tiene?
-score:
-  corta: cabe en una pantalla
-  media: unas pocas páginas
-  larga: muchas páginas`;
-
-let formato = "natural";
-let documento = null;        // {texto, nombre, tipo, caracteres, palabras} o null
+/* ------------------------------------------------------------------ modelo
+   El modelo es la fuente unica: caso + preguntas. Los tres modos son vistas de
+   esto, no tres sitios donde teclear por separado. */
+let modelo = {caso: "", preguntas: []};
+let modo = "bloques";
+let documento = null;
+let ultimo = null;            // la ultima medicion, para la banda
 const $ = (id) => document.getElementById(id);
 
-// Va arriba a proposito: lo usan tanto el bloque del documento como el de resultados.
-const esc = (s) => String(s).replace(/[&<>"]/g, (c) =>
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) =>
   ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
 
-function pintarFormato() {
-  $("btn-natural").setAttribute("aria-pressed", String(formato === "natural"));
-  $("btn-tipado").setAttribute("aria-pressed", String(formato === "tipado"));
+const TIPOS = ["choice", "score", "noul"];
+const CABECERAS = {
+  "input": "input", "entrada": "input",
+  "ask": "ask", "pregunta": "ask",
+  "choice": "choice", "opciones": "choice",
+  "score": "score", "niveles de puntuacion": "score", "niveles de puntuación": "score",
+  "noul": "noul", "boolean": "noul", "que significa no o si": "noul",
+  "qué significa no o sí": "noul"
+};
 
-  // Con un documento cargado, el caso lo pone él: el area de texto solo lleva las
-  // preguntas. Asi no se queda un "input:" a la vista que no se usa.
-  //
-  // Y si al cargar el documento el area todavia tiene el ejemplo de soporte sin
-  // tocar, se cambia por unas preguntas neutras: preguntar "¿a que area hay que
-  // enviar este correo?" sobre un curriculum confunde, y el sitio donde se escribe
-  // la pregunta tiene que invitar a escribirla.
-  const ta = $("entrada");
-  // "" cuenta como sin tocar: al arrancar el area viene vacia, no con un ejemplo.
-  const sinTocar = (ta.value === "" || ta.value === NATURAL
-                    || ta.value === SOLO_PREGUNTAS || ta.value === TIPADO
-                    || ta.value === GENERICAS);
-  if (formato === "natural") {
-    if (documento && sinTocar) ta.value = GENERICAS;
-    else if (!documento && sinTocar) ta.value = NATURAL;
-  } else if (sinTocar) {
-    ta.value = TIPADO;
+function nuevaPregunta(tipo) {
+  const p = {tipo: tipo || "choice", enunciado: "", opciones: []};
+  if (p.tipo === "score") {
+    p.opciones = [{clave: "Baja", texto: "puede esperar"},
+                  {clave: "Media", texto: "conviene atenderlo esta semana"},
+                  {clave: "Alta", texto: "hay una fecha límite encima"}];
+  } else if (p.tipo === "noul") {
+    p.opciones = [{clave: "false", texto: "No lo menciona"},
+                  {clave: "true", texto: "Sí lo menciona"}];
+  } else {
+    p.opciones = [{clave: "si", texto: ""}, {clave: "no", texto: ""}];
   }
-
-  $("etiqueta-entrada").textContent = documento
-    ? (formato === "natural" ? "Escribe las preguntas sobre el documento"
-                             : "Ajusta las preguntas (el caso lo pone el documento)")
-    : (formato === "natural" ? "Escribe el caso y las preguntas" : "Pega el JSON");
-  $("pista").textContent = formato === "natural"
-    ? "cabeceras: input / ask / choice / score / noul"
-    : "formato de TypeSafe: state + questions";
-  ajustarAlto();
+  return p;
 }
 
-// La caja se ajusta a su contenido: el caso es un documento entero y con una altura
-// fija había que hacer scroll para leerlo. Se reajusta al cambiar de formato, pero
-// no mientras se escribe, para no pelearse con quien la redimensiona a mano.
-function ajustarAlto() {
-  const ta = $("entrada");
-  ta.style.height = "auto";
-  const tope = Math.round(window.innerHeight * 0.72);
-  ta.style.height = Math.min(ta.scrollHeight + 4, tope) + "px";
+/* --- modelo -> lenguaje natural --- */
+function aNatural(m) {
+  const trozos = [];
+  if (m.caso.trim()) trozos.push("input: " + m.caso.trim());
+  for (const p of m.preguntas) {
+    const l = ["ask: " + (p.enunciado || "(sin enunciado)"), p.tipo + ":"];
+    for (const o of p.opciones) l.push("  " + o.clave + ": " + o.texto);
+    trozos.push(l.join("\n"));
+  }
+  return trozos.join("\n\n---\n\n");
 }
 
-$("btn-natural").onclick = () => { formato = "natural"; pintarFormato(); };
-$("btn-tipado").onclick = () => { formato = "tipado"; pintarFormato(); };
+/* --- lenguaje natural -> modelo --- */
+function deNatural(texto) {
+  const m = {caso: "", preguntas: []};
+  let actual = null, enOpciones = false, enCaso = false;
+  const volcar = () => { if (actual) { m.preguntas.push(actual); actual = null; } };
 
-// ---------------------------------------------------------------- el documento
-// Se sube a la API, que es quien sabe leer PDF y DOCX. No se lee aqui en el
-// navegador a proposito: asi hay UN solo lector, el mismo que usa el resto del
-// proyecto, en vez de dos que se comporten distinto.
+  for (const linea of String(texto).split("\n")) {
+    const t = linea.trim();
+    if (/^-{3,}$/.test(t)) { volcar(); enOpciones = false; enCaso = false; continue; }
+    if (!t) { enOpciones = false; enCaso = false; continue; }
+
+    const mm = t.match(/^([^:]+):\s*(.*)$/);
+    const cab = mm ? CABECERAS[mm[1].trim().toLowerCase()] : null;
+
+    if (cab === "input") {
+      volcar(); enOpciones = false; enCaso = true;
+      m.caso = mm[2];
+    } else if (cab === "ask") {
+      volcar(); enOpciones = false; enCaso = false;
+      actual = {tipo: "choice", enunciado: mm[2], opciones: []};
+    } else if (cab === "choice" || cab === "score" || cab === "noul") {
+      if (!actual) actual = {tipo: cab, enunciado: "", opciones: []};
+      actual.tipo = cab;
+      enOpciones = true; enCaso = false;
+    } else if (enCaso) {
+      m.caso += (m.caso ? "\n" : "") + t;
+    } else if (enOpciones && actual) {
+      if (mm) actual.opciones.push({clave: mm[1].trim(), texto: mm[2].trim()});
+      else actual.opciones.push({clave: t, texto: ""});
+    } else if (actual && !actual.enunciado) {
+      actual.enunciado = t;
+    }
+  }
+  volcar();
+  if (!m.preguntas.length) throw new Error("no encontré ninguna cabecera 'ask:'");
+  return m;
+}
+
+/* --- modelo -> JSON tipado --- */
+function aTipado(m) {
+  const o = {state: {input: m.caso.trim()}, questions: {}};
+  m.preguntas.forEach((p, i) => {
+    const q = {type: p.tipo, instructions: p.enunciado};
+    if (p.tipo === "score") {
+      q.criteria = p.opciones.map((op) => op.texto ? op.clave + ": " + op.texto : op.clave);
+    } else {
+      q.criteria = {};
+      for (const op of p.opciones) q.criteria[op.clave] = op.texto;
+    }
+    o.questions["q" + (i + 1)] = q;
+  });
+  return JSON.stringify(o, null, 2);
+}
+
+/* --- JSON tipado -> modelo --- */
+function deTipado(texto) {
+  const o = JSON.parse(texto);
+  if (!o || typeof o !== "object" || !o.questions) {
+    throw new Error("el JSON necesita 'questions'");
+  }
+  const m = {caso: (o.state && o.state.input) || "", preguntas: []};
+  for (const q of Object.values(o.questions)) {
+    const p = {tipo: q.type || "choice", enunciado: q.instructions || "", opciones: []};
+    if (p.tipo === "score") {
+      (q.criteria || []).forEach((c, i) => {
+        const mm = String(c).match(/^([^:]+):\s*(.*)$/);
+        p.opciones.push(mm ? {clave: mm[1].trim(), texto: mm[2].trim()}
+                           : {clave: String(i), texto: String(c)});
+      });
+    } else {
+      for (const [k, v] of Object.entries(q.criteria || {})) {
+        p.opciones.push({clave: k, texto: v});
+      }
+    }
+    m.preguntas.push(p);
+  }
+  return m;
+}
+
+/* ------------------------------------------------------------------ vistas */
+function pintarBloques() {
+  const caja = $("bloques");
+  caja.innerHTML = modelo.preguntas.map((p, i) => `
+    <div class="bloque" data-i="${i}">
+      <div class="bloque-cab">
+        <span class="num">${String(i + 1).padStart(2, "0")}</span>
+        <span class="tipo-sel" role="group" aria-label="Tipo de la pregunta">
+          ${TIPOS.map((t) => `<button data-t="${t}" data-i="${i}"
+             aria-pressed="${p.tipo === t}">${t}</button>`).join("")}
+        </span>
+        <button class="btn chico quitar" data-quitar="${i}">Quitar</button>
+      </div>
+      <div class="campo">
+        <label>Pregunta</label>
+        <input type="text" data-enunciado="${i}" value="${esc(p.enunciado)}"
+               placeholder="¿A qué área hay que enviar este correo?">
+      </div>
+      <div class="campo" style="margin-bottom:2px">
+        <label>${p.tipo === "score" ? "Niveles" : (p.tipo === "noul" ? "Valores" : "Opciones")}</label>
+      </div>
+      <div class="opciones">
+        ${p.opciones.map((o, j) => `
+          <div class="opcion">
+            <input type="text" class="clave" data-clave="${i}.${j}" value="${esc(o.clave)}"
+                   placeholder="${p.tipo === "score" ? "Baja" : "clave"}"
+                   ${p.tipo === "noul" ? "readonly" : ""}>
+            <input type="text" class="texto" data-texto="${i}.${j}" value="${esc(o.texto)}"
+                   placeholder="${p.tipo === "score" ? "puede esperar" : "qué significa"}">
+            <button class="btn chico" data-opcion-quitar="${i}.${j}"
+                    aria-label="Quitar esta opción"><svg width="9" height="9"
+                    viewBox="0 0 9 9" aria-hidden="true"><path d="M1.2 1.2l6.6 6.6M7.8 1.2l-6.6 6.6"
+                    stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                    fill="none"/></svg></button>
+          </div>`).join("")}
+      </div>
+      <button class="btn chico" data-opcion-anadir="${i}">Añadir opción</button>
+    </div>`).join("");
+
+  $("cuenta-preguntas").textContent = modelo.preguntas.length === 1
+    ? "1 pregunta" : modelo.preguntas.length + " preguntas";
+
+  caja.querySelectorAll(".tipo-sel button").forEach((b) => {
+    b.onclick = () => {
+      const p = modelo.preguntas[+b.dataset.i];
+      p.tipo = b.dataset.t;
+      // los valores de un noul son fijos: false y true, y en ese orden
+      if (p.tipo === "noul") {
+        p.opciones = [{clave: "false", texto: p.opciones[0] ? p.opciones[0].texto : "No lo menciona"},
+                      {clave: "true", texto: p.opciones[1] ? p.opciones[1].texto : "Sí lo menciona"}];
+      }
+      pintarBloques();
+    };
+  });
+  caja.querySelectorAll("[data-quitar]").forEach((b) => {
+    b.onclick = () => { modelo.preguntas.splice(+b.dataset.quitar, 1); pintarBloques(); };
+  });
+  caja.querySelectorAll("[data-opcion-anadir]").forEach((b) => {
+    b.onclick = () => {
+      modelo.preguntas[+b.dataset.opcionAnadir].opciones.push({clave: "", texto: ""});
+      pintarBloques();
+    };
+  });
+  caja.querySelectorAll("[data-opcion-quitar]").forEach((b) => {
+    b.onclick = () => {
+      const [i, j] = b.dataset.opcionQuitar.split(".").map(Number);
+      modelo.preguntas[i].opciones.splice(j, 1);
+      pintarBloques();
+    };
+  });
+  caja.querySelectorAll("[data-enunciado]").forEach((el) => {
+    el.oninput = () => { modelo.preguntas[+el.dataset.enunciado].enunciado = el.value; };
+  });
+  caja.querySelectorAll("[data-clave]").forEach((el) => {
+    el.oninput = () => {
+      const [i, j] = el.dataset.clave.split(".").map(Number);
+      modelo.preguntas[i].opciones[j].clave = el.value;
+    };
+  });
+  caja.querySelectorAll("[data-texto]").forEach((el) => {
+    el.oninput = () => {
+      const [i, j] = el.dataset.texto.split(".").map(Number);
+      modelo.preguntas[i].opciones[j].texto = el.value;
+    };
+  });
+}
+
+// Al cambiar de modo se vuelca el modelo a la vista que entra. El modo que se abandona
+// no se relee: sus cambios ya estan en el modelo al escribirlos.
+function pintarVista() {
+  if (modo === "bloques") {
+    $("caso-texto").value = modelo.caso;
+    pintarBloques();
+  } else if (modo === "natural") {
+    $("natural-texto").value = aNatural(modelo);
+    $("natural-aviso").hidden = true;
+  } else {
+    $("tipado-texto").value = aTipado(modelo);
+    $("tipado-aviso").hidden = true;
+  }
+}
+
+function cambiarModo(nuevo) {
+  modo = nuevo;
+  for (const [id, m] of [["tab-bloques", "bloques"], ["tab-natural", "natural"],
+                         ["tab-tipado", "tipado"]]) {
+    $(id).setAttribute("aria-selected", String(modo === m));
+    $("vista-" + m).hidden = modo !== m;
+  }
+  pintarVista();
+}
+$("tab-bloques").onclick = () => cambiarModo("bloques");
+$("tab-natural").onclick = () => cambiarModo("natural");
+$("tab-tipado").onclick = () => cambiarModo("tipado");
+
+$("caso-texto").oninput = () => { modelo.caso = $("caso-texto").value; };
+$("anadir-pregunta").onclick = () => {
+  modelo.preguntas.push(nuevaPregunta("choice"));
+  pintarBloques();
+};
+
+// Escribir en natural o en JSON actualiza el modelo; si no se puede leer, se avisa y
+// se deja el modelo como estaba, en vez de perder lo que ya habia.
+$("natural-texto").oninput = () => {
+  const a = $("natural-aviso");
+  try { modelo = deNatural($("natural-texto").value); a.hidden = true; }
+  catch (e) { a.hidden = false; a.textContent = "Todavía no se puede leer: " + e.message; }
+};
+$("tipado-texto").oninput = () => {
+  const a = $("tipado-aviso");
+  try { modelo = deTipado($("tipado-texto").value); a.hidden = true; }
+  catch (e) { a.hidden = false; a.textContent = "Todavía no se puede leer: " + e.message; }
+};
+
+/* ------------------------------------------------------------------ el documento */
 function pintarDoc() {
-  const caja = $("doc");
   if (!documento) {
-    caja.className = "doc";
-    $("doc-icono").textContent = "\u25c7";
-    $("doc-quien").innerHTML = "<b>Escrito aquí abajo.</b> "
-      + '<span class="medida">o carga un documento y las preguntas van sobre él</span>';
+    $("doc").className = "doc";
+    $("doc-icono").textContent = "txt";
+    $("doc-quien").innerHTML = "<b>Ninguno.</b> <span class=\"medida\">" +
+      "el caso es lo que escribas a mano</span>";
     $("doc-elegir").textContent = "Cargar documento";
     $("doc-quitar").hidden = true;
+    $("doc-extraido").hidden = true;
     $("doc-nota").textContent = "txt · md · csv · json · log · docx · pdf";
     return;
   }
-  caja.className = "doc cargado";
-  $("doc-icono").textContent = "\u25c8";
-  $("doc-quien").innerHTML = `<b>${esc(documento.nombre)}</b> `
-    + `<span class="medida">${documento.tipo} · ${documento.caracteres} caracteres · `
-    + `${documento.palabras} palabras</span>`;
+  $("doc").className = "doc cargado";
+  $("doc-icono").textContent = documento.tipo;
+  const cifras = [documento.tipo, documento.caracteres + " caracteres",
+                  documento.palabras + " palabras"];
+  if (documento.paginas) cifras.push(documento.paginas + " páginas");
+  $("doc-quien").innerHTML = `<b>${esc(documento.nombre)}</b> ` +
+    `<span class="medida">${cifras.join(" · ")}</span>`;
   $("doc-elegir").textContent = "Cambiar documento";
   $("doc-quitar").hidden = false;
-  $("doc-nota").textContent = documento.aviso
-    ? documento.aviso
-    : "el documento es el caso: las preguntas van sobre él";
+  $("doc-nota").textContent = "El documento es el caso: las preguntas van sobre él.";
+  // la vista previa: el texto que se extrajo, que es lo que recibe el modelo
+  $("doc-extraido").hidden = false;
+  $("doc-extraido").innerHTML =
+    `<div class="fila"><span class="ayuda">Lo que se extrajo del documento, que es lo
+      que recibe el modelo:</span>
+      <button class="btn chico" id="ver-texto">Ver el texto</button>
+      <span class="ayuda" id="cifras-texto">${documento.caracteres} caracteres ·
+      ${documento.palabras} palabras${documento.paginas ? " · " + documento.paginas + " páginas" : ""}
+      · ${documento.lineas} líneas</span></div>
+     <pre id="texto-extraido" hidden>${esc(documento.texto)}</pre>`;
+  $("ver-texto").onclick = () => {
+    const pre = $("texto-extraido");
+    pre.hidden = !pre.hidden;
+    $("ver-texto").textContent = pre.hidden ? "Ver el texto" : "Ocultar el texto";
+  };
 }
 
 async function subirDoc(fichero) {
-  const cajaError = $("error");
-  cajaError.innerHTML = "";
+  $("error").innerHTML = "";
   $("doc-elegir").textContent = "Leyendo…";
   try {
     const r = await fetch("/documento", {
@@ -405,15 +669,14 @@ async function subirDoc(fichero) {
     });
     const d = await r.json();
     if (!r.ok) {
-      cajaError.innerHTML = `<div class="error">${esc(d.error || "no se pudo leer")}`
-        + (d.soportados ? "\n\nse puede: " + esc(d.soportados.join(", ")) : "") + "</div>";
+      $("error").innerHTML = `<div class="error">${esc(d.error || "no se pudo leer")}` +
+        (d.soportados ? "\n\nse puede: " + esc(d.soportados.join(", ")) : "") + "</div>";
       return;
     }
     documento = d;
     pintarDoc();
-    pintarFormato();          // el area de texto pasa a llevar solo las preguntas
   } catch (e) {
-    cajaError.innerHTML = `<div class="error">No pude subir el documento: ${esc(e.message)}</div>`;
+    $("error").innerHTML = `<div class="error">No pude subir el documento: ${esc(e.message)}</div>`;
   } finally {
     if (!documento) $("doc-elegir").textContent = "Cargar documento";
   }
@@ -423,62 +686,99 @@ $("doc-elegir").onclick = () => $("doc-fichero").click();
 $("doc-fichero").onchange = (e) => {
   const f = e.target.files[0];
   if (f) subirDoc(f);
-  e.target.value = "";         // para poder volver a elegir el mismo fichero
+  e.target.value = "";
 };
-$("doc-quitar").onclick = () => {
-  documento = null;
-  pintarDoc();
-  pintarFormato();
-};
-pintarDoc();
-pintarFormato();
+$("doc-quitar").onclick = () => { documento = null; pintarDoc(); };
 
-// ---------------------------------------------------------------- utilidades
-function barra(clave, p, max) {
-  const ancho = max > 0 ? (p / max) * 100 : 0;
-  const primera = p === max ? " primera" : "";
-  return `<div class="barra${primera}">
-    <span class="k" title="${esc(clave)}">${esc(clave)}</span>
-    <span class="pista"><i style="width:${ancho.toFixed(1)}%"></i></span>
-    <span class="n">${p.toFixed(3)}</span>
-  </div>`;
+/* ------------------------------------------------------------------ la banda */
+function bandaDeMedida() {
+  const d = ultimo.decision, c = ultimo.chat;
+  const veces = c.tiempo_ms > 0 ? (c.tiempo_ms / Math.max(d.tiempo_ms, 1)) : 0;
+  return `
+    <span class="rot">${ultimo.n_preguntas} ${ultimo.n_preguntas === 1 ? "pregunta" : "preguntas"}
+      · medido ahora</span>
+    <span class="dato"><i>Decisión</i><b>${d.peticiones} pet.</b></span>
+    <span class="dato"><i>su tiempo</i><b>${d.tiempo_ms.toFixed(0)} ms</b></span>
+    <span class="dato"><i>sus tokens</i><b>${d.tokens}</b></span>
+    <span class="dato"><i>Chat</i><b>${c.peticiones} pet.</b></span>
+    <span class="dato"><i>su tiempo</i><b>${c.tiempo_ms.toFixed(0)} ms</b></span>
+    <span class="dato"><i>sus tokens</i><b>${c.tokens}</b></span>
+    <span class="ratio"><b>${veces.toFixed(1)}<small>×</small></b>
+      <i>menos tiempo con la decisión</i></span>`;
 }
 
-function claseConfianza(c) {
-  return c >= 0.7 ? "alta" : (c <= 0.3 ? "baja" : "");
+// Antes de la primera medicion la banda enseña la cifra que ya esta medida en el
+// repositorio, dicha como lo que es: una medicion publicada, no la de ahora.
+function bandaDelRepositorio() {
+  return `
+    <span class="rot">medido en el repositorio · 12 preguntas sobre un CV</span>
+    <span class="dato"><i>Decisión</i><b>1 pet.</b></span>
+    <span class="dato"><i>su tiempo</i><b>510 ms</b></span>
+    <span class="dato"><i>sus tokens</i><b>0</b></span>
+    <span class="dato"><i>Chat</i><b>12 pet.</b></span>
+    <span class="dato"><i>su tiempo</i><b>6717 ms</b></span>
+    <span class="dato"><i>sus tokens</i><b>541</b></span>
+    <span class="ratio"><b>13.2<small>×</small></b>
+      <i>menos tiempo con la decisión</i></span>`;
 }
 
-// En un score el motor devuelve un NUMERO (0, 1, 2...). El numero solo no dice nada:
-// se le pega su etiqueta, que viene en q.niveles. "0" no significa nada; "0 · espanol"
-// si.
+function pintarBanda() {
+  $("banda-in").innerHTML = ultimo ? bandaDeMedida() : bandaDelRepositorio();
+}
+
+/* ------------------------------------------------------------------ la lectura */
 function etiquetaNivel(q, clave) {
   if (!q.niveles) return clave;
   const i = Math.round(parseFloat(clave));
-  return (i >= 0 && i < q.niveles.length) ? `${i} · ${q.niveles[i]}` : clave;
+  return (i >= 0 && i < q.niveles.length) ? i + " · " + q.niveles[i] : clave;
+}
+
+function claseConfianza(c) { return c >= 0.7 ? "alta" : (c <= 0.3 ? "baja" : ""); }
+
+// LA MARCA. La respuesta se lee como una marca en una escala graduada: un trazo por
+// opcion cuya ALTURA es la probabilidad, el trazo elegido entintado, y el cursor rojo
+// encima. La linea base lleva graduaciones finas, que es lo que hace que se lea como
+// un instrumento y no como un grafico de barras.
+function escala(q) {
+  const probs = q.probabilities || {};
+  const pares = Object.entries(probs);
+  if (!pares.length) return "";
+  if (q.niveles) pares.sort((a, b) => parseFloat(a[0]) - parseFloat(b[0]));
+  else pares.sort((a, b) => b[1] - a[1]);
+
+  const max = pares.reduce((m, [, p]) => Math.max(m, p), 0.000001);
+  const elegida = pares.findIndex(([k]) =>
+    Math.abs(parseFloat(k) - parseFloat(q.value)) < 1e-9);
+  const idx = elegida < 0 ? 0 : elegida;
+  const x = ((idx + 0.5) / pares.length) * 100;
+
+  const trazos = pares.map(([, p], i) =>
+    `<span class="g${i === idx ? " marcada" : ""}"><i style="--h:${(p / max).toFixed(4)}"></i></span>`
+  ).join("");
+  const etiquetas = pares.map(([k, p], i) =>
+    `<span class="e${i === idx ? " marcada" : ""}">${esc(etiquetaNivel(q, k))}
+      <b>${p.toFixed(3)}</b></span>`).join("");
+
+  return `<div class="regla">
+      <span class="tics"></span><span class="base"></span>
+      <span class="trazo">${trazos}</span>
+      <span class="cursor" style="--x:${x.toFixed(2)}%"></span>
+    </div>
+    <div class="etiquetas">${etiquetas}</div>`;
 }
 
 function pintarDecision(r) {
-  return r.map((q) => {
-    const probs = q.probabilities || {};
-    let pares = Object.entries(probs);
-    // Un score se lee de menor a mayor, como la escala; un choice, de mas probable
-    // a menos, que es lo que se quiere saber.
-    pares.sort(q.niveles ? (a, b) => parseFloat(a[0]) - parseFloat(b[0])
-                         : (a, b) => b[1] - a[1]);
-    const max = pares.reduce((m, [, p]) => Math.max(m, p), 0);
-    const barras = pares.map(([k, p]) => barra(etiquetaNivel(q, k), p, max)).join("");
-    return `<div class="preg">
-      <div class="titulo">${esc(q.pregunta || q.campo)}
-        <span style="color:var(--tenue)">· ${esc(q.tipo || "")}</span></div>
-      <div class="valor">
+  return r.map((q) => `
+    <div class="preg">
+      <div class="enunciado">${esc(q.pregunta || q.campo)}</div>
+      <div class="leido">
         <span class="v">${esc(etiquetaNivel(q, q.value))}</span>
         <span class="p">p = ${Number(q.probability).toFixed(3)}</span>
-        <span class="conf ${claseConfianza(q.confidence)}">
-          confianza ${Number(q.confidence).toFixed(3)}</span>
+        <span class="c ${claseConfianza(q.confidence)}">confianza
+          ${Number(q.confidence).toFixed(3)}</span>
       </div>
-      ${barras}
-    </div>`;
-  }).join("");
+      ${escala(q)}
+    </div>`).join("");
 }
 
 function pintarChat(r) {
@@ -486,96 +786,98 @@ function pintarChat(r) {
           .join("");
 }
 
-function tarjeta(titulo, etiqueta, clase, metricas, cuerpo) {
-  return `<div class="tarjeta ${clase}">
-    <div class="cab">
+function tarjeta(titulo, tipo, claseEt, cifras, cuerpo, pie) {
+  return `<div class="lectura">
+    <header>
       <h2>${esc(titulo)}</h2>
-      <span class="tipo">${esc(etiqueta)}</span>
-      <span class="metricas">${metricas}</span>
-    </div>
+      <span class="et ${claseEt}">${esc(tipo)}</span>
+      <span class="cifras">${cifras}</span>
+    </header>
     <div class="cuerpo">${cuerpo}</div>
+    ${pie ? `<div class="cuerpo" style="padding-top:0"><p class="pie">${pie}</p></div>` : ""}
   </div>`;
 }
 
 function pintarComparativa(d) {
   const dec = d.decision, chat = d.chat;
-  const ahorro = chat.tiempo_ms > 0
-    ? (chat.tiempo_ms / Math.max(dec.tiempo_ms, 1)).toFixed(1) : "0";
-
-  const resumen = `<div class="resumen">
-    <span>peticiones &nbsp; decisi&oacute;n <b>${dec.peticiones}</b> · chat <b>${chat.peticiones}</b></span>
-    <span>ida y vuelta &nbsp; decisi&oacute;n <b>${dec.tiempo_ms.toFixed(0)} ms</b> ·
-      chat <b>${chat.tiempo_ms.toFixed(0)} ms</b></span>
-    <span>tokens &nbsp; decisi&oacute;n <b>${dec.tokens}</b> · chat <b>${chat.tokens}</b></span>
-    <span class="mejor">la decisi&oacute;n tarda ${ahorro}&times; menos</span>
-  </div>`;
-
-  return resumen + `<div class="rejilla dos">
-    ${tarjeta("Decisión", "valores", "decision",
-      `<span><b>${dec.tiempo_ms.toFixed(0)}</b> ms</span><span><b>${dec.tokens}</b> tok</span>`,
-      pintarDecision(dec.resultados))}
-    ${tarjeta("Chat", "prosa", "chat",
-      `<span><b>${chat.tiempo_ms.toFixed(0)}</b> ms</span><span><b>${chat.tokens}</b> tok</span>`,
-      pintarChat(chat.resultados))}
+  return `<div class="rejilla dos">
+    ${tarjeta("Decisión", "valores", "et-choice",
+      `<span><b>${dec.tiempo_ms.toFixed(0)}</b> ms</span><span><b>${dec.tokens}</b> tok</span>
+       <span><b>${dec.peticiones}</b> pet.</span>`,
+      pintarDecision(dec.resultados),
+      "El valor sale de puntuar las opciones contra el caso: no se escribe ni un token.")}
+    ${tarjeta("Chat", "prosa", "et-chat",
+      `<span><b>${chat.tiempo_ms.toFixed(0)}</b> ms</span><span><b>${chat.tokens}</b> tok</span>
+       <span><b>${chat.peticiones}</b> pet.</span>`,
+      pintarChat(chat.resultados),
+      "Una petición por pregunta, y la respuesta hay que leerla para sacar el dato.")}
   </div>`;
 }
 
 function pintarSolo(d) {
   const r = d.resultados || [];
   if (r[0] && r[0].modo === "chat") {
-    return tarjeta("Chat", "prosa", "chat",
+    return tarjeta("Chat", "prosa", "et-chat",
       `<span><b>${d.tiempo_ms.toFixed(0)}</b> ms</span><span><b>${d.tokens}</b> tok</span>`,
       pintarChat(r));
   }
-  return tarjeta("Decisión", "valores", "decision",
+  return tarjeta("Decisión", "valores", "et-choice",
     `<span><b>${d.tiempo_ms.toFixed(0)}</b> ms</span><span><b>${d.tokens}</b> tok</span>`,
-    pintarDecision(r));
+    pintarDecision(r),
+    "El valor sale de puntuar las opciones contra el caso: no se escribe ni un token.");
 }
 
-// ---------------------------------------------------------------- peticion
+/* ------------------------------------------------------------------ peticion */
 async function preguntar() {
-  const boton = $("enviar"), cajaError = $("error"), salida = $("salida");
-  cajaError.innerHTML = "";
+  const boton = $("enviar");
+  $("error").innerHTML = "";
+
   let cuerpo;
   try {
-    if (formato === "natural") {
-      cuerpo = {formato: "natural", entrada: $("entrada").value};
+    if (modo === "natural") {
+      cuerpo = {formato: "natural", entrada: $("natural-texto").value};
+    } else if (modo === "tipado") {
+      cuerpo = Object.assign({formato: "tipado"}, JSON.parse($("tipado-texto").value));
     } else {
-      cuerpo = Object.assign({formato: "tipado"}, JSON.parse($("entrada").value));
+      if (!modelo.preguntas.length) throw new Error("marca al menos una pregunta");
+      cuerpo = Object.assign({formato: "tipado"}, JSON.parse(aTipado(modelo)));
     }
   } catch (e) {
-    cajaError.innerHTML = `<div class="error">El JSON no es válido:
-${esc(e.message)}</div>`;
+    $("error").innerHTML = `<div class="error">No puedo preguntar eso todavía:\n${esc(e.message)}</div>`;
     return;
   }
+
   cuerpo.comparar = $("comparar").checked;
   if (documento) cuerpo.documento = documento.texto;
 
   boton.disabled = true;
-  boton.textContent = "Pensando…";
+  boton.textContent = "Midiendo";
   try {
     const t0 = performance.now();
     const res = await fetch("/ask", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
+      method: "POST", headers: {"Content-Type": "application/json"},
       body: JSON.stringify(cuerpo)
     });
     const d = await res.json();
     if (!res.ok) {
-      cajaError.innerHTML = `<div class="error">${esc(JSON.stringify(d, null, 2))}</div>`;
+      $("error").innerHTML = `<div class="error">${esc(JSON.stringify(d, null, 2))}</div>`;
       return;
     }
     const redondo = performance.now() - t0;
-    salida.innerHTML = d.comparar ? pintarComparativa(d) : pintarSolo(d);
+    ultimo = d.comparar ? d : null;
+    pintarBanda();
+    $("salida").innerHTML = d.comparar ? pintarComparativa(d) : pintarSolo(d);
+
     const pie = document.createElement("p");
-    pie.className = "nota";
-    pie.textContent = `desde que pulsaste hasta que se pintó: ${redondo.toFixed(0)} ms · `
-      + `formato ${d.formato} · ${d.n_preguntas} pregunta(s)`
-      + (d.comparar ? ' · el tiempo del chat es la suma de sus peticiones' : '');
-    salida.appendChild(pie);
+    pie.className = "pie";
+    pie.textContent = `Desde que pulsaste hasta que se pintó: ${redondo.toFixed(0)} ms · ` +
+      `formato ${d.formato} · ${d.n_preguntas} pregunta(s)` +
+      (d.comparar ? " · el tiempo del chat es la suma de sus peticiones" : "") +
+      (documento ? ` · caso: ${documento.nombre}` : "");
+    $("salida").appendChild(pie);
   } catch (e) {
-    cajaError.innerHTML = `<div class="error">No pude hablar con la API: ${esc(e.message)}.
-¿Está levantada? python api.py</div>`;
+    $("error").innerHTML = `<div class="error">No pude hablar con la API: ${esc(e.message)}.\n` +
+      `¿Está levantada? python api.py --ui</div>`;
   } finally {
     boton.disabled = false;
     boton.textContent = "Preguntar";
@@ -583,30 +885,44 @@ ${esc(e.message)}</div>`;
 }
 
 $("enviar").onclick = preguntar;
-$("entrada").addEventListener("keydown", (e) => {
+document.addEventListener("keydown", (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key === "Enter") preguntar();
 });
 
-// ---------------------------------------------------------------- estado
+/* ------------------------------------------------------------------ arranque */
 (async () => {
+  modelo.preguntas = [
+    {tipo: "choice", enunciado: "¿A qué área hay que enviar este correo?",
+     opciones: [{clave: "soporte", texto: "Fallos y errores del producto"},
+                {clave: "facturacion", texto: "Cobros, facturas y reembolsos"},
+                {clave: "comercial", texto: "Ventas, planes y bajas"},
+                {clave: "otros", texto: "Todo lo demás"}]},
+    {tipo: "score", enunciado: "¿Qué urgencia tiene?",
+     opciones: [{clave: "Baja", texto: "puede esperar"},
+                {clave: "Media", texto: "conviene atenderlo esta semana"},
+                {clave: "Alta", texto: "hay una fecha límite encima"}]},
+    {tipo: "noul", enunciado: "¿Amenaza el cliente con darse de baja?",
+     opciones: [{clave: "false", texto: "No lo menciona"},
+                {clave: "true", texto: "Sí lo menciona"}]}
+  ];
+  modelo.caso = "Buenas tardes. Escribo porque estoy bastante molesto: contraté el " +
+    "plan de 20 GB el mes pasado y llevo una semana con cortes de conexión casi todas " +
+    "las noches. He llamado tres veces y nadie me ha dado una solución. Además me han " +
+    "cobrado dos veces la factura de este mes. Si esto sigue así me voy a dar de baja.";
+  $("cinta").innerHTML = "<span>una sola petición</span>";
+  pintarDoc();
+  pintarBanda();
+  cambiarModo("bloques");
+
   try {
-    const r = await fetch("/health");
-    const d = await r.json();
+    const d = await (await fetch("/health")).json();
     const ok = d.llama_server && d.llama_server.status === "ok";
     $("punto").className = "punto " + (ok ? "ok" : "malo");
-    $("texto-estado").textContent = ok
-      ? "modelo listo" : "modelo no disponible";
+    $("texto-estado").textContent = ok ? "modelo listo" : "modelo no disponible";
   } catch (e) {
     $("punto").className = "punto malo";
     $("texto-estado").textContent = "API no disponible";
   }
-  // El catálogo se muestra porque la vía de chat usa su persona: con el de IoT,
-  // el chat contesta como agente de campo aunque el caso sea de facturación.
-  try {
-    const c = await (await fetch("/catalog")).json();
-    const nombre = c.nombre || c.name || c.id || "catálogo";
-    $("catalogo").textContent = "catálogo: " + nombre;
-  } catch (e) { /* sin catálogo no se muestra nada */ }
 })();
 </script>
 </body>
