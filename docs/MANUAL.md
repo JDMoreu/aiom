@@ -445,8 +445,8 @@ El ejemplo 2, tipado:
 ```
 
 **Y aquí está el punto del repositorio:** ese JSON y el texto del apartado 2 **son la
-misma consulta y dan el mismo resultado**. Medido sobre 90 casos: **85,6% de acierto y
-76 ms en las dos formas**.
+misma consulta y dan el mismo resultado**. Ninguna de las dos formas acierta más que la
+otra: son dos maneras de decir lo mismo al mismo modelo.
 
 *Entonces, ¿para qué el JSON?* Para cuando lo escribe un programa. *¿Y por qué el
 lenguaje natural?* Porque **cualquiera puede escribirlo sin conocer el esquema**, y eso

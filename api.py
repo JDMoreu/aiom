@@ -32,7 +32,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import aiom                    # noqa: E402
 import documento as doc_mod    # noqa: E402  (saca el texto de pdf, docx, txt...)
-import ejemplos_typesafe       # noqa: E402  (reutiliza su traductor de TypeSafe)
+import tipado                    # noqa: E402  (el traductor del formato tipado)
 import preguntar               # noqa: E402
 
 FORMATOS = ("texto", "natural", "tipado")
@@ -164,11 +164,12 @@ def por_tipado(cuerpo, catalogo, cfg):
     if doc:
         # El documento manda como estado, venga lo que venga en state.input.
         cuerpo = dict(cuerpo, state=dict(cuerpo["state"], input=doc))
-    res_crudo, ms = ejemplos_typesafe.ejecutar(cuerpo, timeout=cfg["timeout"])
+    res_crudo, ms = tipado.ejecutar(cuerpo, timeout=cfg["timeout"],
+                                    servidor=cfg["server"])
     campos = res_crudo["results"][0]["fields"]
     # El tipo y el enunciado salen de la PETICION; la descripcion del esquema hace
     # falta para las etiquetas de un score. traducir() es barato y no manda nada.
-    _, esquema = ejemplos_typesafe.traducir(cuerpo)
+    _, esquema = tipado.traducir(cuerpo)
     preguntas = [(nombre, {"type": preg.get("type"),
                            "pregunta": preg.get("instructions", ""),
                            "description": esquema.get(nombre, {}).get("description", "")})

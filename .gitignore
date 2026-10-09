@@ -14,13 +14,8 @@ env/
 *.log
 *.tmp
 
-# Candado de los benchmarks: evita que las dos instancias que lanza el terminal
-# midan a la vez. Es de la maquina, no del proyecto.
-*.lock
-.cascada.lock
-
-# Nota: results/ SI se versiona. Es la evidencia del benchmark y el README
-# cita sus numeros; si se borra, las cifras quedan sin respaldo.
+# Nota: results/ ya no existe. Los benchmarks salieron del repositorio: lo unico que se
+# mide es la comparacion de las dos vias, en vivo.
 
 # Estado de las herramientas de diseno (impeccable): es proceso, no producto.
 .impeccable/

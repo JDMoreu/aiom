@@ -54,8 +54,8 @@ C_PESO = "#7A3E12"         # el modelo
 SANS = "Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif"
 MONO = "Consolas, ui-monospace, SFMono-Regular, Menlo, monospace"
 
-ANCHO, ALTO = 1400, 950
-Y_ROTULO = 268                             # la linea de los rotulos de columna
+ANCHO, ALTO = 1400, 850
+Y_ROTULO = 168                             # la linea de los rotulos de columna
 
 # La cabecera: un titulo que dice QUE es el dibujo y, debajo, una descripcion. No el
 # recorrido paso a paso -eso ya lo dicen las flechas-, sino que se esta mirando.
@@ -73,8 +73,8 @@ COL_MODELO, W_MODELO = 717, 185            # 717 - 902
 COL_VIA_A, W_VIA = 941, 208                # 941 - 1149
 COL_VIA_B = 1177                           # 1177 - 1385
 
-FILA_1, FILA_2, FILA_3, FILA_4 = 300, 400, 500, 600    # las cuatro filas de arriba
-FILA_VIA = 730                             # las dos vias
+FILA_1, FILA_2, FILA_3, FILA_4 = 200, 300, 400, 500    # las cuatro filas de arriba
+FILA_VIA = 630                             # las dos vias
 H = 76                                     # alto de tarjeta
 
 CX_MODELO = COL_MODELO + W_MODELO / 2
@@ -130,11 +130,6 @@ def icono(cx, cy, tipo, color):
                 f'stroke-width="1.6" stroke-linejoin="round"/>'
                 f'<line x1="{cx-5}" y1="{cy+2}" x2="{cx+5}" y2="{cy+2}" '
                 f'stroke="{color}" stroke-width="1.4"/>')
-    if tipo == "texto":                       # el texto ya extraido
-        return "".join(
-            f'<line x1="{cx-11}" y1="{cy-8+i*6}" x2="{cx+11-i*4}" y2="{cy-8+i*6}" '
-            f'stroke="{color}" stroke-width="1.6" stroke-linecap="round"/>'
-            for i in range(4))
     if tipo == "lista":
         return "".join(
             f'<line x1="{cx-10}" y1="{cy-7+i*7}" x2="{cx+10}" y2="{cy-7+i*7}" '
@@ -158,19 +153,6 @@ def icono(cx, cy, tipo, color):
                 f'fill="none" stroke="{color}" stroke-width="1.6"/>'
                 f'<circle cx="{cx-7}" cy="{cy-7}" r="1.6" fill="{color}"/>'
                 f'<circle cx="{cx-7}" cy="{cy+7}" r="1.6" fill="{color}"/>')
-    if tipo == "rayo":
-        return (f'<path d="M {cx+3} {cy-12} L {cx-7} {cy+1} L {cx-1} {cy+1} '
-                f'L {cx-4} {cy+12} L {cx+8} {cy-2} L {cx+1} {cy-2} Z" '
-                f'fill="{color}"/>')
-    if tipo == "burbuja":
-        return (f'<path d="M {cx-12} {cy-9} h 24 a 4 4 0 0 1 4 4 v 9 a 4 4 0 0 1 -4 4 '
-                f'h -12 l -6 6 v -6 h -6 a 4 4 0 0 1 -4 -4 v -9 a 4 4 0 0 1 4 -4 z" '
-                f'fill="none" stroke="{color}" stroke-width="1.6" '
-                f'stroke-linejoin="round"/>')
-    if tipo == "objetivo":
-        return (f'<circle cx="{cx}" cy="{cy}" r="11" fill="none" stroke="{color}" '
-                f'stroke-width="1.6"/>'
-                f'<circle cx="{cx}" cy="{cy}" r="3.5" fill="{color}"/>')
     return ""
 
 
@@ -203,20 +185,6 @@ def tarjeta(x, y, w, h, titulo, lineas, color, tipo=None, mono=None, destacada=F
         p.append(f'<text x="{xi}" y="{y0 + 17 + i*15}" font-family="{SANS}" '
                  f'font-size="11.5" fill="{TXT3}">{esc(ln)}</text>')
     return "\n".join(p)
-
-
-def metrica(x, y, valor, pie, color, tipo):
-    """Tarjeta de metrica: el numero grande, en monoespaciada porque es una medida."""
-    w, h = 300, 92
-    return "\n".join([
-        f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="3" fill="{PAPEL}" '
-        f'stroke="{HAIRLINE2}" stroke-width="1"/>',
-        icono(x + 34, y + h / 2, tipo, color),
-        f'<text x="{x + 62}" y="{y + 44}" font-family="{MONO}" font-size="28" '
-        f'font-weight="600" letter-spacing="-1" fill="{color}">{esc(valor)}</text>',
-        f'<text x="{x + 62}" y="{y + 66}" font-family="{SANS}" font-size="11.5" '
-        f'fill="{TXT3}">{esc(pie)}</text>',
-    ])
 
 
 def rotulo_columna(x, numero, texto):
@@ -435,8 +403,8 @@ def comprobar():
     if cx0 < 10 or cx0 + cw0 > ANCHO - 10:
         fallos.append("la chapa de la cabecera se sale del lienzo")
 
-    if Y_ROTULO - 40 < 226:
-        fallos.append("los rotulos de columna pisan las metricas")
+    if Y_ROTULO - 40 < 96:
+        fallos.append("los rotulos de columna pisan la cabecera")
     if FILA_VIA + H > ALTO - 90:
         fallos.append("las vias no dejan sitio para la leyenda")
     return fallos
@@ -481,14 +449,6 @@ def main():
     s.append(f'<circle cx="{cx0+14}" cy="{cy0+13}" r="3.5" fill="{REGLA}"/>')
     s.append(f'<text x="{cx0+26}" y="{cy0+17}" font-family="{MONO}" font-size="11" '
              f'fill="{TXT2}">{esc(CHAPA)}</text>')
-
-    # ---------------------------------------------------------- metricas
-    for k, (val, pie, col, ic) in enumerate((
-            ("0 tokens", "por respuesta de decisión", REGLA, "rayo"),
-            ("2,7×", "más rápido que el chat, 1 pregunta", CURSOR, "objetivo"),
-            ("9,8×", "más rápido con 15 encadenadas", CURSOR, "objetivo"),
-            ("85,6%", "de acierto con una pregunta", TXT2, "objetivo"))):
-        s.append(metrica(48 + k * 326, 130, val, pie, col, ic))
 
     # ---------------------------------------------------------- rotulos de columna
     for x, num, txt in ((COL_ENTRADA, "1", "ENTRADAS"),
@@ -553,7 +513,7 @@ def main():
                  f'fill="{TXT2}">{esc(nombre)}</text>')
         x += 29 + ancho_texto(nombre, 12) + 34
     s.append(f'<text x="{ANCHO-48}" y="{ly}" text-anchor="end" font-family="{MONO}" '
-             f'font-size="11" fill="{TXT3}">cifras medidas aquí · results/</text>')
+             f'font-size="11" fill="{TXT3}">un solo modelo, dos formas de preguntar</text>')
 
     s.append("</svg>")
 

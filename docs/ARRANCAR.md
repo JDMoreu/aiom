@@ -215,28 +215,18 @@ winget install Python.Python.3.13
 Y comprueba con `python --version` en una terminal **nueva**.
 
 **El cliente no necesita instalar nada más**: todos los scripts usan solo la biblioteca
-estándar. Lo único que pide dependencias es `graficos.py` (matplotlib), y solo si quieres
-**regenerar los gráficos del estudio** — ya están generados en `results/graf/`, así que
-puedes ignorarlo por completo.
-
-Si aun así quieres regenerarlos:
+estándar. Lo único opcional es `pymupdf`, y solo si vas a usar un **PDF** como caso:
 
 ```bash
-pip install matplotlib
-python rendimiento.py
+pip install pymupdf
 ```
+
+Un `.docx`, un `.txt` o un `.md` se leen sin instalar nada.
 
 ---
 
 ## Y ya está
 
 Con eso tienes el montaje entero: **el servidor arriba, el cliente de consola, la API y la
-interfaz**. Los resultados del estudio —tiempos, acierto, confianza— están en
-[`ESTUDIO.md`](ESTUDIO.md), [`METRICAS.md`](METRICAS.md) y [`DETALLE.md`](DETALLE.md).
-**Son informativos**: describen lo que dio este montaje en esta máquina, y no hacen falta
-para usar el proyecto.
-
-> **Si repites los benchmarks:** el terminal de esta máquina lanza cada comando **dos
-> veces**, así que dos pueden correr a la vez y contaminarse los tiempos.
-> `bench_cascada.py` lo evita con un candado. Si lanzas los otros dos a la vez, los números
-> no valen.
+interfaz**. Lo único que queda por medir es la comparación de las dos vías, y esa se mide
+en vivo con tus propias preguntas —desde la interfaz, o con `comparar:true` en la API—.

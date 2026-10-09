@@ -1,17 +1,12 @@
 # Dependencias de AIOM.
 #
-# El cliente y todos los benchmarks usan SOLO la biblioteca estandar de Python: no
-# hace falta instalar nada para usar el proyecto ni para reproducir las medidas.
-#
-# matplotlib es unicamente para REGENERAR los graficos del estudio (graficos.py). Los
-# SVG ya generados estan en results/graf/ y se versionan, asi que sin esto el
-# repositorio sigue completo: rendimiento.py los reutiliza y avisa por consola.
+# El cliente y todo el repositorio usan SOLO la biblioteca estandar de Python: no hace
+# falta instalar nada para usar el proyecto.
 #
 # pymupdf es unicamente para leer documentos PDF (documento.py). Los .txt, .md, .csv,
 # .json y .docx se leen sin instalar nada: un .docx es un ZIP y se abre con la
 # biblioteca estandar. Sin pymupdf, todo lo demas funciona igual.
 #
 #     pip install -r requirements.txt
-  
-matplotlib>=3.8
+
 pymupdf>=1.24

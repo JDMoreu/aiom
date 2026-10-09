@@ -153,10 +153,8 @@ def ask(question: str, catalog: dict, cfg: dict, force_mode: str = "auto") -> di
 def ask_many(questions, catalog, cfg, lote=16, meta=None):
     """Igual que `ask`, pero agrupando consultas en una sola peticion.
 
-    Medido en `exp_batch.py`: 1 peticion con 26 consultas rinde 48.0 ms/consulta
-    frente a 60.2 ms con 16 peticiones HTTP en paralelo, y mejora de forma
-    monotona con el tamano del lote. El servidor puntua todo el lote en la misma
-    pasada hacia delante, asi que el cliente no necesita un pool de hilos.
+    El servidor puntua todo el lote en la misma pasada hacia delante, asi que el
+    cliente no necesita un pool de hilos: N preguntas caben en UNA peticion.
 
     Las consultas que no caben en el catalogo se recogen y se relevan a chat al
     final, para no romper el lote. Esas SI escriben texto y dominan el tiempo
@@ -221,8 +219,6 @@ def main() -> int:
     p_batch = sub.add_parser("ask-batch", help="agrupa consultas en una peticion")
     p_batch.add_argument("--file", required=True, help="un texto por linea")
     p_batch.add_argument("--lote", type=int, default=16)
-    p_bench = sub.add_parser("bench")
-    p_bench.add_argument("--concurrency", default="1,4,16")
 
     args = ap.parse_args()
     cfg = {"server": args.server, "model": args.model, "timeout": args.timeout}
@@ -261,10 +257,6 @@ def main() -> int:
         print(f"  por relevo   : {meta['por_chat']:>3} consultas  "
               f"{meta['chat_ms']:>8.0f} ms  ({meta['ms_por_chat']:>6.1f} ms/consulta)   escribe texto",
               file=sys.stderr)
-    elif args.cmd == "bench":
-        from bench import run_bench
-        run_bench(catalog, cfg,
-                  niveles=[int(x) for x in args.concurrency.split(",")])
     else:
         ap.print_help()
     return 0

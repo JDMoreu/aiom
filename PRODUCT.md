@@ -40,8 +40,8 @@ medida con sus propios ojos, con su propio documento.
 ## Positioning
 
 El mecanismo que un producto vecino no podría copiar sin cambiar su arquitectura: **el
-valor sale de puntuar opciones contra el contexto, no de generar tokens**. Eso trae
-tres cosas a la vez, y las tres están medidas en el repositorio:
+valor sale de puntuar opciones contra el contexto, no de generar tokens**. Eso trae tres
+cosas a la vez, y las tres son propiedades del mecanismo, no promesas:
 
 1. **0 tokens generados** en la vía de decisión.
 2. **La distribución completa** de cada pregunta, no solo la respuesta.
@@ -52,8 +52,8 @@ vías a la vez para que la diferencia se vea, no se lea.
 
 ## Operating Context
 
-- Se ejecuta **en local**, contra un `llama-server` en Vulkan. Quien lo visita no
-  levanta el modelo: mira el resultado ya medido.
+- Se ejecuta **en local**, contra un `llama-server` en Vulkan. Quien lo visita sin
+  servidor ve el mecanismo y el diagrama; la comparación la hace quien lo tiene levantado.
 - El caso de entrada casi siempre es **un documento**: un PDF, un DOCX, un correo, un
   CV. Se sube, se extrae su texto en el servidor y **ese texto es el caso**.
 - Las preguntas se escriben **a mano** por quien prueba. El autor comprueba a mano, no
@@ -87,12 +87,14 @@ Restricciones que el diseño debe respetar:
 - **Nada de credenciales** en ningún artefacto.
 - El idioma de la interfaz es **español**.
 
-Medido y documentado en el repositorio (no inventar cifras):
+Lo que se ve al comparar, y que no hay que inventar porque **se mide en vivo**:
 
-- 12 preguntas sobre un CV: decisión **1 petición / 510 ms / 0 tokens** contra chat
-  **12 peticiones / 6717 ms / 541 tokens** → **13,2×**.
-- Caso corto: 190 ms contra 1451 ms (7,6×). Con documento: 391 contra 1048 (2,7×).
-- El chat es **no determinista** en cuánto escribe: 18 a 34 tokens en la misma pregunta.
+- La vía de decisión devuelve un valor y **no escribe**; la de chat escribe prosa que hay
+  que interpretar.
+- Con varias preguntas encadenadas la diferencia se abre: el motor las puntúa todas en la
+  misma pasada, así que añadir una casi no cuesta.
+- El chat es **no determinista** en cuánto escribe: la misma pregunta da respuestas de
+  largo distinto.
 - Agrupar preguntas cambia las de juicio y no las de «¿aparece X?».
 
 ## Brand Commitments
@@ -105,10 +107,10 @@ Medido y documentado en el repositorio (no inventar cifras):
 
 Todo esto es real y está en el repositorio; **nada de esto se puede inventar**:
 
-- Las cifras medidas, en `results/*.json` y en la documentación (`docs/`).
+- La comparación en vivo de las dos vías, que cualquiera puede repetir con sus preguntas.
 - Casos de ejemplo reales, en `ejemplos/` (correos de soporte, un CV, un documento).
 - El CV del autor (`C:\Users\JDMoreu\CV\`) y un PDF real de 9,3 MB, usados como casos.
-- Gráficas y diagrama ya producidos (`results/graf/*.svg`, `docs/arquitectura.svg`).
+- El diagrama de arquitectura (`docs/arquitectura.svg`), dibujado por el propio código.
 
 **Ausencias que no se deben rellenar con invención:** no hay usuarios externos, ni
 testimonios, ni clientes, ni precios, ni despliegue en la nube. El proyecto es local y

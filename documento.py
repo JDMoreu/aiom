@@ -14,7 +14,7 @@ Los tres primeros son biblioteca estandar de Python, sin instalar nada. El `.doc
 TAMBIEN: un .docx es un ZIP con XML dentro, y eso se abre con `zipfile`.
 
 El `.pdf` es el unico que pide una dependencia, y es opcional (como matplotlib para
-los graficos): si no esta, se dice que falta en vez de fallar por dentro.
+los graficos de un pdf): si no esta, se dice que falta en vez de fallar por dentro.
 
     pip install pymupdf
 

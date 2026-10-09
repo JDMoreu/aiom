@@ -368,8 +368,8 @@ Es lo que define esta interfaz. Por cada respuesta:
 
 - **Do** usar el rojo de cursor (#B4321F) **una sola vez por pregunta**: en su cursor.
 - **Do** poner cifras tabulares en todo lo que se compare en columna.
-- **Do** decir la verdad en los números: la lectura vacía enseña la medición publicada
-  del repositorio **dicha como lo que es**, y la sustituye por la tuya en cuanto mides.
+- **Do** decir la verdad en los números: la medida sale de tu corrida, y se dice de
+  dónde viene.
 - **Do** mantener el gris más claro en #606560 o más oscuro sobre el panel.
 - **Do** construir con controles web de siempre: pestañas, campos, botones, interruptor.
 - **Do** mantener el orden de lectura del trabajo: caso → preguntas → resultado.

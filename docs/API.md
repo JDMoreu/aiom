@@ -236,78 +236,41 @@ existencia: así acertó.
 ley — pero la dirección es clara y el error es del tipo que hace daño: una respuesta
 segura y equivocada.)*
 
-## Por qué la ventaja se encoge con un documento largo
+## Cómo se comportan las dos vías
 
-Es contraintuitivo y conviene tenerlo claro: **cuando el caso es un documento, la
-diferencia entre las dos vías baja**. Medido aquí, con las mismas tres preguntas:
+Tres cosas que se ven al comparar y conviene tener claras:
 
-| caso | decisión | chat | razón |
-|---|---|---|---|
-| texto corto (128 caracteres) | 190 ms | 1451 ms | **7,6×** |
-| documento (6086 caracteres) | 391 ms | 1048 ms | **2,7×** |
+- **El chat no es determinista.** Genera prosa, así que la misma pregunta da respuestas de
+  largo distinto y tiempos que bailan. La decisión no baila: no genera nada.
+- **La razón «N× menos» no es una constante**, es una foto de esa corrida. Sirve para ver
+  el orden de magnitud, no para afirmar un factor exacto.
+- **Con un documento largo la ventaja se estrecha**, y es contraintuitivo. La decisión no
+  escribe, así que su tiempo es casi todo *leer* — y leer el documento **no te lo ahorras
+  en ninguna de las dos vías**. Cuando el caso es corto, leer es barato y el «0 tokens»
+  pesa mucho; cuando el caso es un documento, leer pasa a ser el grueso de la decisión.
 
-Y no es que el chat se vuelva mejor. Es que **cambia en qué se va el tiempo de cada uno**:
-
-- **La decisión no escribe nada**, así que su tiempo es casi todo *leer*. Su prompt pasó
-  de 451 a 1812 tokens y ella pasó de 78 a 367 ms — **4,7× más lenta**, en proporción
-  al texto que tiene que leer. Es lo esperable: no puede ahorrarse leer el documento.
-- **El chat se va en escribir.** Lee el documento también, pero su tiempo lo manda la
-  prosa que genera. Y con un documento delante **tiende a escribir menos** (mediana de
-  30 a 21 tokens en la misma pregunta), así que no crece — a veces incluso baja.
-
-**El fondo del asunto:** la ventaja de la decisión es *no generar*. Pero leer el
-documento no te lo ahorras en ninguna de las dos vías. Cuando el texto es corto, leer
-es barato y el «0 tokens» es una ventaja enorme. Cuando el caso es un documento, leer
-pasa a ser el grueso del tiempo de la decisión, y ahí la ventaja se estrecha.
-
-**Dos avisos honestos:**
-
-- El chat **no escribe siempre lo mismo**: en cinco corridas de la misma pregunta dio
-  entre 18 y 34 tokens. Con un documento, esa variación pesa más en la razón, así que
-  el «2,7×» es menos estable que el «7,6×».
-- La decisión sigue teniendo lo suyo, y no es solo la velocidad: **devuelve valores con
-  su probabilidad**, no prosa que hay que interpretar. Eso no se mide en milisegundos.
+Y lo que la decisión da y no se mide en milisegundos: **valores con su probabilidad**, no
+prosa que hay que interpretar.
 
 ## Muchas preguntas a la vez: rápido, pero ojo
 
-Agrupar es lo que hace rápida a la decisión: **doce preguntas en una sola petición**.
-Medido sobre un currículum real (3910 caracteres), las mismas doce preguntas:
-
-| | peticiones | tiempo | tokens |
-|---|---|---|---|
-| decisión | **1** | **510 ms** | **0** |
-| chat | 12 | 6717 ms | 541 |
-
-**13,2× menos**, y escala: el chat hace una petición por pregunta, la decisión una sola.
+Agrupar es lo que hace rápida a la decisión: **N preguntas en una sola petición**, cuando
+el chat necesita una por pregunta.
 
 Pero hay un pero, y es importante. **Las preguntas se estorban entre sí**, y no todas
-igual. Sobre el mismo currículum:
+igual. Se separan solas en dos grupos:
 
-| pregunta | sola | en el lote de 12 |
-|---|---|---|
-| ¿Qué tipo de documento es? | curriculum 0.870 | **informe 0.788** |
-| ¿Cuánta experiencia declara? | mucha 3.0 | **media 2.0** |
-| ¿Cuántos empleos enumera? | 3.0 | **2.0** |
-| ¿Menciona nube? | si 1.000 | si 0.990 |
-| ¿Menciona hardware? | si 1.000 | si 0.957 |
-| ¿Es para un reclutador? | True 0.618 | True 0.824 |
-
-Se separan solas en dos grupos:
-
-- **«¿aparece X?»** (contacto, estudios, nube, IA, publicaciones, hardware) → **no se
-  mueven**. Agruparlas no cuesta nada.
+- **«¿aparece X?»** (¿menciona contacto? ¿estudios? ¿nube?) → **no se mueven**. Agruparlas
+  no cuesta nada.
 - **De juicio** (qué tipo de documento es, cuánta experiencia, cuántos empleos) →
   **cambian** según con cuántas vayan.
 
-No es azar: el lote de doce da exactamente lo mismo en tres corridas seguidas. Es un
-efecto sistemático de meterlas juntas, no ruido. *Por qué* pasa no lo he medido — la
-explicación que le veo es que los campos de «¿aparece X?» anclan al modelo en el
-contenido del documento y los de juicio se dejan arrastrar, pero eso es una hipótesis
-mía, no un dato.
+Es un efecto sistemático de meterlas juntas, no ruido. *Por qué* pasa no está medido — la
+explicación que le veo es que los campos de «¿aparece X?» anclan al modelo en el contenido
+del documento y los de juicio se dejan arrastrar, pero eso es una hipótesis, no un dato.
 
 **Lo práctico:** agrupa para velocidad y para las de «¿aparece X?»; si una respuesta de
-juicio te importa, **pregúntala sola** — una petición de ~40 ms, y da `curriculum` 0.870
-en vez de `informe` 0.788.
+juicio te importa, **pregúntala sola**.
 
 ## Qué mide exactamente `tiempo_ms`
 
@@ -316,21 +279,12 @@ en el cliente, desde que sale la petición hasta que se lee el cuerpo entero.
 
 Y se mide **con el mismo reloj en las dos vías**, que es lo que hace la comparación
 honesta. Esto no es un detalle: el servidor también informa de un `total_ms` propio,
-que es lo que tarda por dentro y **no cuenta la red**. Medido en este equipo, `total_ms`
-es entre **11 y 29 ms menor** que la ida y vuelta. Si se publicara decisión con
-`total_ms` y chat con la ida y vuelta, se le estaría perdonando a una vía un coste que
+que es lo que tarda por dentro y **no cuenta la red**. Si se publicara la decisión con
+`total_ms` y el chat con la ida y vuelta, se le estaría perdonando a una vía un coste que
 a la otra se le cobra — y la ventaja saldría inflada.
 
 El del chat es **la suma** de sus N peticiones, porque van una por pregunta: es lo que
 se tarda en tener las N respuestas, que es justo lo que se compara.
-
-**Dos avisos honestos sobre los números:**
-
-- El **chat no es determinista** (genera prosa, temperatura 0,2). La misma pregunta dio
-  entre 383 y 443 ms en seis corridas, con 33–37 tokens. La cifra de decisión es mucho
-  más estable, porque no genera nada.
-- Por eso **la razón «N× menos» no es una constante**: es una foto de esa corrida. Sirve
-  para ver el orden de magnitud, no para afirmar un factor exacto.
 
 ## La interfaz
 
@@ -349,9 +303,7 @@ que es exactamente lo que recibe el modelo.
 
 La **medida** —los números de las dos vías— vive **con la respuesta**, no en una banda
 pegada arriba: son los números de esto que acabas de leer, y separarlos obligaba a mirar
-en dos sitios para juntar el dato con su tiempo. En la pantalla vacía, en su lugar, se
-enseña la cifra ya medida en el repositorio, dicha como lo que es: una medición
-publicada, no la de ahora.
+en dos sitios para juntar el dato con su tiempo.
 
 El **catálogo** no se enseña en la interfaz, pero sigue importando: la vía de chat usa su
 *persona*. Con el catálogo de IoT por defecto, un caso de facturación hace que el chat

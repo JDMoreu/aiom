@@ -1,7 +1,7 @@
 # Créditos y procedencia
 
 Este repositorio **no inventa la pieza que lo hace posible**. Lo que aporta es la
-técnica, el cliente y las mediciones. Aquí está, pieza por pieza, de quién es cada cosa
+técnica, el cliente y la comparación. Aquí está, pieza por pieza, de quién es cada cosa
 y con qué licencia.
 
 ## Lo que hace posible todo: llama.cpp y el endpoint de decisión
@@ -89,25 +89,21 @@ origen   : end000/Spark-X2.5-4B-Q8_0-GGUF  (coincidencia exacta de tamaño)
 | | |
 |---|---|
 | **TypeSafe / Jev** | El concepto de *System One* (un modelo que decide en vez de redactar) y las tres primitivas: choice, score y noul. <https://docs.typesafe.ai/> |
-| **S1MB** | Banco de pruebas público de modelos de decisión, usado como referencia externa. <https://github.com/hotchpotch/S1MB> |
-| **WANLI** | Dataset de inferencia en lenguaje natural, usado para medir calibración. |
 
 ## Lo que es de este repositorio
 
 Para que no haya duda de qué se está leyendo:
 
-**No es de este repositorio:** el motor de inferencia, el endpoint de decisión, el
-modelo y los bancos de prueba públicos. Todo eso es de terceros y está acreditado
-arriba.
+**No es de este repositorio:** el motor de inferencia, el endpoint de decisión y el
+modelo. Todo eso es de terceros y está acreditado arriba.
 
 **Sí es de este repositorio:**
 
 - El cliente y el **traductor de lenguaje natural** (`preguntar.py`), que deduce el
   tipo de pregunta por la cabecera sin obligar a escribir JSON.
 - La técnica de tener **los dos modos sobre un solo modelo y un solo proceso**.
-- El **estudio comparativo**: las 154 preguntas, los tres modos, el escalado de 1 a 15
-  preguntas y todas las mediciones, con su parte negativa incluida.
-- Los gráficos y el diagrama de arquitectura.
+- La **comparación en vivo** de las dos vías, con sus peticiones, su tiempo y sus tokens.
+- El diagrama de arquitectura.
 
 ## Licencia del repositorio
 
