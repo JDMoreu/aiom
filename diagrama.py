@@ -6,19 +6,24 @@ para que el repositorio entero hable un solo idioma visual.
 El recorrido se lee de izquierda a derecha y esta NUMERADO en las cabeceras de columna,
 porque el fallo clasico de un diagrama asi es no saber hacia donde va:
 
-    1 ENTRADAS  ->  2 EL CLIENTE  ->  3 EL MODELO  ->  4 LAS DOS VIAS
+    1 ENTRADAS -> 2 EL CLIENTE -> 3 LA API -> 4 EL MODELO -> 5 LAS DOS VIAS
 
-Y el punto que mas se presta a confusion, resuelto a proposito: **el documento no va
-directo al servidor**. Su texto se extrae, se convierte en el CASO, y viaja CON las
-preguntas en la misma peticion que el cliente le manda al servidor.
+Lo que el diagrama tiene que dejar claro, porque es donde se lee mal:
 
-Entre la columna del cliente y la del modelo hay un CANAL a proposito (COL_CLIENTE+W
-hasta COL_MODELO) por el que sube el bus de conexiones. Las etiquetas de las flechas
-viven en ese canal, que es el unico sitio donde caben sin pisar nada.
+  - api.py es la API, NO el cliente. Es un servidor: recibe la peticion del cliente y se
+    la pasa a llama-server. Por eso tiene salida, y por eso esta en su propia columna.
+  - El documento lo usa el cliente: se sube en la interfaz, api.py lo extrae con
+    documento.py y le DEVUELVE el texto, que pasa a ser el `input` de la peticion. Es un
+    ida y vuelta, y se dibuja como tal (flecha de vuelta, a trazos).
+  - Se puede llamar a la API sin el cliente: con curl o Postman, directo.
+  - preguntar.py (la consola) NO pasa por api.py: habla con llama-server el solo.
 
-Se autocomprueba ANTES de escribir, y ahora tambien las ETIQUETAS: que ninguna pildora
-pise una tarjeta, ni a otra pildora, ni se salga del lienzo. Esa era la comprobacion que
-faltaba, y por eso se colaban solapamientos.
+Entre columna y columna no hay sitio para etiquetas, asi que NO las lleva: lo que dirian
+esta escrito en el texto de cada tarjeta, que es donde se lee sin apretar.
+
+Se autocomprueba ANTES de escribir: que ningun texto se salga de su tarjeta ni de la
+columna, que ninguna tarjeta se pise, que ninguna flecha cruce una tarjeta que no sea su
+origen o su destino, y que las etiquetas no pisen nada.
 
     python diagrama.py     # escribe docs/arquitectura.svg
 """
@@ -43,29 +48,32 @@ CHAT = "#606560"           # la via de chat, apagada a proposito
 SANS = "Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif"
 MONO = "Consolas, ui-monospace, SFMono-Regular, Menlo, monospace"
 
-ANCHO, ALTO = 1400, 950
-ZX, ZY, ZW, ZH = 230, 292, 1150, 552      # la frontera de "tu equipo"
+ANCHO, ALTO = 1400, 1050
+ZX, ZY, ZW, ZH = 247, 272, 1140, 684      # la frontera de "tu equipo"
 
-# Las cuatro columnas y sus anchos. Se declaran UNA vez: las conexiones, las etiquetas y
+# Las cinco columnas y sus anchos. Se declaran UNA vez: las conexiones, las etiquetas y
 # las comprobaciones leen de aqui, asi que no pueden desincronizarse.
-COL_ENTRADA, W_ENTRADA = 40, 175          # 40 - 215
-COL_CLIENTE, W_CLIENTE = 245, 205         # 245 - 450
-COL_MODELO, W_MODELO = 600, 215           # 600 - 815
-COL_VIA_A, COL_VIA_B, W_VIA = 855, 1115, 250
+COL_ENTRADA, W_ENTRADA = 40, 190           # 40 - 230
+COL_CLIENTE, W_CLIENTE = 260, 190          # 260 - 450
+COL_API, W_API = 485, 185                  # 485 - 670
+COL_MODELO, W_MODELO = 705, 185            # 705 - 890
+COL_VIA_A, COL_VIA_B, W_VIA = 915, 1155, 228
 
-FILA_1, FILA_2, FILA_3 = 320, 430, 540    # las tres filas de arriba
-FILA_VIA, FILA_SALIDA = 620, 740          # las vias y sus salidas
-
-# El canal entre el cliente y el modelo, y el bus que sube por el.
-CANAL_IZQ = COL_CLIENTE + W_CLIENTE       # 450
-CANAL_DER = COL_MODELO                    # 600
-BUS = 525
-FORK_X = 830                              # por donde sale la bifurcacion del servidor
+FILA_1, FILA_2, FILA_3, FILA_4 = 300, 400, 500, 600    # las cuatro filas de arriba
+FILA_VIA, FILA_SALIDA = 730, 850           # las vias y sus salidas
+H = 76                                     # alto de tarjeta
 
 CX_MODELO = COL_MODELO + W_MODELO / 2
+CX_API = COL_API + W_API / 2
+CX_CLIENTE = COL_CLIENTE + W_CLIENTE / 2
 CX_VIA_A = COL_VIA_A + W_VIA / 2
 CX_VIA_B = COL_VIA_B + W_VIA / 2
+FORK_X = 907                               # por donde sale la bifurcacion del servidor
 Y_FORK = FILA_VIA - 20
+# Dos carriles para las dos lineas que van de la fila 4 hacia arriba por la columna del
+# cliente: si compartieran x, se pisarian.
+CARRIL_SUBIDA, CARRIL_VUELTA = 395, 415
+CARRIL_API = 615                           # el bajante de api.py a documento.py
 
 
 def esc(t):
@@ -73,12 +81,8 @@ def esc(t):
 
 
 def ancho_texto(t, tam=13, negrita=False):
-    """Ancho aproximado, para no dibujar etiquetas que no caben."""
+    """Ancho aproximado, para no dibujar texto que no cabe."""
     return len(t) * tam * (0.58 if negrita else 0.55)
-
-
-def ancho_pildora(texto):
-    return ancho_texto(texto, 11, True) + 22
 
 
 def icono(cx, cy, tipo, color):
@@ -205,7 +209,7 @@ def rotulo_columna(x, numero, texto):
     return "\n".join([
         f'<circle cx="{x+11}" cy="{ZY-26}" r="11" fill="{REGLA}"/>',
         f'<text x="{x+11}" y="{ZY-22}" text-anchor="middle" font-family="{MONO}" '
-        f'font-size="12" font-weight="600" fill="{PAPEL}">{numero}</text>',
+        f'font-size="12" font-weight="600" fill="{PANEL}">{numero}</text>',
         f'<text x="{x+30}" y="{ZY-21}" font-family="{SANS}" font-size="11.5" '
         f'font-weight="600" letter-spacing="1.6" fill="{TXT3}">{esc(texto)}</text>',
     ])
@@ -213,7 +217,7 @@ def rotulo_columna(x, numero, texto):
 
 def pildora(x, y, texto, color):
     """La etiqueta de una flecha: una pastilla sobre el papel, con su texto."""
-    an = ancho_pildora(texto)
+    an = ancho_texto(texto, 11, True) + 22
     return "\n".join([
         f'<rect x="{x - an/2}" y="{y - 12}" width="{an}" height="24" rx="2" '
         f'fill="{PAPEL}" stroke="{HAIRLINE2}" stroke-width="1"/>',
@@ -222,117 +226,121 @@ def pildora(x, y, texto, color):
     ])
 
 
-def flecha(x1, y1, x2, y2, color, opacidad=1.0, ancho=1.8):
+def flecha(x1, y1, x2, y2, color, opacidad=1.0, ancho=1.8, trazos=False):
     """Una flecha recta. El trazo es mas grueso que un borde: una flecha no es un marco."""
+    guion = ' stroke-dasharray="5,4"' if trazos else ""
     return (f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="{color}" '
-            f'stroke-opacity="{opacidad}" stroke-width="{ancho}" '
+            f'stroke-opacity="{opacidad}" stroke-width="{ancho}"{guion} '
             f'stroke-linecap="round" marker-end="url(#punta-{color[1:]})"/>')
 
 
-def codo(x1, y1, x2, y2, color, radio=10, opacidad=1.0, ancho=1.8):
+def codo(x1, y1, x2, y2, color, radio=10, opacidad=1.0, ancho=1.8, trazos=False):
     """Un codo recto con la esquina redondeada: mas legible que una curva S cuando el
     recorrido no es de arriba abajo."""
     sx = 1 if x2 > x1 else -1
     sy = 1 if y2 > y1 else -1
+    guion = ' stroke-dasharray="5,4"' if trazos else ""
     return (f'<path d="M {x1} {y1} L {x2 - sx*radio} {y1} '
             f'Q {x2} {y1} {x2} {y1 + sy*radio} L {x2} {y2}" fill="none" '
-            f'stroke="{color}" stroke-opacity="{opacidad}" stroke-width="{ancho}" '
-            f'stroke-linecap="round" marker-end="url(#punta-{color[1:]})"/>')
+            f'stroke="{color}" stroke-opacity="{opacidad}" stroke-width="{ancho}"'
+            f'{guion} stroke-linecap="round" marker-end="url(#punta-{color[1:]})"/>')
 
 
-# (titulo, x, y, w, h, lineas, color, icono, etiqueta, mono, destacada, dentro)
+# (titulo, x, y, w, h, lineas, color, icono, mono, destacada, dentro)
 CAJAS = [
-    # --- 1. las entradas: por donde entra el usuario. Fuera de la maquina. ---
-    ("Tú escribes", COL_ENTRADA, FILA_1, W_ENTRADA, 80, ["el caso, a mano"],
-     TXT3, "terminal", None, False, False, False),
-    ("El navegador", COL_ENTRADA, FILA_2, W_ENTRADA, 80, ["la interfaz web"],
-     TXT3, "navegador", None, False, False, False),
-    ("Un documento", COL_ENTRADA, FILA_3, W_ENTRADA, 80, ["pdf · docx · txt"],
-     TXT3, "documento", None, False, False, False),
+    # --- 1. las entradas. De donde viene lo que se pregunta. Fuera de la maquina. ---
+    ("Tú escribes", COL_ENTRADA, FILA_1, W_ENTRADA, H, ["el caso, a mano"],
+     TXT3, "terminal", False, False, False),
+    ("Navegador", COL_ENTRADA, FILA_2, W_ENTRADA, H, ["la interfaz web"],
+     TXT3, "navegador", False, False, False),
+    ("curl / Postman", COL_ENTRADA, FILA_3, W_ENTRADA, H, ["sin el cliente"],
+     TXT3, "terminal", False, False, False),
+    ("Un documento", COL_ENTRADA, FILA_4, W_ENTRADA, H, ["pdf · docx · txt"],
+     TXT3, "documento", False, False, False),
 
-    # --- 2. el cliente: lee lo que escribes, saca el texto y arma la peticion. ---
-    ("preguntar.py", COL_CLIENTE, FILA_1, W_CLIENTE, 80, ["la puerta de consola",
-                                                          "deduce el tipo"],
-     REGLA, "lista", None, True, True, True),
-    ("api.py", COL_CLIENTE, FILA_2, W_CLIENTE, 80, ["la puerta de programa",
-                                                    "sirve la interfaz"],
-     REGLA, "servidor", None, True, True, True),
-    ("documento.py", COL_CLIENTE, FILA_3, W_CLIENTE, 80, ["del documento",
-                                                          "el texto es el caso"],
-     REGLA, "texto", None, True, True, True),
+    # --- 2. el cliente: lo que usas. La consola, y la interfaz en el navegador. ---
+    ("preguntar.py", COL_CLIENTE, FILA_1, W_CLIENTE, H, ["la consola",
+                                                        "lee la cabecera"],
+     REGLA, "lista", True, True, True),
+    ("web/index.html", COL_CLIENTE, FILA_2, W_CLIENTE, H, ["la interfaz",
+                                                           "aquí preguntas"],
+     REGLA, "navegador", True, True, True),
 
-    # --- 3. el modelo y lo que necesita para funcionar. ---
-    ("Spark-X2.5-4B", COL_MODELO, FILA_1, W_MODELO, 76, ["Q8_0 · ~9 GB en VRAM"],
-     TXT3, "chip", None, False, False, True),
-    ("llama-server", COL_MODELO, FILA_2, W_MODELO, 96, ["un solo proceso",
-                                                        "Vulkan · RX 9070"],
-     REGLA, "servidor", None, True, True, True),
-    ("Catálogo", COL_MODELO, FILA_3, W_MODELO, 76, ["catalogs/*.json",
-                                                    "qué se puede preguntar"],
-     TXT3, "lista", None, False, False, True),
+    # --- 3. la API: un servidor, no el cliente. Recibe y pasa al modelo. ---
+    ("api.py", COL_API, FILA_2, W_API, H, ["recibe el input",
+                                           "y las preguntas"],
+     REGLA, "servidor", True, True, True),
+    ("documento.py", COL_API, FILA_4, W_API, H, ["saca el texto",
+                                                 "del documento"],
+     REGLA, "texto", True, True, True),
 
-    # --- 4. las dos vias: no son del sistema, son de la peticion. ---
-    ("/v1/decision", COL_VIA_A, FILA_VIA, W_VIA, 88, ["PUNTÚA las opciones",
-                                                      "no genera ni un token"],
-     REGLA, "rayo", None, True, True, True),
-    ("/v1/chat/completions", COL_VIA_B, FILA_VIA, W_VIA, 88, ["GENERA texto",
-                                                              "token a token · respaldo"],
-     CHAT, "burbuja", None, True, False, True),
+    # --- 4. el modelo y lo que necesita para funcionar. ---
+    ("llama-server", COL_MODELO, FILA_2, W_MODELO, H, ["un solo proceso",
+                                                       "Vulkan · RX 9070"],
+     REGLA, "servidor", True, True, True),
+    ("Spark-X2.5-4B", COL_MODELO, FILA_3, W_MODELO, H, ["Q8_0",
+                                                        "9 GB en VRAM"],
+     TXT3, "chip", False, False, True),
+
+    # --- 5. las dos vias: no son del sistema, son de la peticion. ---
+    ("/v1/decision", COL_VIA_A, FILA_VIA, W_VIA, H, ["PUNTÚA las opciones",
+                                                     "no genera ni un token"],
+     REGLA, "rayo", True, True, True),
+    ("/v1/chat/completions", COL_VIA_B, FILA_VIA, W_VIA, H, ["GENERA texto",
+                                                             "token a token"],
+     CHAT, "burbuja", True, False, True),
 
     # --- y sus salidas. ---
-    ("Valor listo para usar", COL_VIA_A, FILA_SALIDA, W_VIA, 72,
-     ["+ probabilidad + confianza"],
-     REGLA, "escala", None, False, True, True),
-    ("Prosa", COL_VIA_B, FILA_SALIDA, W_VIA, 72, ["hay que interpretarla"],
-     CHAT, "burbuja", None, False, False, True),
+    ("Valor listo", COL_VIA_A, FILA_SALIDA, W_VIA, H, ["+ prob. + confianza"],
+     REGLA, "escala", False, True, True),
+    ("Prosa", COL_VIA_B, FILA_SALIDA, W_VIA, H, ["hay que interpretarla"],
+     CHAT, "burbuja", False, False, True),
 ]
 
 # Las etiquetas de las flechas, declaradas APARTE de las flechas: asi se puede comprobar
-# que ninguna pildora pisa una tarjeta ni a otra pildora. Viven en el canal.
-#
-# Aqui hay SOLO dos, y es a proposito: el canal mide 150px y una pildora de 143 no cabe
-# con margen. Lo que decia la tercera («el texto es el caso») se dice mejor en el propio
-# recuadro de documento.py, donde hay sitio y se lee sin apretar.
+# que ninguna pildora pisa una tarjeta ni a otra pildora.
 # (texto, x del centro, y del centro, color)
 ETIQUETAS = [
-    ("esquema + caso", BUS, FILA_2 + 40, REGLA),
-    ("la petición elige la vía", 1000, Y_FORK - 30, REGLA),
+    ("la petición elige la vía", 1091, Y_FORK - 32, REGLA),
 ]
 
 # Los tramos de flecha, para comprobar que ninguno pasa por encima de una tarjeta.
 # (x1, y1, x2, y2)
 SEGMENTOS = [
-    # 1 -> 2: las tres entradas, a su pieza del cliente
-    (COL_ENTRADA + W_ENTRADA, FILA_1 + 40, COL_CLIENTE, FILA_1 + 40),
-    (COL_ENTRADA + W_ENTRADA, FILA_2 + 40, COL_CLIENTE, FILA_2 + 40),
-    (COL_ENTRADA + W_ENTRADA, FILA_3 + 40, COL_CLIENTE, FILA_3 + 40),
-    # 2: el bus. Las dos puertas y el texto extraido se juntan en un solo punto, porque
-    # acaban en la MISMA peticion.
-    (CANAL_IZQ, FILA_1 + 40, BUS, FILA_1 + 40),
-    (CANAL_IZQ, FILA_2 + 40, BUS, FILA_2 + 40),
-    (CANAL_IZQ, FILA_3 + 40, BUS, FILA_3 + 40),
-    (BUS, FILA_1 + 40, BUS, FILA_3 + 40),
-    # y de ahi, al servidor: UNA peticion con el esquema y el caso
-    (BUS, FILA_2 + 40, COL_MODELO, FILA_2 + 40),
-    # 3: el modelo y el catalogo, cargados una vez
-    (CX_MODELO, FILA_1 + 76, CX_MODELO, FILA_2),
-    (CX_MODELO, FILA_3, CX_MODELO, FILA_2 + 96),
-    # 3 -> 4: del servidor salen las dos vias, de UN mismo punto
-    (COL_MODELO + W_MODELO, FILA_2 + 48, FORK_X, FILA_2 + 48),
-    (FORK_X, FILA_2 + 48, FORK_X, Y_FORK),
+    # 1 -> 2: las entradas, a lo que las usa
+    (COL_ENTRADA + W_ENTRADA, FILA_1 + H/2, COL_CLIENTE, FILA_1 + H/2),
+    (COL_ENTRADA + W_ENTRADA, FILA_2 + H/2, COL_CLIENTE, FILA_2 + H/2),
+    (COL_ENTRADA + W_ENTRADA, FILA_3 + H/2, CARRIL_API - 55, FILA_3 + H/2),
+    (CARRIL_API - 55, FILA_3 + H/2, CARRIL_API - 55, FILA_2 + H),
+    (COL_ENTRADA + W_ENTRADA, FILA_4 + H/2, CARRIL_SUBIDA, FILA_4 + H/2),
+    (CARRIL_SUBIDA, FILA_4 + H/2, CARRIL_SUBIDA, FILA_2 + H),
+    # 2: el cliente, a la API (y la consola, directa al modelo)
+    (COL_CLIENTE + W_CLIENTE, FILA_2 + H/2, COL_API, FILA_2 + H/2),
+    (COL_CLIENTE + W_CLIENTE, FILA_1 + H/2, CX_MODELO, FILA_1 + H/2),
+    (CX_MODELO, FILA_1 + H/2, CX_MODELO, FILA_2),
+    # 3: la API, al modelo
+    (COL_API + W_API, FILA_2 + H/2, COL_MODELO, FILA_2 + H/2),
+    # y la vuelta: documento.py devuelve el texto al cliente, que lo manda como `input`
+    (COL_API, FILA_4 + H/2, CARRIL_VUELTA, FILA_4 + H/2),
+    (CARRIL_VUELTA, FILA_4 + H/2, CARRIL_VUELTA, FILA_2 + H),
+    (CARRIL_API, FILA_2 + H, CARRIL_API, FILA_4),
+    # 4: el modelo carga el peso, y de el salen las dos vias
+    (CX_MODELO, FILA_3, CX_MODELO, FILA_2 + H),
+    (COL_MODELO + W_MODELO, FILA_2 + H/2, FORK_X, FILA_2 + H/2),
+    (FORK_X, FILA_2 + H/2, FORK_X, Y_FORK),
     (FORK_X, Y_FORK, CX_VIA_A, Y_FORK),
     (FORK_X, Y_FORK, CX_VIA_B, Y_FORK),
     (CX_VIA_A, Y_FORK, CX_VIA_A, FILA_VIA),
     (CX_VIA_B, Y_FORK, CX_VIA_B, FILA_VIA),
-    # 4: y cada via, a su salida
-    (CX_VIA_A, FILA_VIA + 88, CX_VIA_A, FILA_SALIDA),
-    (CX_VIA_B, FILA_VIA + 88, CX_VIA_B, FILA_SALIDA),
+    # 5: y cada via, a su salida
+    (CX_VIA_A, FILA_VIA + H, CX_VIA_A, FILA_SALIDA),
+    (CX_VIA_B, FILA_VIA + H, CX_VIA_B, FILA_SALIDA),
 ]
 
 
 def caja_de_etiqueta(texto, x, y):
     """El rectangulo que ocupa una pildora, para poder comprobarla."""
-    an = ancho_pildora(texto)
+    an = ancho_texto(texto, 11, True) + 22
     return (x - an/2, y - 12, an, 24)
 
 
@@ -345,7 +353,7 @@ def choca(a, b, margen=0):
 def comprobar():
     """Todo lo que puede salir mal en un diagrama dibujado a mano, comprobado."""
     fallos = []
-    for tit, x, y, w, h, lns, _c, ic, etq, mono, _d, dentro in CAJAS:
+    for tit, x, y, w, h, lns, _c, ic, mono, _d, dentro in CAJAS:
         necesita = (54 if ic else 16) + max(
             [ancho_texto(tit, 13.5 if mono else 14, True)]
             + [ancho_texto(l, 11.5) for l in lns])
@@ -371,8 +379,7 @@ def comprobar():
             if choca(a, rect_cajas[j]):
                 fallos.append(f"«{titulos[i]}» y «{titulos[j]}» se pisan")
 
-    # LAS ETIQUETAS: es la comprobacion que faltaba, y por eso se colaban pildoras
-    # encima de los recuadros.
+    # LAS ETIQUETAS: que ninguna pise una tarjeta, ni a otra etiqueta, ni se salga.
     rect_etq = [(t, caja_de_etiqueta(t, x, y)) for t, x, y, _c in ETIQUETAS]
     for texto, (ex, ey, ew, eh) in rect_etq:
         if ex < 10 or ex + ew > ANCHO - 10 or ey < 0 or ey + eh > ALTO:
@@ -449,11 +456,11 @@ def main():
              f'stroke-width="2.2" stroke-linecap="round"/>')
     s.append(f'<text x="108" y="62" font-family="{SANS}" font-size="25" '
              f'font-weight="600" letter-spacing="-0.9" fill="{TINTA}">'
-             f'AIOM: un cliente, un servidor, dos formas de preguntar</text>')
+             f'AIOM: un cliente, una API, un modelo, dos formas de preguntar</text>')
     s.append(f'<text x="108" y="84" font-family="{SANS}" font-size="13" '
-             f'letter-spacing="-0.1" fill="{TXT3}">El cliente arma UNA petición con el '
-             f'esquema y el caso —y el texto del documento es el caso—; el servidor la '
-             f'atiende por la vía que la petición pida.</text>')
+             f'letter-spacing="-0.1" fill="{TXT3}">El cliente manda UNA petición con el '
+             f'input —el texto del documento, si lo hay— y las preguntas; la API se la '
+             f'pasa a llama-server, que la atiende por una de sus dos vías.</text>')
     s.append(f'<rect x="{ANCHO-232}" y="48" width="184" height="26" rx="2" '
              f'fill="{PAPEL}" stroke="{HAIRLINE2}" stroke-width="1"/>')
     s.append(f'<circle cx="{ANCHO-212}" cy="61" r="3.5" fill="{REGLA}"/>')
@@ -476,38 +483,50 @@ def main():
              f'font-weight="600" letter-spacing="1.6" fill="{TXT3}">TU EQUIPO</text>')
 
     # ---------------------------------------------------------- rotulos de columna
-    s.append(rotulo_columna(COL_ENTRADA, "1", "ENTRADAS"))
-    s.append(rotulo_columna(COL_CLIENTE, "2", "EL CLIENTE"))
-    s.append(rotulo_columna(COL_MODELO, "3", "EL MODELO"))
-    s.append(rotulo_columna(COL_VIA_A, "4", "LAS DOS VÍAS"))
+    for x, num, txt in ((COL_ENTRADA, "1", "ENTRADAS"),
+                        (COL_CLIENTE, "2", "EL CLIENTE"),
+                        (COL_API, "3", "LA API"),
+                        (COL_MODELO, "4", "EL MODELO"),
+                        (COL_VIA_A, "5", "LAS DOS VÍAS")):
+        s.append(rotulo_columna(x, num, txt))
 
     # ---------------------------------------------------------- flechas
-    # 1 -> 2: las tres entradas, a su pieza del cliente.
-    for fila in (FILA_1, FILA_2, FILA_3):
-        s.append(flecha(COL_ENTRADA + W_ENTRADA, fila + 40, COL_CLIENTE, fila + 40,
-                        TXT3, ancho=1.5))
-    # 2: el bus. Las dos puertas y el texto extraido se juntan en un solo punto.
-    s.append(f'<path d="M {CANAL_IZQ} {FILA_1 + 40} L {BUS} {FILA_1 + 40} '
-             f'L {BUS} {FILA_3 + 40} L {CANAL_IZQ} {FILA_3 + 40}" '
-             f'fill="none" stroke="{REGLA}" stroke-width="1.8" stroke-linecap="round"/>')
-    s.append(flecha(BUS, FILA_2 + 40, COL_MODELO, FILA_2 + 40, REGLA, ancho=2.2))
-    # 3: el modelo y el catalogo, cargados una vez.
-    s.append(flecha(CX_MODELO, FILA_1 + 76, CX_MODELO, FILA_2, TXT3, opacidad=0.8,
+    # 1 -> 2: las entradas, a lo que las usa.
+    s.append(flecha(COL_ENTRADA + W_ENTRADA, FILA_1 + H/2, COL_CLIENTE, FILA_1 + H/2,
+                    TXT3, ancho=1.5))
+    s.append(flecha(COL_ENTRADA + W_ENTRADA, FILA_2 + H/2, COL_CLIENTE, FILA_2 + H/2,
+                    TXT3, ancho=1.5))
+    # curl y Postman entran directos a la API, sin pasar por el cliente.
+    s.append(codo(COL_ENTRADA + W_ENTRADA, FILA_3 + H/2, CARRIL_API - 55,
+                  FILA_2 + H, TXT3, ancho=1.5))
+    # y el documento: se sube desde el cliente, por eso la linea sube por su columna.
+    s.append(codo(COL_ENTRADA + W_ENTRADA, FILA_4 + H/2, CARRIL_SUBIDA, FILA_2 + H,
+                  TXT3, ancho=1.5))
+    # 2: el cliente, a la API. Y la consola, directa al modelo: no pasa por la API.
+    s.append(flecha(COL_CLIENTE + W_CLIENTE, FILA_2 + H/2, COL_API, FILA_2 + H/2, REGLA))
+    s.append(codo(COL_CLIENTE + W_CLIENTE, FILA_1 + H/2, CX_MODELO, FILA_2, REGLA))
+    # 3: la API, al modelo.
+    s.append(flecha(COL_API + W_API, FILA_2 + H/2, COL_MODELO, FILA_2 + H/2, REGLA,
+                    ancho=2.2))
+    # y la vuelta del documento: api.py lo extrae y le devuelve el texto al cliente.
+    s.append(codo(CX_API, FILA_2 + H, CARRIL_API, FILA_4, REGLA, opacidad=0.85,
+                  ancho=1.5))
+    s.append(codo(COL_API, FILA_4 + H/2, CARRIL_VUELTA, FILA_2 + H, TXT3, ancho=1.5,
+                  trazos=True))
+    # 4: el modelo, cargado, y de el salen las dos vias.
+    s.append(flecha(CX_MODELO, FILA_3, CX_MODELO, FILA_2 + H, TXT3, opacidad=0.8,
                     ancho=1.5))
-    s.append(flecha(CX_MODELO, FILA_3, CX_MODELO, FILA_2 + 96, TXT3, opacidad=0.8,
-                    ancho=1.5))
-    # 3 -> 4: del servidor salen las dos vias, de UN mismo punto.
-    s.append(codo(COL_MODELO + W_MODELO, FILA_2 + 48, FORK_X, Y_FORK, REGLA))
+    s.append(codo(COL_MODELO + W_MODELO, FILA_2 + H/2, FORK_X, Y_FORK, REGLA))
     s.append(f'<line x1="{FORK_X}" y1="{Y_FORK}" x2="{CX_VIA_B}" y2="{Y_FORK}" '
              f'stroke="{REGLA}" stroke-width="1.8" stroke-linecap="round"/>')
     s.append(flecha(CX_VIA_A, Y_FORK, CX_VIA_A, FILA_VIA, REGLA))
     s.append(flecha(CX_VIA_B, Y_FORK, CX_VIA_B, FILA_VIA, CHAT, opacidad=0.85))
-    # 4: cada via, a su salida.
-    s.append(flecha(CX_VIA_A, FILA_VIA + 88, CX_VIA_A, FILA_SALIDA, REGLA))
-    s.append(flecha(CX_VIA_B, FILA_VIA + 88, CX_VIA_B, FILA_SALIDA, CHAT, opacidad=0.85))
+    # 5: cada via, a su salida.
+    s.append(flecha(CX_VIA_A, FILA_VIA + H, CX_VIA_A, FILA_SALIDA, REGLA))
+    s.append(flecha(CX_VIA_B, FILA_VIA + H, CX_VIA_B, FILA_SALIDA, CHAT, opacidad=0.85))
 
     # ---------------------------------------------------------- tarjetas y etiquetas
-    for (tit, x, y, w, h, lns, col, ic, _etq, mono, dest, _d) in CAJAS:
+    for (tit, x, y, w, h, lns, col, ic, mono, dest, _d) in CAJAS:
         s.append(tarjeta(x, y, w, h, tit, lns, col, ic, mono, dest))
     # Las etiquetas van DESPUES de las tarjetas: si alguna se acercara, el papel de la
     # pildora tapa el borde en vez de que el borde corte el texto.
@@ -521,18 +540,24 @@ def main():
     s.append(f'<text x="48" y="{ly}" font-family="{SANS}" font-size="11.5" '
              f'font-weight="600" letter-spacing="1.6" fill="{TXT3}">LEYENDA</text>')
     x = 168
-    for nombre, col, dest in (("Entrada del usuario", TXT3, False),
-                              ("Vía de decisión · 0 tokens", REGLA, True),
-                              ("Vía de chat · respaldo", CHAT, False)):
+    for nombre, col, dest, trazos in (
+            ("Entrada del usuario", TXT3, False, False),
+            ("Vía de decisión · 0 tokens", REGLA, True, False),
+            ("Vía de chat · respaldo", CHAT, False, False),
+            ("El texto del documento vuelve al cliente", TXT3, False, True)):
         s.append(f'<rect x="{x}" y="{ly-13}" width="20" height="17" rx="2" '
                  f'fill="{PAPEL}" stroke="{col}" '
                  f'stroke-opacity="{0.55 if dest else 0.3}" '
                  f'stroke-width="{2 if dest else 1}"/>')
-        s.append(f'<rect x="{x+4}" y="{ly-9}" width="12" height="9" rx="1" '
-                 f'fill="{col}" fill-opacity="{0.25 if dest else 0.12}"/>')
+        if trazos:
+            s.append(f'<line x1="{x+3}" y1="{ly-4}" x2="{x+17}" y2="{ly-4}" '
+                     f'stroke="{col}" stroke-width="1.5" stroke-dasharray="4,3"/>')
+        else:
+            s.append(f'<rect x="{x+4}" y="{ly-9}" width="12" height="9" rx="1" '
+                     f'fill="{col}" fill-opacity="{0.25 if dest else 0.12}"/>')
         s.append(f'<text x="{x+29}" y="{ly}" font-family="{SANS}" font-size="12" '
                  f'fill="{TXT2}">{esc(nombre)}</text>')
-        x += 29 + ancho_texto(nombre, 12) + 40
+        x += 29 + ancho_texto(nombre, 12) + 34
     s.append(f'<text x="{ANCHO-48}" y="{ly}" text-anchor="end" font-family="{MONO}" '
              f'font-size="11" fill="{TXT3}">cifras medidas aquí · results/</text>')
 

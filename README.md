@@ -9,7 +9,7 @@ equipo**, sin entrenar nada y sin cargar un segundo modelo.
 
 ## Cómo funciona
 
-![Arquitectura de AIOM: las entradas, el cliente, el modelo y las dos vías](docs/arquitectura.png)
+![Arquitectura de AIOM: las entradas, el cliente, la API, el modelo y las dos vías](docs/arquitectura.png)
 
 La pieza que lo hace posible no es el modelo: es **el endpoint**. llama.cpp de serie
 solo sabe generar texto; el backend
@@ -18,9 +18,11 @@ añade uno que **puntúa las opciones en lugar de redactar**. Por eso el modo de
 no gasta tokens: no es que escriba poco, es que **no pasa por el bucle de generación**.
 
 **El cliente tiene dos puertas y las dos acaban en el mismo sitio.** Por consola
-(`preguntar.py`) o por HTTP (`api.py`, que además sirve la interfaz web en el mismo
-proceso). El modo —decisión o chat— no es del sistema: es **una propiedad de la
-petición**, y por eso se pueden pedir los dos a la vez y compararlos.
+(`preguntar.py`, que habla con el servidor el solo) o por HTTP, contra `api.py` —la API,
+que además sirve la interfaz web en el mismo proceso—. Y a la API también se la puede
+llamar **sin cliente ninguno**: con `curl` o Postman. El modo —decisión o chat— no es del
+sistema: es **una propiedad de la petición**, y por eso se pueden pedir los dos a la vez y
+compararlos.
 
 ## Empezar
 
@@ -224,7 +226,7 @@ preguntar.py         LA PUERTA DE ENTRADA: escribes en lenguaje natural y deduce
                      tipo por la cabecera; una o varias preguntas en una petición
                      (--documento hace que el caso salga de un pdf, docx, txt...)
 documento.py         saca el texto de un documento para usarlo como caso
-aiom.py              el cliente: los tres modos
+aiom.py              el motor: los tres modos, y las dos vías del servidor
 api.py               la API HTTP, que además sirve la interfaz web
 web/index.html       la interfaz: un solo fichero, HTML+CSS+JS sin dependencias
 catalogs/            dos catálogos listos para usar:
