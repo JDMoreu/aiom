@@ -347,9 +347,11 @@ El **caso** puede ser un documento: se sube, se extrae su texto en el servidor y
 enseña una vista previa con lo que se extrajo (caracteres, palabras, páginas y el texto),
 que es exactamente lo que recibe el modelo.
 
-Arriba, una banda pegada al armazón enseña la comparación con sus números. Antes de la
-primera medición muestra la cifra ya medida en el repositorio, dicha como lo que es: una
-medición publicada, no la de ahora.
+La **medida** —los números de las dos vías— vive **con la respuesta**, no en una banda
+pegada arriba: son los números de esto que acabas de leer, y separarlos obligaba a mirar
+en dos sitios para juntar el dato con su tiempo. En la pantalla vacía, en su lugar, se
+enseña la cifra ya medida en el repositorio, dicha como lo que es: una medición
+publicada, no la de ahora.
 
 El **catálogo** no se enseña en la interfaz, pero sigue importando: la vía de chat usa su
 *persona*. Con el catálogo de IoT por defecto, un caso de facturación hace que el chat

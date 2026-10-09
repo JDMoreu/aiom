@@ -178,7 +178,7 @@ aparecen poco.
 ### Secondary
 
 - **Rojo de Cursor** (#B4321F): **la marca**. Es el cursor de la escala graduada, el
-  foco del teclado y el borde del multiplicador de la banda de comparación. Nada más
+  foco del teclado y el borde del multiplicador de la medida. Nada más
   lo usa: su rareza es lo que lo hace leer como una aguja y no como un adorno.
 
 ### Tertiary
@@ -188,7 +188,7 @@ aparecen poco.
 - **Verde de Escala** para las de tipo `choice`.
   Los tres códigos vienen de la regla de cálculo, que marca sus escalas con bandas de
   color para que se encuentren de un vistazo. Aquí el color **informa**: dice de qué
-  tipo es cada pregunta, en la etiqueta de la placa y en la banda de su bloque.
+  tipo es cada pregunta, en la etiqueta de la placa y en el selector de su bloque.
 
 ### Neutral
 
@@ -234,10 +234,10 @@ tabulares, versalitas espaciadas, contraste de peso— y no del dibujo de la let
 
 Ocho pasos, y ninguno es decorativo: cada uno tiene un trabajo y un sitio.
 
-- **Display** (600, 30px, 1.0, -0.03em): el multiplicador de la banda de comparación.
+- **Display** (600, 30px, 1.0, -0.03em): el multiplicador de la medida.
   Es la cifra que prueba el proyecto y es lo más grande de la pantalla.
 - **Headline** (600, 21px, 1.15, -0.015em): el valor elegido de cada respuesta.
-- **Cifra** (600, 19px, 1.15): los números de la banda de comparación y la palabra AIOM
+- **Cifra** (600, 19px, 1.15): los números de la medida y la palabra AIOM
   del armazón. Van en cifras tabulares, porque se leen en columna.
 - **Body** (400, 15px, 1.5): el texto corrido, la prosa del chat y los enunciados
   largos. Medida máxima de 75ch.
@@ -260,9 +260,10 @@ medidas. Un rótulo en mono para que parezca técnico es un disfraz.
 
 ## Layout
 
-Una sola columna, y el orden lo manda el trabajo: primero el armazón y la banda de
-comparación pegada debajo, después las pestañas de los tres modos, después el caso
-(con su documento y su vista previa), después las preguntas, y al final la lectura.
+Una sola columna, y el orden lo manda el trabajo: el armazón, las pestañas de los tres
+modos, el caso (con su documento y su vista previa), las preguntas, **la acción de
+preguntar debajo de ellas** —es lo último que haces— y al final la lectura, con su
+medida encima.
 
 - **Ancho de contenido:** 1180px, centrado, con relleno lateral fluido
   (`clamp(14px, 3vw, 26px)`).
@@ -271,8 +272,7 @@ comparación pegada debajo, después las pestañas de los tres modos, después e
 - **Densidad:** alta a propósito. Los márgenes internos de una placa son de 14-18px, no
   de 40px. Es una superficie de lectura, no una página de presentación.
 - **Responsive:** por debajo de 940px las dos placas de lectura se apilan; por debajo
-  de 640px el armazón y la banda dejan de ser pegajosos, el multiplicador baja a su
-  propia línea y los campos de clave se ensanchan. Sin desbordes horizontales a 390px.
+  de 640px el armazón deja de ser pegajoso, el multiplicador baja a su propia línea y los campos de clave se ensanchan. Sin desbordes horizontales a 390px.
 
 ## Elevation & Depth
 
@@ -345,7 +345,7 @@ el sistema, y no es adorno: es la retícula de medida a la vista.
 
 - **Style:** pestañas de texto con subrayado de 2px en verde para la activa. El estado
   se marca con `aria-selected`, no con una clase.
-- **Mobile:** el armazón y la banda dejan de ser pegajosos y la cinta lateral se oculta.
+- **Mobile:** el armazón deja de ser pegajoso y la cinta lateral se oculta.
 
 ### La Escala Graduada (componente firma)
 
@@ -368,9 +368,8 @@ Es lo que define esta interfaz. Por cada respuesta:
 
 - **Do** usar el rojo de cursor (#B4321F) **una sola vez por pregunta**: en su cursor.
 - **Do** poner cifras tabulares en todo lo que se compare en columna.
-- **Do** decir la verdad en los números: la banda de comparación enseña la medición
-  publicada del repositorio antes de la primera corrida, **dicha como lo que es**, y
-  la sustituye por la del usuario en cuanto mide.
+- **Do** decir la verdad en los números: la lectura vacía enseña la medición publicada
+  del repositorio **dicha como lo que es**, y la sustituye por la tuya en cuanto mides.
 - **Do** mantener el gris más claro en #606560 o más oscuro sobre el panel.
 - **Do** construir con controles web de siempre: pestañas, campos, botones, interruptor.
 - **Do** mantener el orden de lectura del trabajo: caso → preguntas → resultado.

@@ -87,10 +87,10 @@ petición**, para que los tiempos sean de la misma corrida. El resultado va **em
 por pregunta**: la decisión de la pregunta 1 al lado del chat de la pregunta 1, y así. Se
 puede comparar sin bajar y subir por la página.
 
-Arriba, pegada al armazón, una banda enseña los totales de las dos vías con su rótulo, y
-el multiplicador. **Antes de la primera medición esa banda enseña la cifra ya medida en el
-repositorio, dicha como lo que es**: una medición publicada, no la de ahora. En cuanto
-mides, se sustituye por la tuya.
+Arriba de la lectura, **con ella**, una caja enseña los totales de las dos vías con su
+rótulo y el multiplicador. Antes de la primera medición esa caja no existe, y en su lugar
+la pantalla vacía enseña la cifra ya medida en el repositorio, **dicha como lo que es**:
+una medición publicada, no la de ahora. En cuanto mides, se sustituye por la tuya.
 
 ## Cómo se lee una respuesta
 

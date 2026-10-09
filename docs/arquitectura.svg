@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1040" width="1400" height="1040">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 950" width="1400" height="950">
 <defs>
 <pattern id="reticula" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M0 0v36M0 0h36" stroke="#CFD1C9" stroke-opacity="0.42" stroke-width="1"/></pattern>
 <marker id="punta-1B4D3E" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#1B4D3E"/></marker>
@@ -6,12 +6,12 @@
 <marker id="punta-606560" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#606560"/></marker>
 <marker id="punta-B4321F" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B4321F"/></marker>
 </defs>
-<rect width="1400" height="1040" fill="#E4E5DF"/>
-<rect width="1400" height="1040" fill="url(#reticula)"/>
+<rect width="1400" height="950" fill="#E4E5DF"/>
+<rect width="1400" height="950" fill="url(#reticula)"/>
 <rect x="48" y="40" width="42" height="42" rx="3" fill="#1B4D3E"/>
 <path d="M 62 54 h 14 M 62 62 h 14 M 62 70 h 8" stroke="#FAFAF7" stroke-width="2.2" stroke-linecap="round"/>
 <text x="108" y="62" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="25" font-weight="600" letter-spacing="-0.9" fill="#1A1C1B">AIOM: un cliente, un servidor, dos formas de preguntar</text>
-<text x="108" y="84" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="13" letter-spacing="-0.1" fill="#606560">El mismo servidor atiende las dos. El modo no es del sistema: es una propiedad de la petición.</text>
+<text x="108" y="84" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="13" letter-spacing="-0.1" fill="#606560">El cliente arma UNA petición con el esquema y el caso —y el texto del documento es el caso—; el servidor la atiende por la vía que la petición pida.</text>
 <rect x="1168" y="48" width="184" height="26" rx="2" fill="#FAFAF7" stroke="#B9BDB3" stroke-width="1"/>
 <circle cx="1188" cy="61" r="3.5" fill="#1B4D3E"/>
 <text x="1200" y="65" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" fill="#4A4F49">local · sin red · sin nube</text>
@@ -31,127 +31,132 @@
 <line x1="1046" y1="183.0" x2="1046" y2="180.0" stroke="#4A4F49" stroke-width="1.4"/><line x1="1053" y1="183.0" x2="1053" y2="177.0" stroke="#4A4F49" stroke-width="1.4"/><line x1="1060" y1="183.0" x2="1060" y2="180.0" stroke="#4A4F49" stroke-width="1.4"/><line x1="1067" y1="183.0" x2="1067" y2="177.0" stroke="#4A4F49" stroke-width="1.4"/><line x1="1074" y1="183.0" x2="1074" y2="180.0" stroke="#4A4F49" stroke-width="1.4"/><line x1="1046" y1="183.0" x2="1074" y2="183.0" stroke="#4A4F49" stroke-width="1.6"/><line x1="1057" y1="167.0" x2="1057" y2="183.0" stroke="#B4321F" stroke-width="2"/>
 <text x="1088" y="174" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="28" font-weight="600" letter-spacing="-1" fill="#4A4F49">85,6%</text>
 <text x="1088" y="196" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">de acierto con una pregunta</text>
-<rect x="300" y="288" width="1000" height="648" rx="4" fill="#FAFAF7" fill-opacity="0.45" stroke="#B9BDB3" stroke-width="1" stroke-dasharray="7,6"/>
-<text x="318" y="312" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" font-weight="600" letter-spacing="1.6" fill="#606560">TU EQUIPO</text>
-<text x="48" y="276" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" font-weight="600" letter-spacing="1.6" fill="#606560">ENTRADAS</text>
-<text x="330" y="276" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" font-weight="600" letter-spacing="1.6" fill="#606560">EL CLIENTE</text>
-<text x="650" y="276" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" font-weight="600" letter-spacing="1.6" fill="#606560">EL MODELO</text>
-<text x="970" y="276" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" font-weight="600" letter-spacing="1.6" fill="#606560">LAS DOS VÍAS</text>
-<rect x="48" y="340" width="190" height="84" rx="3" fill="#FAFAF7" stroke="#B9BDB3" stroke-width="1"/>
-<circle cx="76" cy="382.0" r="16" fill="#606560" fill-opacity="0.10"/>
-<rect x="64" y="372.0" width="24" height="20" rx="2" fill="none" stroke="#606560" stroke-width="1.6"/><path d="M 69 378.0 l 3.5 4 l -3.5 4" fill="none" stroke="#606560" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><line x1="77" y1="386.0" x2="83" y2="386.0" stroke="#606560" stroke-width="1.6" stroke-linecap="round"/>
-<text x="104" y="378.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="14" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">Tú escribes</text>
-<text x="104" y="395.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">el caso, a mano</text>
-<rect x="48" y="444" width="190" height="84" rx="3" fill="#FAFAF7" stroke="#B9BDB3" stroke-width="1"/>
-<circle cx="76" cy="486.0" r="16" fill="#606560" fill-opacity="0.10"/>
-<rect x="64" y="476.0" width="24" height="20" rx="2" fill="none" stroke="#606560" stroke-width="1.6"/><line x1="64" y1="482.0" x2="88" y2="482.0" stroke="#606560" stroke-width="1.6"/><circle cx="68" cy="479.0" r="1.3" fill="#606560"/>
-<text x="104" y="482.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="14" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">El navegador</text>
-<text x="104" y="499.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">la interfaz web</text>
-<rect x="48" y="548" width="190" height="84" rx="3" fill="#FAFAF7" stroke="#B9BDB3" stroke-width="1"/>
-<circle cx="76" cy="590.0" r="16" fill="#606560" fill-opacity="0.10"/>
-<path d="M 67 578.0 h 13 l 6 6 v 18 h -19 z" fill="none" stroke="#606560" stroke-width="1.6" stroke-linejoin="round"/><path d="M 80 578.0 v 6 h 6" fill="none" stroke="#606560" stroke-width="1.6" stroke-linejoin="round"/><line x1="71" y1="592.0" x2="81" y2="592.0" stroke="#606560" stroke-width="1.4"/>
-<text x="104" y="586.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="14" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">Un documento</text>
-<text x="104" y="603.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">pdf · docx · txt</text>
-<rect x="330" y="340" width="240" height="84" rx="3" fill="#FAFAF7" stroke="#1B4D3E" stroke-opacity="0.55" stroke-width="2"/>
-<circle cx="358" cy="382.0" r="16" fill="#1B4D3E" fill-opacity="0.10"/>
-<line x1="348" y1="375.0" x2="368" y2="375.0" stroke="#1B4D3E" stroke-width="1.6" stroke-linecap="round"/><circle cx="345" cy="375.0" r="1.6" fill="#1B4D3E"/><line x1="348" y1="382.0" x2="368" y2="382.0" stroke="#1B4D3E" stroke-width="1.6" stroke-linecap="round"/><circle cx="345" cy="382.0" r="1.6" fill="#1B4D3E"/><line x1="348" y1="389.0" x2="368" y2="389.0" stroke="#1B4D3E" stroke-width="1.6" stroke-linecap="round"/><circle cx="345" cy="389.0" r="1.6" fill="#1B4D3E"/>
-<text x="386" y="371.0" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13.5" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">preguntar.py</text>
-<text x="386" y="388.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">lee la cabecera</text>
-<text x="386" y="403.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">y deduce el tipo</text>
-<rect x="481.39" y="349" width="78.60999999999999" height="18" rx="2" fill="#1B4D3E" fill-opacity="0.12"/>
-<text x="520.695" y="361.5" text-anchor="middle" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="9.5" fill="#1B4D3E">por consola</text>
-<rect x="330" y="444" width="240" height="84" rx="3" fill="#FAFAF7" stroke="#1B4D3E" stroke-opacity="0.55" stroke-width="2"/>
-<circle cx="358" cy="486.0" r="16" fill="#1B4D3E" fill-opacity="0.10"/>
-<rect x="345" y="474.0" width="26" height="10" rx="2" fill="none" stroke="#1B4D3E" stroke-width="1.6"/><rect x="345" y="488.0" width="26" height="10" rx="2" fill="none" stroke="#1B4D3E" stroke-width="1.6"/><circle cx="351" cy="479.0" r="1.6" fill="#1B4D3E"/><circle cx="351" cy="493.0" r="1.6" fill="#1B4D3E"/>
-<text x="386" y="475.0" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13.5" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">api.py</text>
-<text x="386" y="492.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">HTTP en el 8100</text>
-<text x="386" y="507.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">sirve la interfaz</text>
-<rect x="492.40999999999997" y="453" width="67.59" height="18" rx="2" fill="#1B4D3E" fill-opacity="0.12"/>
-<text x="526.205" y="465.5" text-anchor="middle" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="9.5" fill="#1B4D3E">la puerta</text>
-<rect x="330" y="548" width="240" height="84" rx="3" fill="#FAFAF7" stroke="#B9BDB3" stroke-width="1"/>
-<circle cx="358" cy="590.0" r="16" fill="#1B4D3E" fill-opacity="0.10"/>
-<path d="M 349 578.0 h 13 l 6 6 v 18 h -19 z" fill="none" stroke="#1B4D3E" stroke-width="1.6" stroke-linejoin="round"/><path d="M 362 578.0 v 6 h 6" fill="none" stroke="#1B4D3E" stroke-width="1.6" stroke-linejoin="round"/><line x1="353" y1="592.0" x2="363" y2="592.0" stroke="#1B4D3E" stroke-width="1.4"/>
-<text x="386" y="579.0" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13.5" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">documento.py</text>
-<text x="386" y="596.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">saca el texto</text>
-<text x="386" y="611.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">del documento</text>
-<rect x="650" y="444" width="240" height="96" rx="3" fill="#FAFAF7" stroke="#1B4D3E" stroke-opacity="0.55" stroke-width="2"/>
-<circle cx="678" cy="492.0" r="16" fill="#1B4D3E" fill-opacity="0.10"/>
-<rect x="665" y="480.0" width="26" height="10" rx="2" fill="none" stroke="#1B4D3E" stroke-width="1.6"/><rect x="665" y="494.0" width="26" height="10" rx="2" fill="none" stroke="#1B4D3E" stroke-width="1.6"/><circle cx="671" cy="485.0" r="1.6" fill="#1B4D3E"/><circle cx="671" cy="499.0" r="1.6" fill="#1B4D3E"/>
-<text x="706" y="481.0" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13.5" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">llama-server</text>
-<text x="706" y="498.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">un solo proceso</text>
-<text x="706" y="513.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">Vulkan · local</text>
-<rect x="823.43" y="453" width="56.57" height="18" rx="2" fill="#1B4D3E" fill-opacity="0.12"/>
-<text x="851.715" y="465.5" text-anchor="middle" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="9.5" fill="#1B4D3E">RX 9070</text>
-<rect x="650" y="320" width="240" height="78" rx="3" fill="#FAFAF7" stroke="#B9BDB3" stroke-width="1"/>
-<circle cx="678" cy="359.0" r="16" fill="#606560" fill-opacity="0.10"/>
-<line x1="666" y1="346.0" x2="666" y2="351.0" stroke="#606560" stroke-width="1.5"/><line x1="666" y1="367.0" x2="666" y2="372.0" stroke="#606560" stroke-width="1.5"/><line x1="672" y1="346.0" x2="672" y2="351.0" stroke="#606560" stroke-width="1.5"/><line x1="672" y1="367.0" x2="672" y2="372.0" stroke="#606560" stroke-width="1.5"/><line x1="678" y1="346.0" x2="678" y2="351.0" stroke="#606560" stroke-width="1.5"/><line x1="678" y1="367.0" x2="678" y2="372.0" stroke="#606560" stroke-width="1.5"/><line x1="684" y1="346.0" x2="684" y2="351.0" stroke="#606560" stroke-width="1.5"/><line x1="684" y1="367.0" x2="684" y2="372.0" stroke="#606560" stroke-width="1.5"/><line x1="690" y1="346.0" x2="690" y2="351.0" stroke="#606560" stroke-width="1.5"/><line x1="690" y1="367.0" x2="690" y2="372.0" stroke="#606560" stroke-width="1.5"/><rect x="668" y="351.0" width="20" height="16" rx="2" fill="none" stroke="#606560" stroke-width="1.6"/><rect x="674" y="356.0" width="8" height="6" rx="1" fill="#606560" opacity="0.6"/>
-<text x="706" y="355.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="14" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">Spark-X2.5-4B</text>
-<text x="706" y="372.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">Q8_0 · ~9 GB en VRAM</text>
-<rect x="650" y="580" width="240" height="78" rx="3" fill="#FAFAF7" stroke="#B9BDB3" stroke-width="1"/>
-<circle cx="678" cy="619.0" r="16" fill="#606560" fill-opacity="0.10"/>
-<line x1="668" y1="612.0" x2="688" y2="612.0" stroke="#606560" stroke-width="1.6" stroke-linecap="round"/><circle cx="665" cy="612.0" r="1.6" fill="#606560"/><line x1="668" y1="619.0" x2="688" y2="619.0" stroke="#606560" stroke-width="1.6" stroke-linecap="round"/><circle cx="665" cy="619.0" r="1.6" fill="#606560"/><line x1="668" y1="626.0" x2="688" y2="626.0" stroke="#606560" stroke-width="1.6" stroke-linecap="round"/><circle cx="665" cy="626.0" r="1.6" fill="#606560"/>
-<text x="706" y="615.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="14" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">Catálogo de campos</text>
-<text x="706" y="632.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">qué se puede preguntar</text>
-<rect x="779.35" y="589" width="100.64999999999999" height="18" rx="2" fill="#606560" fill-opacity="0.12"/>
-<text x="829.675" y="601.5" text-anchor="middle" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="9.5" fill="#606560">catalogs/*.json</text>
-<rect x="970" y="340" width="250" height="92" rx="3" fill="#FAFAF7" stroke="#1B4D3E" stroke-opacity="0.55" stroke-width="2"/>
-<circle cx="998" cy="386.0" r="16" fill="#1B4D3E" fill-opacity="0.10"/>
-<path d="M 1001 374.0 L 991 387.0 L 997 387.0 L 994 398.0 L 1006 384.0 L 999 384.0 Z" fill="#1B4D3E"/>
-<text x="1026" y="375.0" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13.5" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">/v1/decision</text>
-<text x="1026" y="392.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">PUNTÚA las opciones</text>
-<text x="1026" y="407.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">no genera ni un token</text>
-<rect x="1147.92" y="349" width="62.08" height="18" rx="2" fill="#1B4D3E" fill-opacity="0.12"/>
-<text x="1178.96" y="361.5" text-anchor="middle" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="9.5" fill="#1B4D3E">0 tokens</text>
-<rect x="970" y="452" width="250" height="92" rx="3" fill="#FAFAF7" stroke="#B9BDB3" stroke-width="1"/>
-<circle cx="998" cy="498.0" r="16" fill="#606560" fill-opacity="0.10"/>
-<path d="M 986 489.0 h 24 a 4 4 0 0 1 4 4 v 9 a 4 4 0 0 1 -4 4 h -12 l -6 6 v -6 h -6 a 4 4 0 0 1 -4 -4 v -9 a 4 4 0 0 1 4 -4 z" fill="none" stroke="#606560" stroke-width="1.6" stroke-linejoin="round"/>
-<text x="1026" y="487.0" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13.5" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">/v1/chat/completions</text>
-<text x="1026" y="504.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">GENERA texto</text>
-<text x="1026" y="519.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">token a token</text>
-<rect x="1147.92" y="461" width="62.08" height="18" rx="2" fill="#606560" fill-opacity="0.12"/>
-<text x="1178.96" y="473.5" text-anchor="middle" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="9.5" fill="#606560">respaldo</text>
-<rect x="970" y="590" width="250" height="78" rx="3" fill="#FAFAF7" stroke="#1B4D3E" stroke-opacity="0.55" stroke-width="2"/>
-<circle cx="998" cy="629.0" r="16" fill="#1B4D3E" fill-opacity="0.10"/>
-<line x1="984" y1="636.0" x2="984" y2="633.0" stroke="#1B4D3E" stroke-width="1.4"/><line x1="991" y1="636.0" x2="991" y2="630.0" stroke="#1B4D3E" stroke-width="1.4"/><line x1="998" y1="636.0" x2="998" y2="633.0" stroke="#1B4D3E" stroke-width="1.4"/><line x1="1005" y1="636.0" x2="1005" y2="630.0" stroke="#1B4D3E" stroke-width="1.4"/><line x1="1012" y1="636.0" x2="1012" y2="633.0" stroke="#1B4D3E" stroke-width="1.4"/><line x1="984" y1="636.0" x2="1012" y2="636.0" stroke="#1B4D3E" stroke-width="1.6"/><line x1="995" y1="620.0" x2="995" y2="636.0" stroke="#B4321F" stroke-width="2"/>
-<text x="1026" y="625.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="14" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">Valor listo para usar</text>
-<text x="1026" y="642.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">+ probabilidad + confianza</text>
-<rect x="970" y="700" width="250" height="78" rx="3" fill="#FAFAF7" stroke="#B9BDB3" stroke-width="1"/>
-<circle cx="998" cy="739.0" r="16" fill="#606560" fill-opacity="0.10"/>
-<path d="M 986 730.0 h 24 a 4 4 0 0 1 4 4 v 9 a 4 4 0 0 1 -4 4 h -12 l -6 6 v -6 h -6 a 4 4 0 0 1 -4 -4 v -9 a 4 4 0 0 1 4 -4 z" fill="none" stroke="#606560" stroke-width="1.6" stroke-linejoin="round"/>
-<text x="1026" y="735.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="14" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">Prosa</text>
-<text x="1026" y="752.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">hay que interpretarla</text>
-<line x1="238" y1="382" x2="330" y2="382" stroke="#606560" stroke-opacity="1.0" stroke-width="1.6" marker-end="url(#punta-606560)"/>
-<line x1="238" y1="486" x2="330" y2="486" stroke="#606560" stroke-opacity="1.0" stroke-width="1.6" marker-end="url(#punta-606560)"/>
-<line x1="238" y1="590" x2="330" y2="590" stroke="#606560" stroke-opacity="1.0" stroke-width="1.6" marker-end="url(#punta-606560)"/>
-<line x1="570" y1="590" x2="640" y2="590" stroke="#606560" stroke-width="1.4"/>
-<line x1="640" y1="590" x2="640" y2="492" stroke="#606560" stroke-width="1.4"/>
-<line x1="640" y1="492" x2="650" y2="492" stroke="#606560" stroke-width="1.4" marker-end="url(#punta-606560)"/>
-<line x1="570" y1="382" x2="650" y2="442" stroke="#1B4D3E" stroke-opacity="1.0" stroke-width="1.6" marker-end="url(#punta-1B4D3E)"/>
-<rect x="545.15" y="400.0" width="117.69999999999999" height="24" rx="2" fill="#FAFAF7" stroke="#CFD1C9" stroke-width="1"/>
-<text x="604.0" y="416.0" text-anchor="middle" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11" font-weight="600" fill="#1B4D3E">esquema + texto</text>
-<line x1="570" y1="486" x2="650" y2="486" stroke="#1B4D3E" stroke-opacity="1.0" stroke-width="1.6" marker-end="url(#punta-1B4D3E)"/>
-<line x1="770" y1="398" x2="770" y2="444" stroke="#606560" stroke-opacity="0.8" stroke-width="1.6" marker-end="url(#punta-606560)"/>
-<line x1="770" y1="580" x2="770" y2="540" stroke="#606560" stroke-opacity="0.8" stroke-width="1.6" marker-end="url(#punta-606560)"/>
-<line x1="890" y1="492" x2="940" y2="492" stroke="#1B4D3E" stroke-width="1.6"/>
-<circle cx="940" cy="492" r="4.5" fill="#FAFAF7" stroke="#1B4D3E" stroke-width="1.8"/>
-<path d="M 940 492 C 940 416.0 1095 416.0 1095 340" fill="none" stroke="#1B4D3E" stroke-opacity="1.0" stroke-width="1.6" marker-end="url(#punta-1B4D3E)"/>
-<rect x="929.94" y="404.0" width="175.11999999999998" height="24" rx="2" fill="#FAFAF7" stroke="#CFD1C9" stroke-width="1"/>
-<text x="1017.5" y="420.0" text-anchor="middle" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11" font-weight="600" fill="#1B4D3E">sí · puntúa las opciones</text>
-<path d="M 940 492 C 940 472.0 1095 472.0 1095 452" fill="none" stroke="#606560" stroke-opacity="0.85" stroke-width="1.6" marker-end="url(#punta-606560)"/>
-<rect x="945.89" y="460.0" width="143.21999999999997" height="24" rx="2" fill="#FAFAF7" stroke="#CFD1C9" stroke-width="1"/>
-<text x="1017.5" y="476.0" text-anchor="middle" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11" font-weight="600" fill="#606560">no · relevo al chat</text>
-<line x1="1095" y1="432" x2="1095" y2="590" stroke="#1B4D3E" stroke-opacity="1.0" stroke-width="1.6" marker-end="url(#punta-1B4D3E)"/>
-<line x1="1095" y1="544" x2="1095" y2="700" stroke="#606560" stroke-opacity="0.85" stroke-width="1.6" marker-end="url(#punta-606560)"/>
-<line x1="48" y1="964" x2="1352" y2="964" stroke="#CFD1C9" stroke-width="1"/>
-<text x="48" y="994" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" font-weight="600" letter-spacing="1.6" fill="#606560">LEYENDA</text>
-<rect x="168" y="981" width="20" height="17" rx="2" fill="#FAFAF7" stroke="#606560" stroke-opacity="0.3" stroke-width="1"/>
-<rect x="172" y="985" width="12" height="9" rx="1" fill="#606560" fill-opacity="0.12"/>
-<text x="197" y="994" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="12" fill="#4A4F49">Entrada del usuario</text>
-<rect x="362.4" y="981" width="20" height="17" rx="2" fill="#FAFAF7" stroke="#1B4D3E" stroke-opacity="0.55" stroke-width="2"/>
-<rect x="366.4" y="985" width="12" height="9" rx="1" fill="#1B4D3E" fill-opacity="0.25"/>
-<text x="391.4" y="994" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="12" fill="#4A4F49">Vía de decisión · 0 tokens</text>
-<rect x="603.0" y="981" width="20" height="17" rx="2" fill="#FAFAF7" stroke="#606560" stroke-opacity="0.3" stroke-width="1"/>
-<rect x="607.0" y="985" width="12" height="9" rx="1" fill="#606560" fill-opacity="0.12"/>
-<text x="632.0" y="994" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="12" fill="#4A4F49">Vía de chat · respaldo</text>
-<text x="1352" y="994" text-anchor="end" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" fill="#606560">cifras medidas aquí · results/</text>
+<rect x="262" y="292" width="1104" height="552" rx="4" fill="#FAFAF7" fill-opacity="0.45" stroke="#B9BDB3" stroke-width="1" stroke-dasharray="7,6"/>
+<text x="280" y="316" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" font-weight="600" letter-spacing="1.6" fill="#606560">TU EQUIPO</text>
+<circle cx="59" cy="266" r="11" fill="#1B4D3E"/>
+<text x="59" y="270" text-anchor="middle" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" font-weight="600" fill="#FAFAF7">1</text>
+<text x="78" y="271" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" font-weight="600" letter-spacing="1.6" fill="#606560">ENTRADAS</text>
+<circle cx="291" cy="266" r="11" fill="#1B4D3E"/>
+<text x="291" y="270" text-anchor="middle" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" font-weight="600" fill="#FAFAF7">2</text>
+<text x="310" y="271" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" font-weight="600" letter-spacing="1.6" fill="#606560">EL CLIENTE</text>
+<circle cx="571" cy="266" r="11" fill="#1B4D3E"/>
+<text x="571" y="270" text-anchor="middle" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" font-weight="600" fill="#FAFAF7">3</text>
+<text x="590" y="271" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" font-weight="600" letter-spacing="1.6" fill="#606560">EL MODELO</text>
+<circle cx="861" cy="266" r="11" fill="#1B4D3E"/>
+<text x="861" y="270" text-anchor="middle" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" font-weight="600" fill="#FAFAF7">4</text>
+<text x="880" y="271" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" font-weight="600" letter-spacing="1.6" fill="#606560">LAS DOS VÍAS</text>
+<rect x="48" y="320" width="180" height="80" rx="3" fill="#FAFAF7" stroke="#B9BDB3" stroke-width="1"/>
+<circle cx="75" cy="360.0" r="16" fill="#606560" fill-opacity="0.10"/>
+<rect x="63" y="350.0" width="24" height="20" rx="2" fill="none" stroke="#606560" stroke-width="1.6"/><path d="M 68 356.0 l 3.5 4 l -3.5 4" fill="none" stroke="#606560" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><line x1="76" y1="364.0" x2="82" y2="364.0" stroke="#606560" stroke-width="1.6" stroke-linecap="round"/>
+<text x="102" y="356.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="14" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">Tú escribes</text>
+<text x="102" y="373.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">el caso, a mano</text>
+<rect x="48" y="430" width="180" height="80" rx="3" fill="#FAFAF7" stroke="#B9BDB3" stroke-width="1"/>
+<circle cx="75" cy="470.0" r="16" fill="#606560" fill-opacity="0.10"/>
+<rect x="63" y="460.0" width="24" height="20" rx="2" fill="none" stroke="#606560" stroke-width="1.6"/><line x1="63" y1="466.0" x2="87" y2="466.0" stroke="#606560" stroke-width="1.6"/><circle cx="67" cy="463.0" r="1.3" fill="#606560"/>
+<text x="102" y="466.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="14" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">El navegador</text>
+<text x="102" y="483.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">la interfaz web</text>
+<rect x="48" y="540" width="180" height="80" rx="3" fill="#FAFAF7" stroke="#B9BDB3" stroke-width="1"/>
+<circle cx="75" cy="580.0" r="16" fill="#606560" fill-opacity="0.10"/>
+<path d="M 66 568.0 h 13 l 6 6 v 18 h -19 z" fill="none" stroke="#606560" stroke-width="1.6" stroke-linejoin="round"/><path d="M 79 568.0 v 6 h 6" fill="none" stroke="#606560" stroke-width="1.6" stroke-linejoin="round"/><line x1="70" y1="582.0" x2="80" y2="582.0" stroke="#606560" stroke-width="1.4"/>
+<text x="102" y="576.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="14" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">Un documento</text>
+<text x="102" y="593.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">pdf · docx · txt</text>
+<rect x="280" y="320" width="230" height="80" rx="3" fill="#FAFAF7" stroke="#1B4D3E" stroke-opacity="0.55" stroke-width="2"/>
+<circle cx="307" cy="360.0" r="16" fill="#1B4D3E" fill-opacity="0.10"/>
+<line x1="297" y1="353.0" x2="317" y2="353.0" stroke="#1B4D3E" stroke-width="1.6" stroke-linecap="round"/><circle cx="294" cy="353.0" r="1.6" fill="#1B4D3E"/><line x1="297" y1="360.0" x2="317" y2="360.0" stroke="#1B4D3E" stroke-width="1.6" stroke-linecap="round"/><circle cx="294" cy="360.0" r="1.6" fill="#1B4D3E"/><line x1="297" y1="367.0" x2="317" y2="367.0" stroke="#1B4D3E" stroke-width="1.6" stroke-linecap="round"/><circle cx="294" cy="367.0" r="1.6" fill="#1B4D3E"/>
+<text x="334" y="349.0" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13.5" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">preguntar.py</text>
+<text x="334" y="366.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">la puerta de consola</text>
+<text x="334" y="381.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">deduce el tipo</text>
+<rect x="421.39" y="329" width="78.60999999999999" height="18" rx="2" fill="#1B4D3E" fill-opacity="0.12"/>
+<text x="460.695" y="341.5" text-anchor="middle" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="9.5" fill="#1B4D3E">por consola</text>
+<rect x="280" y="430" width="230" height="80" rx="3" fill="#FAFAF7" stroke="#1B4D3E" stroke-opacity="0.55" stroke-width="2"/>
+<circle cx="307" cy="470.0" r="16" fill="#1B4D3E" fill-opacity="0.10"/>
+<rect x="294" y="458.0" width="26" height="10" rx="2" fill="none" stroke="#1B4D3E" stroke-width="1.6"/><rect x="294" y="472.0" width="26" height="10" rx="2" fill="none" stroke="#1B4D3E" stroke-width="1.6"/><circle cx="300" cy="463.0" r="1.6" fill="#1B4D3E"/><circle cx="300" cy="477.0" r="1.6" fill="#1B4D3E"/>
+<text x="334" y="459.0" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13.5" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">api.py</text>
+<text x="334" y="476.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">la puerta de programa</text>
+<text x="334" y="491.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">HTTP · sirve la interfaz</text>
+<rect x="432.40999999999997" y="439" width="67.59" height="18" rx="2" fill="#1B4D3E" fill-opacity="0.12"/>
+<text x="466.205" y="451.5" text-anchor="middle" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="9.5" fill="#1B4D3E">la puerta</text>
+<rect x="280" y="540" width="230" height="80" rx="3" fill="#FAFAF7" stroke="#1B4D3E" stroke-opacity="0.55" stroke-width="2"/>
+<circle cx="307" cy="580.0" r="16" fill="#1B4D3E" fill-opacity="0.10"/>
+<line x1="296" y1="572.0" x2="318" y2="572.0" stroke="#1B4D3E" stroke-width="1.6" stroke-linecap="round"/><line x1="296" y1="578.0" x2="314" y2="578.0" stroke="#1B4D3E" stroke-width="1.6" stroke-linecap="round"/><line x1="296" y1="584.0" x2="310" y2="584.0" stroke="#1B4D3E" stroke-width="1.6" stroke-linecap="round"/><line x1="296" y1="590.0" x2="306" y2="590.0" stroke="#1B4D3E" stroke-width="1.6" stroke-linecap="round"/>
+<text x="334" y="569.0" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13.5" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">documento.py</text>
+<text x="334" y="586.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">saca el texto</text>
+<text x="334" y="601.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">y ese texto es el caso</text>
+<rect x="560" y="320" width="230" height="76" rx="3" fill="#FAFAF7" stroke="#B9BDB3" stroke-width="1"/>
+<circle cx="587" cy="358.0" r="16" fill="#606560" fill-opacity="0.10"/>
+<line x1="575" y1="345.0" x2="575" y2="350.0" stroke="#606560" stroke-width="1.5"/><line x1="575" y1="366.0" x2="575" y2="371.0" stroke="#606560" stroke-width="1.5"/><line x1="581" y1="345.0" x2="581" y2="350.0" stroke="#606560" stroke-width="1.5"/><line x1="581" y1="366.0" x2="581" y2="371.0" stroke="#606560" stroke-width="1.5"/><line x1="587" y1="345.0" x2="587" y2="350.0" stroke="#606560" stroke-width="1.5"/><line x1="587" y1="366.0" x2="587" y2="371.0" stroke="#606560" stroke-width="1.5"/><line x1="593" y1="345.0" x2="593" y2="350.0" stroke="#606560" stroke-width="1.5"/><line x1="593" y1="366.0" x2="593" y2="371.0" stroke="#606560" stroke-width="1.5"/><line x1="599" y1="345.0" x2="599" y2="350.0" stroke="#606560" stroke-width="1.5"/><line x1="599" y1="366.0" x2="599" y2="371.0" stroke="#606560" stroke-width="1.5"/><rect x="577" y="350.0" width="20" height="16" rx="2" fill="none" stroke="#606560" stroke-width="1.6"/><rect x="583" y="355.0" width="8" height="6" rx="1" fill="#606560" opacity="0.6"/>
+<text x="614" y="354.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="14" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">Spark-X2.5-4B</text>
+<text x="614" y="371.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">Q8_0 · ~9 GB en VRAM</text>
+<rect x="560" y="430" width="230" height="96" rx="3" fill="#FAFAF7" stroke="#1B4D3E" stroke-opacity="0.55" stroke-width="2"/>
+<circle cx="587" cy="478.0" r="16" fill="#1B4D3E" fill-opacity="0.10"/>
+<rect x="574" y="466.0" width="26" height="10" rx="2" fill="none" stroke="#1B4D3E" stroke-width="1.6"/><rect x="574" y="480.0" width="26" height="10" rx="2" fill="none" stroke="#1B4D3E" stroke-width="1.6"/><circle cx="580" cy="471.0" r="1.6" fill="#1B4D3E"/><circle cx="580" cy="485.0" r="1.6" fill="#1B4D3E"/>
+<text x="614" y="467.0" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13.5" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">llama-server</text>
+<text x="614" y="484.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">un solo proceso</text>
+<text x="614" y="499.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">Vulkan · local</text>
+<rect x="723.43" y="439" width="56.57" height="18" rx="2" fill="#1B4D3E" fill-opacity="0.12"/>
+<text x="751.715" y="451.5" text-anchor="middle" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="9.5" fill="#1B4D3E">RX 9070</text>
+<rect x="560" y="540" width="230" height="76" rx="3" fill="#FAFAF7" stroke="#B9BDB3" stroke-width="1"/>
+<circle cx="587" cy="578.0" r="16" fill="#606560" fill-opacity="0.10"/>
+<line x1="577" y1="571.0" x2="597" y2="571.0" stroke="#606560" stroke-width="1.6" stroke-linecap="round"/><circle cx="574" cy="571.0" r="1.6" fill="#606560"/><line x1="577" y1="578.0" x2="597" y2="578.0" stroke="#606560" stroke-width="1.6" stroke-linecap="round"/><circle cx="574" cy="578.0" r="1.6" fill="#606560"/><line x1="577" y1="585.0" x2="597" y2="585.0" stroke="#606560" stroke-width="1.6" stroke-linecap="round"/><circle cx="574" cy="585.0" r="1.6" fill="#606560"/>
+<text x="614" y="574.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="14" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">Catálogo de campos</text>
+<text x="614" y="591.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">qué se puede preguntar</text>
+<rect x="679.35" y="549" width="100.64999999999999" height="18" rx="2" fill="#606560" fill-opacity="0.12"/>
+<text x="729.675" y="561.5" text-anchor="middle" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="9.5" fill="#606560">catalogs/*.json</text>
+<rect x="850" y="620" width="250" height="88" rx="3" fill="#FAFAF7" stroke="#1B4D3E" stroke-opacity="0.55" stroke-width="2"/>
+<circle cx="877" cy="664.0" r="16" fill="#1B4D3E" fill-opacity="0.10"/>
+<path d="M 880 652.0 L 870 665.0 L 876 665.0 L 873 676.0 L 885 662.0 L 878 662.0 Z" fill="#1B4D3E"/>
+<text x="904" y="653.0" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13.5" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">/v1/decision</text>
+<text x="904" y="670.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">PUNTÚA las opciones</text>
+<text x="904" y="685.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">no genera ni un token</text>
+<rect x="1027.92" y="629" width="62.08" height="18" rx="2" fill="#1B4D3E" fill-opacity="0.12"/>
+<text x="1058.96" y="641.5" text-anchor="middle" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="9.5" fill="#1B4D3E">0 tokens</text>
+<rect x="1110" y="620" width="250" height="88" rx="3" fill="#FAFAF7" stroke="#B9BDB3" stroke-width="1"/>
+<circle cx="1137" cy="664.0" r="16" fill="#606560" fill-opacity="0.10"/>
+<path d="M 1125 655.0 h 24 a 4 4 0 0 1 4 4 v 9 a 4 4 0 0 1 -4 4 h -12 l -6 6 v -6 h -6 a 4 4 0 0 1 -4 -4 v -9 a 4 4 0 0 1 4 -4 z" fill="none" stroke="#606560" stroke-width="1.6" stroke-linejoin="round"/>
+<text x="1164" y="653.0" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13.5" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">/v1/chat/completions</text>
+<text x="1164" y="670.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">GENERA texto</text>
+<text x="1164" y="685.0" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">token a token</text>
+<rect x="1287.92" y="629" width="62.08" height="18" rx="2" fill="#606560" fill-opacity="0.12"/>
+<text x="1318.96" y="641.5" text-anchor="middle" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="9.5" fill="#606560">respaldo</text>
+<rect x="850" y="740" width="250" height="72" rx="3" fill="#FAFAF7" stroke="#1B4D3E" stroke-opacity="0.55" stroke-width="2"/>
+<circle cx="877" cy="776.0" r="16" fill="#1B4D3E" fill-opacity="0.10"/>
+<line x1="863" y1="783.0" x2="863" y2="780.0" stroke="#1B4D3E" stroke-width="1.4"/><line x1="870" y1="783.0" x2="870" y2="777.0" stroke="#1B4D3E" stroke-width="1.4"/><line x1="877" y1="783.0" x2="877" y2="780.0" stroke="#1B4D3E" stroke-width="1.4"/><line x1="884" y1="783.0" x2="884" y2="777.0" stroke="#1B4D3E" stroke-width="1.4"/><line x1="891" y1="783.0" x2="891" y2="780.0" stroke="#1B4D3E" stroke-width="1.4"/><line x1="863" y1="783.0" x2="891" y2="783.0" stroke="#1B4D3E" stroke-width="1.6"/><line x1="874" y1="767.0" x2="874" y2="783.0" stroke="#B4321F" stroke-width="2"/>
+<text x="904" y="772.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="14" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">Valor listo para usar</text>
+<text x="904" y="789.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">+ probabilidad + confianza</text>
+<rect x="1110" y="740" width="250" height="72" rx="3" fill="#FAFAF7" stroke="#B9BDB3" stroke-width="1"/>
+<circle cx="1137" cy="776.0" r="16" fill="#606560" fill-opacity="0.10"/>
+<path d="M 1125 767.0 h 24 a 4 4 0 0 1 4 4 v 9 a 4 4 0 0 1 -4 4 h -12 l -6 6 v -6 h -6 a 4 4 0 0 1 -4 -4 v -9 a 4 4 0 0 1 4 -4 z" fill="none" stroke="#606560" stroke-width="1.6" stroke-linejoin="round"/>
+<text x="1164" y="772.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="14" font-weight="600" letter-spacing="-0.2" fill="#1A1C1B">Prosa</text>
+<text x="1164" y="789.5" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" fill="#606560">hay que interpretarla</text>
+<line x1="228" y1="360" x2="280" y2="360" stroke="#606560" stroke-opacity="1.0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#punta-606560)"/>
+<line x1="228" y1="470" x2="280" y2="470" stroke="#606560" stroke-opacity="1.0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#punta-606560)"/>
+<line x1="228" y1="580" x2="280" y2="580" stroke="#606560" stroke-opacity="1.0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#punta-606560)"/>
+<path d="M 510 360 L 532 360 L 532 580 L 510 580" fill="none" stroke="#1B4D3E" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="532" y1="470" x2="560" y2="470" stroke="#1B4D3E" stroke-opacity="1.0" stroke-width="2.2" stroke-linecap="round" marker-end="url(#punta-1B4D3E)"/>
+<rect x="498.34000000000003" y="458.0" width="111.32" height="24" rx="2" fill="#FAFAF7" stroke="#CFD1C9" stroke-width="1"/>
+<text x="554.0" y="474.0" text-anchor="middle" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11" font-weight="600" fill="#1B4D3E">esquema + caso</text>
+<rect x="364.39" y="550" width="143.21999999999997" height="24" rx="2" fill="#FAFAF7" stroke="#CFD1C9" stroke-width="1"/>
+<text x="436" y="566" text-anchor="middle" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11" font-weight="600" fill="#1B4D3E">el texto es el caso</text>
+<line x1="675.0" y1="396" x2="675.0" y2="430" stroke="#606560" stroke-opacity="0.8" stroke-width="1.5" stroke-linecap="round" marker-end="url(#punta-606560)"/>
+<line x1="675.0" y1="540" x2="675.0" y2="526" stroke="#606560" stroke-opacity="0.8" stroke-width="1.5" stroke-linecap="round" marker-end="url(#punta-606560)"/>
+<path d="M 790 478 L 810 478 Q 820 478 820 488 L 820 600" fill="none" stroke="#1B4D3E" stroke-opacity="1.0" stroke-width="1.8" stroke-linecap="round" marker-end="url(#punta-1B4D3E)"/>
+<line x1="820" y1="600" x2="1235.0" y2="600" stroke="#1B4D3E" stroke-width="1.8" stroke-linecap="round"/>
+<rect x="927.44" y="564" width="175.11999999999998" height="24" rx="2" fill="#FAFAF7" stroke="#CFD1C9" stroke-width="1"/>
+<text x="1015" y="580" text-anchor="middle" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11" font-weight="600" fill="#1B4D3E">la petición elige la vía</text>
+<line x1="975.0" y1="600" x2="975.0" y2="620" stroke="#1B4D3E" stroke-opacity="1.0" stroke-width="1.8" stroke-linecap="round" marker-end="url(#punta-1B4D3E)"/>
+<line x1="1235.0" y1="600" x2="1235.0" y2="620" stroke="#606560" stroke-opacity="0.85" stroke-width="1.8" stroke-linecap="round" marker-end="url(#punta-606560)"/>
+<line x1="975.0" y1="708" x2="975.0" y2="740" stroke="#1B4D3E" stroke-opacity="1.0" stroke-width="1.8" stroke-linecap="round" marker-end="url(#punta-1B4D3E)"/>
+<line x1="1235.0" y1="708" x2="1235.0" y2="740" stroke="#606560" stroke-opacity="0.85" stroke-width="1.8" stroke-linecap="round" marker-end="url(#punta-606560)"/>
+<line x1="48" y1="874" x2="1352" y2="874" stroke="#CFD1C9" stroke-width="1"/>
+<text x="48" y="904" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="11.5" font-weight="600" letter-spacing="1.6" fill="#606560">LEYENDA</text>
+<rect x="168" y="891" width="20" height="17" rx="2" fill="#FAFAF7" stroke="#606560" stroke-opacity="0.3" stroke-width="1"/>
+<rect x="172" y="895" width="12" height="9" rx="1" fill="#606560" fill-opacity="0.12"/>
+<text x="197" y="904" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="12" fill="#4A4F49">Entrada del usuario</text>
+<rect x="362.4" y="891" width="20" height="17" rx="2" fill="#FAFAF7" stroke="#1B4D3E" stroke-opacity="0.55" stroke-width="2"/>
+<rect x="366.4" y="895" width="12" height="9" rx="1" fill="#1B4D3E" fill-opacity="0.25"/>
+<text x="391.4" y="904" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="12" fill="#4A4F49">Vía de decisión · 0 tokens</text>
+<rect x="603.0" y="891" width="20" height="17" rx="2" fill="#FAFAF7" stroke="#606560" stroke-opacity="0.3" stroke-width="1"/>
+<rect x="607.0" y="895" width="12" height="9" rx="1" fill="#606560" fill-opacity="0.12"/>
+<text x="632.0" y="904" font-family="Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif" font-size="12" fill="#4A4F49">Vía de chat · respaldo</text>
+<text x="1352" y="904" text-anchor="end" font-family="Consolas, ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" fill="#606560">cifras medidas aquí · results/</text>
 </svg>

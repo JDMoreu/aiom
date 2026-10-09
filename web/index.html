@@ -59,38 +59,42 @@ button,input,textarea,select{font:inherit;color:inherit}
         color:var(--regla-texto);letter-spacing:.02em}
 .punto{width:7px;height:7px;border-radius:50%;background:var(--regla-punto);flex:none}
 .punto.ok{background:#7BE0B0} .punto.malo{background:#FF9A8F}
-.principal{background:var(--papel);color:var(--regla);border:0;border-radius:2px;
-           padding:9px 22px;font-weight:600;letter-spacing:.04em;cursor:pointer;
-           text-transform:uppercase;font-size:12.5px}
-.principal:hover{background:var(--papel-hundido)}
+/* La accion principal vive DEBAJO de las preguntas, con ellas: es la ultima cosa que
+   haces, y tenerla arriba obligaba a subir la vista despues de escribir. */
+.acciones-finales{margin-top:4px;padding-top:16px;border-top:1px solid var(--hairline)}
+.principal{background:var(--regla);color:var(--papel);border:0;border-radius:2px;
+           padding:11px 26px;font-weight:600;letter-spacing:.06em;cursor:pointer;
+           text-transform:uppercase;font-size:12.5px;margin-left:auto;min-width:170px}
+.principal:hover{background:var(--regla-claro)}
 .principal:disabled{opacity:.55;cursor:default}
 
-/* ---------------------------------------------------------------- la banda */
-.banda{background:var(--papel);border-bottom:1px solid var(--hairline-fuerte);
-       position:sticky;top:52px;z-index:20}
-.banda-in{max-width:var(--ancho);margin:0 auto;padding:0 clamp(14px,3vw,26px);
-          display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
-.banda .rot{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
-            color:var(--tenue);padding:9px 18px 9px 0;display:flex;align-items:center;
-            max-width:210px}
+/* ---------------------------------------------------------------- la medida */
+/* Los numeros de la respuesta, CON la respuesta: no en una banda pegada arriba, que
+   obligaba a mirar en dos sitios para juntar el dato con su tiempo. */
+.medida{background:var(--papel);border:1px solid var(--hairline-fuerte);
+        border-radius:3px;display:flex;align-items:stretch;flex-wrap:wrap;
+        margin-bottom:16px}
+.medida .rot{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+             color:var(--tenue);padding:9px 18px 9px 16px;display:flex;align-items:center;
+             max-width:210px}
 /* Un grupo por via, con su rotulo: sin esto los seis numeros hay que agruparlos
    mentalmente, y el rotulo del grupo era la primera de sus cifras. */
-.banda .grupo{display:flex;align-items:stretch;border-left:1px solid var(--hairline-fuerte)}
-.banda .grupo-rot{align-self:center;font-style:normal;font-size:11.5px;letter-spacing:.14em;
-                  text-transform:uppercase;color:var(--regla);font-weight:600;
-                  padding:0 14px 0 18px;white-space:nowrap}
-.banda .dato{padding:8px 16px;border-left:1px solid var(--hairline);min-width:88px}
-.banda .dato i{display:block;font-style:normal;font-size:11.5px;letter-spacing:.12em;
-               text-transform:uppercase;color:var(--tenue);margin-top:1px}
-.banda .dato b{display:block;font-size:19px;font-weight:600;letter-spacing:-.01em;
-               line-height:1.1}
-.banda .ratio{margin-left:auto;display:flex;align-items:center;gap:12px;
-              padding:6px 0 6px 18px;border-left:2px solid var(--cursor)}
-.banda .ratio b{font-size:30px;font-weight:600;letter-spacing:-.03em;color:var(--cursor);
-                line-height:1}
-.banda .ratio i{font-style:normal;font-size:11.5px;color:var(--apagado);
-                max-width:150px;line-height:1.3}
-.banda .ratio b small{font-size:15px;letter-spacing:0}
+.medida .grupo{display:flex;align-items:stretch;border-left:1px solid var(--hairline-fuerte)}
+.medida .grupo-rot{align-self:center;font-style:normal;font-size:11.5px;letter-spacing:.14em;
+                   text-transform:uppercase;color:var(--regla);font-weight:600;
+                   padding:0 14px 0 18px;white-space:nowrap}
+.medida .dato{padding:8px 16px;border-left:1px solid var(--hairline);min-width:88px}
+.medida .dato i{display:block;font-style:normal;font-size:11.5px;letter-spacing:.12em;
+                text-transform:uppercase;color:var(--tenue);margin-top:1px}
+.medida .dato b{display:block;font-size:19px;font-weight:600;letter-spacing:-.01em;
+                line-height:1.1}
+.medida .ratio{margin-left:auto;display:flex;align-items:center;gap:12px;
+               padding:6px 16px 6px 18px;border-left:2px solid var(--cursor)}
+.medida .ratio b{font-size:30px;font-weight:600;letter-spacing:-.03em;color:var(--cursor);
+                 line-height:1}
+.medida .ratio i{font-style:normal;font-size:11.5px;color:var(--apagado);
+                 max-width:150px;line-height:1.3}
+.medida .ratio b small{font-size:15px;letter-spacing:0}
 
 /* ---------------------------------------------------------------- cuerpo */
 main{max-width:var(--ancho);margin:0 auto;padding:clamp(16px,3vw,26px)
@@ -285,13 +289,13 @@ textarea.mono{font-family:var(--mono);font-size:13.5px;line-height:1.65;
   .comp-celda + .comp-celda{border-left:0;border-top:1px solid var(--hairline)}
 }
 @media (max-width:640px){
-  /* Los numeros de la banda se apilan en un grupo por via, sin celdas sueltas. */
-  .banda .grupo{width:100%;border-left:0;border-top:1px solid var(--hairline)}
-  .banda .grupo-rot{padding:8px 0 0}
-  .banda .dato{padding:6px 14px 6px 0;min-width:0}
-  .banda .ratio{margin-left:0;padding-left:0;border-left:0;width:100%;
-                border-top:2px solid var(--cursor);padding-top:8px}
-  .banda,.rail{position:static}
+  /* Los numeros se apilan en un grupo por via, sin celdas sueltas. */
+  .medida .grupo{width:100%;border-left:0;border-top:1px solid var(--hairline)}
+  .medida .grupo-rot{padding:8px 0 0}
+  .medida .dato{padding:6px 14px 6px 0;min-width:0}
+  .medida .ratio{margin-left:0;padding:8px 0 0;border-left:0;width:100%;
+                 border-top:2px solid var(--cursor)}
+  .rail{position:static}
   .modos .cinta{display:none}
   /* Las opciones de una pregunta se apilan: en una columna el campo de texto se
      quedaba tan estrecho que cortaba la frase a media palabra. */
@@ -299,6 +303,7 @@ textarea.mono{font-family:var(--mono);font-size:13.5px;line-height:1.65;
   .opcion input.clave{flex:1 1 40%}
   .opcion input.texto{flex:1 1 100%}
   .preg .leido .c{margin-left:0}
+  .principal{width:100%;margin-left:0;min-width:0}
 }
 </style>
 </head>
@@ -312,14 +317,9 @@ textarea.mono{font-family:var(--mono);font-size:13.5px;line-height:1.65;
     </span>
     <span class="rail-der">
       <span class="estado"><i class="punto" id="punto"></i><span id="texto-estado">comprobando</span></span>
-      <button class="principal" id="enviar">Preguntar</button>
     </span>
   </div>
 </header>
-
-<div class="banda">
-  <div class="banda-in" id="banda-in"></div>
-</div>
 
 <main>
   <nav class="modos" role="tablist">
@@ -385,20 +385,28 @@ textarea.mono{font-family:var(--mono);font-size:13.5px;line-height:1.65;
     </div>
   </section>
 
-  <div class="fila">
+  <div class="fila acciones-finales">
     <label class="interruptor">
       <input type="checkbox" id="comparar" checked>
       Comparar con el chat
     </label>
     <span class="ayuda">Se pregunta lo mismo por las dos vías, en la misma corrida, y se
       miden juntas.</span>
+    <button class="principal" id="enviar">Preguntar</button>
   </div>
   <div id="error"></div>
 
   <section id="salida">
-    <p class="vacio">Escribe o carga un caso, marca tus preguntas y pulsa Preguntar.<br>
-      La decisión resuelve todas en una petición y no escribe nada; el chat escribe una
-      respuesta por pregunta.</p>
+    <div id="medida"></div>
+    <div id="lectura">
+      <p class="vacio">Escribe o carga un caso, marca tus preguntas y pulsa Preguntar.<br>
+        La decisión resuelve todas en una petición y no escribe nada; el chat escribe una
+        respuesta por pregunta.<br><br>
+        <span class="ayuda">Medido en el repositorio, con doce preguntas sobre un
+        currículum: la decisión <b>1 petición · 510 ms · 0 tokens</b> contra el chat
+        <b>12 peticiones · 6717 ms · 541 tokens</b> — <b>13,2×</b>. En cuanto preguntes,
+        aquí verás lo tuyo.</span></p>
+    </div>
   </section>
 </main>
 
@@ -753,10 +761,9 @@ $("doc-fichero").onchange = (e) => {
 };
 $("doc-quitar").onclick = () => { documento = null; pintarDoc(); };
 
-/* ------------------------------------------------------------------ la banda */
-// Un grupo por via, con su rotulo, para que la banda se lea de un vistazo sin
-// reconstruir la tabla mentalmente. Y las unidades escritas enteras: "peticiones" y
-// "tokens", no "pet." ni "tok".
+/* ------------------------------------------------------------------ la medida */
+// Un grupo por via, con su rotulo, para que se lea de un vistazo sin reconstruir la
+// tabla mentalmente. Y las unidades escritas enteras: "peticiones" y "tokens".
 function grupoVia(nombre, peticiones, ms, tokens) {
   return `<span class="grupo">
     <i class="grupo-rot">${nombre}</i>
@@ -766,31 +773,21 @@ function grupoVia(nombre, peticiones, ms, tokens) {
   </span>`;
 }
 
-function bandaDeMedida() {
+// La medida vive CON la respuesta, no en una banda pegada arriba: son los numeros de
+// esto que acabas de leer, y separarlos obligaba a mirar en dos sitios.
+function pintarMedida() {
+  const caja = $("medida");
+  if (!ultimo) { caja.innerHTML = ""; return; }
   const d = ultimo.decision, c = ultimo.chat;
   const veces = c.tiempo_ms > 0 ? (c.tiempo_ms / Math.max(d.tiempo_ms, 1)) : 0;
-  return `
+  caja.innerHTML = `<div class="medida">
     <span class="rot">${ultimo.n_preguntas} ${ultimo.n_preguntas === 1 ? "pregunta" : "preguntas"}
       · medido ahora</span>
     ${grupoVia("Decisión", d.peticiones, d.tiempo_ms.toFixed(0), d.tokens)}
     ${grupoVia("Chat", c.peticiones, c.tiempo_ms.toFixed(0), c.tokens)}
     <span class="ratio"><b>${veces.toFixed(1)}<small>×</small></b>
-      <i>tardó menos la decisión que el chat</i></span>`;
-}
-
-// Antes de la primera medicion la banda enseña la cifra que ya esta medida en el
-// repositorio, dicha como lo que es: una medicion publicada, no la de ahora.
-function bandaDelRepositorio() {
-  return `
-    <span class="rot">medido en el repositorio · 12 preguntas sobre un CV</span>
-    ${grupoVia("Decisión", 1, "510", 0)}
-    ${grupoVia("Chat", 12, "6717", 541)}
-    <span class="ratio"><b>13.2<small>×</small></b>
-      <i>tardó menos la decisión que el chat</i></span>`;
-}
-
-function pintarBanda() {
-  $("banda-in").innerHTML = ultimo ? bandaDeMedida() : bandaDelRepositorio();
+      <i>tardó menos la decisión que el chat</i></span>
+  </div>`;
 }
 
 /* ------------------------------------------------------------------ la lectura */
@@ -966,8 +963,8 @@ async function preguntar() {
     }
     const redondo = performance.now() - t0;
     ultimo = d.comparar ? d : null;
-    pintarBanda();
-    $("salida").innerHTML = d.comparar ? pintarComparativa(d) : pintarSolo(d);
+    pintarMedida();
+    $("lectura").innerHTML = d.comparar ? pintarComparativa(d) : pintarSolo(d);
 
     const pie = document.createElement("p");
     pie.className = "pie";
@@ -975,7 +972,7 @@ async function preguntar() {
       `formato ${d.formato} · ${d.n_preguntas} pregunta(s)` +
       (d.comparar ? " · el tiempo del chat es la suma de sus peticiones" : "") +
       (documento ? ` · caso: ${documento.nombre}` : "");
-    $("salida").appendChild(pie);
+    $("lectura").appendChild(pie);
   } catch (e) {
     $("error").innerHTML = `<div class="error">No pude hablar con la API: ${esc(e.message)}.\n` +
       `¿Está levantada? python api.py --ui</div>`;
@@ -1012,7 +1009,7 @@ document.addEventListener("keydown", (e) => {
     "cobrado dos veces la factura de este mes. Si esto sigue así me voy a dar de baja.";
   $("cinta").innerHTML = "<span>una sola petición</span>";
   pintarDoc();
-  pintarBanda();
+  pintarMedida();
   cambiarModo("bloques");
 
   try {

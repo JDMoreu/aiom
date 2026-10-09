@@ -1,23 +1,21 @@
-"""Diagrama de arquitectura de AIOM, en el mismo sistema visual que la interfaz.
+"""Diagrama de arquitectura de AIOM.
 
-Los tokens NO son inventados: son los de DESIGN.md, los mismos que usa web/index.html.
-Asi el repositorio entero habla un solo idioma visual.
+Los tokens NO son inventados: son los de DESIGN.md, los mismos que usa web/index.html,
+para que el repositorio entero hable un solo idioma visual.
 
-  - Fondo de panel (#E4E5DF) y ELEVACION POR CAPAS TONALES, no por sombras: la cara de
-    la regla (#FAFAF7) esta encima del panel. Un instrumento de precision no flota.
-  - Bordes de 1px en hairline (#CFD1C9 / #B9BDB3); 2px solo en lo que esta destacado.
-  - Tracking negativo en los tamanos grandes y pesos 400/600 (nunca 700).
-  - Monoespaciada para los identificadores tecnicos (llama-server, /v1/decision).
-  - DOS acentos con trabajo: el verde de escala (#1B4D3E) para la via de decision y el
-    rojo de cursor (#B4321F) reservado al multiplicador. El chat va en gris apagado
-    porque ES el respaldo: de-enfatizarlo es lo honesto.
+El recorrido se lee de izquierda a derecha y esta NUMERADO en las cabeceras de columna,
+porque el fallo clasico de un diagrama asi es no saber hacia donde va:
 
-El recorrido que dibuja, de izquierda a derecha:
+    1 ENTRADAS  ->  2 EL CLIENTE  ->  3 EL MODELO  ->  4 LAS DOS VIAS
 
-    las entradas  ->  el cliente  ->  el modelo  ->  las dos vias  ->  las salidas
+Y el punto que mas se presta a confusion, resuelto a proposito: **el documento no va
+directo al servidor**. Su texto se extrae, se convierte en el CASO, y viaja CON las
+preguntas en la misma peticion que el cliente le manda al servidor. Eso es lo que dice
+la etiqueta «el texto es el caso» y la flecha que desemboca en la peticion.
 
 Se autocomprueba ANTES de escribir: si una etiqueta no cabe en su tarjeta, si dos
-tarjetas se pisan o si algo cruza la frontera, falla en vez de dejar un SVG roto.
+tarjetas se pisan, si algo cruza la frontera o si una flecha pasa por encima de una
+tarjeta, falla en vez de dejar un SVG roto.
 
     python diagrama.py     # escribe docs/arquitectura.svg
 """
@@ -28,11 +26,11 @@ AQUI = os.path.dirname(os.path.abspath(__file__))
 SALIDA = os.path.join(AQUI, "docs", "arquitectura.svg")
 
 # --- tokens, copiados de DESIGN.md --------------------------------------------
-PANEL = "#E4E5DF"          # el fondo
-PAPEL = "#FAFAF7"          # la cara de la regla: las tarjetas
-TINTA = "#1A1C1B"          # texto principal
-TXT2 = "#4A4F49"           # secundario
-TXT3 = "#606560"           # terciario
+PANEL = "#E4E5DF"
+PAPEL = "#FAFAF7"
+TINTA = "#1A1C1B"
+TXT2 = "#4A4F49"
+TXT3 = "#606560"
 HAIRLINE = "#CFD1C9"
 HAIRLINE2 = "#B9BDB3"
 REGLA = "#1B4D3E"          # verde de escala: la via de decision
@@ -42,15 +40,24 @@ CHAT = "#606560"           # la via de chat, apagada a proposito
 SANS = "Bahnschrift, Segoe UI Variable, Segoe UI, system-ui, sans-serif"
 MONO = "Consolas, ui-monospace, SFMono-Regular, Menlo, monospace"
 
-ANCHO, ALTO = 1400, 1040
-# La frontera de "tu equipo". Dentro corre todo; fuera queda por donde entra el usuario.
-ZX, ZY, ZW, ZH = 300, 288, 1000, 648
+ANCHO, ALTO = 1400, 950
+ZX, ZY, ZW, ZH = 262, 292, 1104, 552      # la frontera de "tu equipo"
 
-# Las columnas del recorrido. Se declaran aqui para que las conexiones y las
-# comprobaciones usen los mismos numeros y no puedan desincronizarse.
-COL_ENTRADA, COL_CLIENTE, COL_SERVIDOR, COL_VIA = 48, 330, 650, 970
-W_COL = 240
-CENTRO = COL_VIA + 125
+# Las cuatro columnas y sus centros, declarados UNA vez: las conexiones, las flechas y
+# las comprobaciones leen de aqui, asi que no pueden desincronizarse.
+COL_ENTRADA, W_ENTRADA = 48, 180
+COL_CLIENTE, W_CLIENTE = 280, 230
+COL_MODELO, W_MODELO = 560, 230
+COL_VIA_A, COL_VIA_B, W_VIA = 850, 1110, 250
+
+FILA_1, FILA_2, FILA_3 = 320, 430, 540    # las tres filas de arriba
+FILA_VIA, FILA_SALIDA = 620, 740          # las vias y sus salidas
+BUS = 532                                 # el bus donde se juntan las dos puertas
+
+CX_CLIENTE = COL_CLIENTE + W_CLIENTE / 2
+CX_MODELO = COL_MODELO + W_MODELO / 2
+CX_VIA_A = COL_VIA_A + W_VIA / 2
+CX_VIA_B = COL_VIA_B + W_VIA / 2
 
 
 def esc(t):
@@ -63,7 +70,7 @@ def ancho_texto(t, tam=13, negrita=False):
 
 
 def icono(cx, cy, tipo, color):
-    """Iconos dibujados a mano: SVG puro, sin dependencias ni fuentes de iconos."""
+    """Iconos dibujados a mano: SVG puro, un solo grosor de trazo, sin dependencias."""
     if tipo == "terminal":
         return (f'<rect x="{cx-12}" y="{cy-10}" width="24" height="20" rx="2" '
                 f'fill="none" stroke="{color}" stroke-width="1.6"/>'
@@ -85,6 +92,11 @@ def icono(cx, cy, tipo, color):
                 f'stroke-width="1.6" stroke-linejoin="round"/>'
                 f'<line x1="{cx-5}" y1="{cy+2}" x2="{cx+5}" y2="{cy+2}" '
                 f'stroke="{color}" stroke-width="1.4"/>')
+    if tipo == "texto":                       # el texto ya extraido
+        return "".join(
+            f'<line x1="{cx-11}" y1="{cy-8+i*6}" x2="{cx+11-i*4}" y2="{cy-8+i*6}" '
+            f'stroke="{color}" stroke-width="1.6" stroke-linecap="round"/>'
+            for i in range(4))
     if tipo == "lista":
         return "".join(
             f'<line x1="{cx-10}" y1="{cy-7+i*7}" x2="{cx+10}" y2="{cy-7+i*7}" '
@@ -118,7 +130,6 @@ def icono(cx, cy, tipo, color):
                 f'fill="none" stroke="{color}" stroke-width="1.6" '
                 f'stroke-linejoin="round"/>')
     if tipo == "escala":
-        # La marca del sistema: la escala graduada con su cursor.
         ticks = "".join(f'<line x1="{cx-14+i*7}" y1="{cy+7}" x2="{cx-14+i*7}" '
                         f'y2="{cy+(1 if i % 2 else 4)}" stroke="{color}" '
                         f'stroke-width="1.4"/>' for i in range(5))
@@ -141,11 +152,11 @@ def tarjeta(x, y, w, h, titulo, lineas, color, tipo=None, etiqueta=None,
     p = [f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="3" fill="{PAPEL}" '
          f'{borde} stroke-width="{2 if destacada else 1}"/>']
 
-    xi = x + (56 if tipo else 16)
+    xi = x + (54 if tipo else 16)
     if tipo:
-        p.append(f'<circle cx="{x+28}" cy="{y+h/2}" r="16" '
+        p.append(f'<circle cx="{x+27}" cy="{y+h/2}" r="16" '
                  f'fill="{color}" fill-opacity="0.10"/>')
-        p.append(icono(x + 28, y + h / 2, tipo, color))
+        p.append(icono(x + 27, y + h / 2, tipo, color))
 
     fam = MONO if mono else SANS
     tam_tit = 13.5 if mono else 14
@@ -182,10 +193,15 @@ def metrica(x, y, valor, pie, color, tipo):
     ])
 
 
-def rotulo(x, y, texto):
-    """El rotulo de columna: en versalitas espaciadas, como en la interfaz."""
-    return (f'<text x="{x}" y="{y}" font-family="{SANS}" font-size="11.5" '
-            f'font-weight="600" letter-spacing="1.6" fill="{TXT3}">{esc(texto)}</text>')
+def rotulo_columna(x, numero, texto):
+    """El rotulo de columna: numerado, para que la direccion del flujo sea inequivoca."""
+    return "\n".join([
+        f'<circle cx="{x+11}" cy="{ZY-26}" r="11" fill="{REGLA}"/>',
+        f'<text x="{x+11}" y="{ZY-22}" text-anchor="middle" font-family="{MONO}" '
+        f'font-size="12" font-weight="600" fill="{PAPEL}">{numero}</text>',
+        f'<text x="{x+30}" y="{ZY-21}" font-family="{SANS}" font-size="11.5" '
+        f'font-weight="600" letter-spacing="1.6" fill="{TXT3}">{esc(texto)}</text>',
+    ])
 
 
 def pildora(x, y, texto, color):
@@ -199,63 +215,100 @@ def pildora(x, y, texto, color):
     ])
 
 
-def bezier(x1, y1, x2, y2, color, etiqueta=None, opacidad=1.0):
-    """Curva S: mas elegante que un codo y deja claro de donde sale cada rama."""
-    dy = (y2 - y1) * 0.5
-    p = [f'<path d="M {x1} {y1} C {x1} {y1+dy} {x2} {y2-dy} {x2} {y2}" fill="none" '
-         f'stroke="{color}" stroke-opacity="{opacidad}" stroke-width="1.6" '
-         f'marker-end="url(#punta-{color[1:]})"/>']
-    if etiqueta:
-        p.append(pildora((x1 + x2) / 2, (y1 + y2) / 2, etiqueta, color))
-    return "\n".join(p)
-
-
-def recto(x1, y1, x2, y2, color, etiqueta=None, opacidad=1.0, dx=0):
+def flecha(x1, y1, x2, y2, color, etiqueta=None, opacidad=1.0, dx=0, dy=0, ancho=1.8):
+    """Una flecha recta. El trazo es mas grueso que un borde: una flecha no es un marco."""
     p = [f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="{color}" '
-         f'stroke-opacity="{opacidad}" stroke-width="1.6" '
+         f'stroke-opacity="{opacidad}" stroke-width="{ancho}" stroke-linecap="round" '
          f'marker-end="url(#punta-{color[1:]})"/>']
     if etiqueta:
-        p.append(pildora((x1 + x2) / 2 + dx, (y1 + y2) / 2, etiqueta, color))
+        p.append(pildora((x1 + x2) / 2 + dx, (y1 + y2) / 2 + dy, etiqueta, color))
     return "\n".join(p)
+
+
+def codo(x1, y1, x2, y2, color, radio=10, opacidad=1.0, ancho=1.8):
+    """Un codo recto con la esquina redondeada: mas legible que una curva S cuando el
+    recorrido no es de arriba abajo."""
+    sx = 1 if x2 > x1 else -1
+    sy = 1 if y2 > y1 else -1
+    return (f'<path d="M {x1} {y1} L {x2 - sx*radio} {y1} '
+            f'Q {x2} {y1} {x2} {y1 + sy*radio} L {x2} {y2}" fill="none" '
+            f'stroke="{color}" stroke-opacity="{opacidad}" stroke-width="{ancho}" '
+            f'stroke-linecap="round" marker-end="url(#punta-{color[1:]})"/>')
 
 
 # (titulo, x, y, w, h, lineas, color, icono, etiqueta, mono, destacada, dentro)
 CAJAS = [
-    # --- las entradas: por donde entra el usuario. Fuera de la maquina. ---
-    ("Tú escribes", COL_ENTRADA, 340, 190, 84, ["el caso, a mano"],
+    # --- 1. las entradas: por donde entra el usuario. Fuera de la maquina. ---
+    ("Tú escribes", COL_ENTRADA, FILA_1, W_ENTRADA, 80, ["el caso, a mano"],
      TXT3, "terminal", None, False, False, False),
-    ("El navegador", COL_ENTRADA, 444, 190, 84, ["la interfaz web"],
+    ("El navegador", COL_ENTRADA, FILA_2, W_ENTRADA, 80, ["la interfaz web"],
      TXT3, "navegador", None, False, False, False),
-    ("Un documento", COL_ENTRADA, 548, 190, 84, ["pdf · docx · txt"],
+    ("Un documento", COL_ENTRADA, FILA_3, W_ENTRADA, 80, ["pdf · docx · txt"],
      TXT3, "documento", None, False, False, False),
 
-    # --- el cliente: lo que lee lo que escribes y arma la peticion. ---
-    ("preguntar.py", COL_CLIENTE, 340, W_COL, 84, ["lee la cabecera", "y deduce el tipo"],
+    # --- 2. el cliente: lee lo que escribes, saca el texto y arma la peticion. ---
+    ("preguntar.py", COL_CLIENTE, FILA_1, W_CLIENTE, 80, ["la puerta de consola",
+                                                          "deduce el tipo"],
      REGLA, "lista", "por consola", True, True, True),
-    ("api.py", COL_CLIENTE, 444, W_COL, 84, ["HTTP en el 8100", "sirve la interfaz"],
+    ("api.py", COL_CLIENTE, FILA_2, W_CLIENTE, 80, ["la puerta de programa",
+                                                    "HTTP · sirve la interfaz"],
      REGLA, "servidor", "la puerta", True, True, True),
-    ("documento.py", COL_CLIENTE, 548, W_COL, 84, ["saca el texto", "del documento"],
-     REGLA, "documento", None, True, False, True),
+    ("documento.py", COL_CLIENTE, FILA_3, W_CLIENTE, 80, ["saca el texto",
+                                                          "y ese texto es el caso"],
+     REGLA, "texto", None, True, True, True),
 
-    # --- el modelo y lo que necesita para funcionar. ---
-    ("llama-server", COL_SERVIDOR, 444, W_COL, 96, ["un solo proceso", "Vulkan · local"],
-     REGLA, "servidor", "RX 9070", True, True, True),
-    ("Spark-X2.5-4B", COL_SERVIDOR, 320, W_COL, 78, ["Q8_0 · ~9 GB en VRAM"],
+    # --- 3. el modelo y lo que necesita para funcionar. ---
+    ("Spark-X2.5-4B", COL_MODELO, FILA_1, W_MODELO, 76, ["Q8_0 · ~9 GB en VRAM"],
      TXT3, "chip", None, False, False, True),
-    ("Catálogo de campos", COL_SERVIDOR, 580, W_COL, 78, ["qué se puede preguntar"],
+    ("llama-server", COL_MODELO, FILA_2, W_MODELO, 96, ["un solo proceso",
+                                                        "Vulkan · local"],
+     REGLA, "servidor", "RX 9070", True, True, True),
+    ("Catálogo de campos", COL_MODELO, FILA_3, W_MODELO, 76, ["qué se puede preguntar"],
      TXT3, "lista", "catalogs/*.json", False, False, True),
 
-    # --- las dos vias: no son del sistema, son de la peticion. ---
-    ("/v1/decision", COL_VIA, 340, 250, 92, ["PUNTÚA las opciones", "no genera ni un token"],
+    # --- 4. las dos vias: no son del sistema, son de la peticion. ---
+    ("/v1/decision", COL_VIA_A, FILA_VIA, W_VIA, 88, ["PUNTÚA las opciones",
+                                                      "no genera ni un token"],
      REGLA, "rayo", "0 tokens", True, True, True),
-    ("/v1/chat/completions", COL_VIA, 452, 250, 92, ["GENERA texto", "token a token"],
+    ("/v1/chat/completions", COL_VIA_B, FILA_VIA, W_VIA, 88, ["GENERA texto",
+                                                              "token a token"],
      CHAT, "burbuja", "respaldo", True, False, True),
 
-    # --- las salidas. ---
-    ("Valor listo para usar", COL_VIA, 590, 250, 78, ["+ probabilidad + confianza"],
+    # --- y sus salidas. ---
+    ("Valor listo para usar", COL_VIA_A, FILA_SALIDA, W_VIA, 72, ["+ probabilidad + confianza"],
      REGLA, "escala", None, False, True, True),
-    ("Prosa", COL_VIA, 700, 250, 78, ["hay que interpretarla"],
+    ("Prosa", COL_VIA_B, FILA_SALIDA, W_VIA, 72, ["hay que interpretarla"],
      CHAT, "burbuja", None, False, False, True),
+]
+
+# Las conexiones, declaradas como segmentos para poder comprobar que ninguna flecha
+# pasa por encima de una tarjeta. (x1, y1, x2, y2)
+SEGMENTOS = [
+    # las tres entradas, a su pieza del cliente
+    (COL_ENTRADA + W_ENTRADA, FILA_1 + 40, COL_CLIENTE, FILA_1 + 40),
+    (COL_ENTRADA + W_ENTRADA, FILA_2 + 40, COL_CLIENTE, FILA_2 + 40),
+    (COL_ENTRADA + W_ENTRADA, FILA_3 + 40, COL_CLIENTE, FILA_3 + 40),
+    # el bus donde se juntan las dos puertas y el documento extraido
+    (COL_CLIENTE + W_CLIENTE, FILA_1 + 40, BUS, FILA_1 + 40),
+    (COL_CLIENTE + W_CLIENTE, FILA_2 + 40, BUS, FILA_2 + 40),
+    (COL_CLIENTE + W_CLIENTE, FILA_3 + 40, BUS, FILA_3 + 40),
+    (BUS, FILA_1 + 40, BUS, FILA_2 + 40),
+    (BUS, FILA_2 + 40, BUS, FILA_3 + 40),
+    # y de ahi, al servidor: UNA peticion con el esquema y el caso
+    (BUS, FILA_2 + 40, COL_MODELO, FILA_2 + 40),
+    # el modelo y el catalogo, cargados una vez
+    (CX_MODELO, FILA_1 + 76, CX_MODELO, FILA_2),
+    (CX_MODELO, FILA_3, CX_MODELO, FILA_2 + 96),
+    # del servidor salen las dos vias, de un mismo punto
+    (COL_MODELO + W_MODELO, FILA_2 + 48, 820, FILA_2 + 48),
+    (820, FILA_2 + 48, 820, FILA_VIA - 20),
+    (820, FILA_VIA - 20, CX_VIA_A, FILA_VIA - 20),
+    (820, FILA_VIA - 20, CX_VIA_B, FILA_VIA - 20),
+    (CX_VIA_A, FILA_VIA - 20, CX_VIA_A, FILA_VIA),
+    (CX_VIA_B, FILA_VIA - 20, CX_VIA_B, FILA_VIA),
+    # y cada via, a su salida
+    (CX_VIA_A, FILA_VIA + 88, CX_VIA_A, FILA_SALIDA),
+    (CX_VIA_B, FILA_VIA + 88, CX_VIA_B, FILA_SALIDA),
 ]
 
 
@@ -263,7 +316,7 @@ def comprobar():
     """Todo lo que puede salir mal en un diagrama dibujado a mano, comprobado."""
     fallos = []
     for tit, x, y, w, h, lns, _c, ic, etq, mono, _d, dentro in CAJAS:
-        necesita = (56 if ic else 16) + max(
+        necesita = (54 if ic else 16) + max(
             [ancho_texto(tit, 13.5 if mono else 14, True)]
             + [ancho_texto(l, 11.5) for l in lns])
         if necesita > w - 12:
@@ -276,25 +329,46 @@ def comprobar():
             fallos.append(f"«{tit}» debería quedar fuera de la frontera")
         if etq and ancho_texto(etq, 9.5, True) + 18 + 10 > w:
             fallos.append(f"«{tit}»: la etiqueta «{etq}» no cabe en la tarjeta")
-    # Ninguna tarjeta puede pisar a otra.
     for i, a in enumerate(CAJAS):
         for b in CAJAS[i+1:]:
             if (a[1] < b[1] + b[3] and b[1] < a[1] + a[3]
                     and a[2] < b[2] + b[4] and b[2] < a[2] + a[4]):
                 fallos.append(f"«{a[0]}» y «{b[0]}» se pisan")
-    # El lienzo tiene que dar cabida a la frontera y a la leyenda.
+
+    # Ninguna flecha puede cruzar por encima de una tarjeta que no sea su origen o su
+    # destino: es el fallo que hace ilegible un diagrama de flujo. Una flecha PUEDE
+    # tocar la tarjeta a la que entra o de la que sale, asi que esa queda exenta.
+    def dentro_de(px, py, caja):
+        _, x, y, w, h = caja[0], caja[1], caja[2], caja[3], caja[4]
+        return x < px < x + w and y < py < y + h
+
+    def toca_extremo(x1, y1, x2, y2, caja):
+        x, y, w, h = caja[1], caja[2], caja[3], caja[4]
+        for px, py in ((x1, y1), (x2, y2)):
+            # Un extremo DENTRO de la caja no exime: es justo lo que hay que cazar.
+            # Solo exime cuando el extremo esta sobre el borde, que es lo normal.
+            if dentro_de(px, py, caja):
+                continue
+            if x - 3 <= px <= x + w + 3 and y - 3 <= py <= y + h + 3:
+                return True
+        return False
+
+    for (x1, y1, x2, y2) in SEGMENTOS:
+        for caja in CAJAS:
+            if toca_extremo(x1, y1, x2, y2, caja):
+                continue
+            # muestreo del segmento, sin contar los extremos (que tocan las tarjetas)
+            for k in range(1, 12):
+                px = x1 + (x2 - x1) * k / 12
+                py = y1 + (y2 - y1) * k / 12
+                if dentro_de(px, py, caja):
+                    fallos.append(f"una flecha pasa por encima de «{caja[0]}»")
+                    break
+
     if ZY + ZH > ALTO - 90:
         fallos.append("la frontera no deja sitio para la leyenda")
-    # Los rotulos de columna no se pueden solapar entre si.
-    xs = [COL_ENTRADA, COL_CLIENTE, COL_SERVIDOR, COL_VIA]
-    nombres = ["ENTRADAS", "EL CLIENTE", "EL MODELO", "LAS DOS VÍAS"]
-    for i in range(len(xs) - 1):
-        if xs[i] + ancho_texto(nombres[i], 11.5, True) + 12 > xs[i+1]:
-            fallos.append(f"los rotulos «{nombres[i]}» y «{nombres[i+1]}» se solapan")
-    # El rotulo de la bifurcacion no puede salirse por la izquierda.
-    l1 = (COL_VIA - 30 + CENTRO) / 2
-    if l1 - (ancho_texto("sí · puntúa las opciones", 11, True) + 22) / 2 < COL_SERVIDOR + W_COL:
-        fallos.append("el rotulo «sí · puntúa las opciones» se sale por la izquierda")
+    if ZY - 40 < 226:
+        fallos.append("los rotulos de columna pisan las metricas")
     return fallos
 
 
@@ -330,8 +404,9 @@ def main():
              f'font-weight="600" letter-spacing="-0.9" fill="{TINTA}">'
              f'AIOM: un cliente, un servidor, dos formas de preguntar</text>')
     s.append(f'<text x="108" y="84" font-family="{SANS}" font-size="13" '
-             f'letter-spacing="-0.1" fill="{TXT3}">El mismo servidor atiende las dos. '
-             f'El modo no es del sistema: es una propiedad de la petición.</text>')
+             f'letter-spacing="-0.1" fill="{TXT3}">El cliente arma UNA petición con el '
+             f'esquema y el caso —y el texto del documento es el caso—; el servidor la '
+             f'atiende por la vía que la petición pida.</text>')
     s.append(f'<rect x="{ANCHO-232}" y="48" width="184" height="26" rx="2" '
              f'fill="{PAPEL}" stroke="{HAIRLINE2}" stroke-width="1"/>')
     s.append(f'<circle cx="{ANCHO-212}" cy="61" r="3.5" fill="{REGLA}"/>')
@@ -354,41 +429,45 @@ def main():
              f'font-weight="600" letter-spacing="1.6" fill="{TXT3}">TU EQUIPO</text>')
 
     # ---------------------------------------------------------- rotulos de columna
-    for x, nombre in ((COL_ENTRADA, "ENTRADAS"), (COL_CLIENTE, "EL CLIENTE"),
-                      (COL_SERVIDOR, "EL MODELO"), (COL_VIA, "LAS DOS VÍAS")):
-        s.append(rotulo(x, ZY - 12, nombre))
+    s.append(rotulo_columna(COL_ENTRADA, "1", "ENTRADAS"))
+    s.append(rotulo_columna(COL_CLIENTE, "2", "EL CLIENTE"))
+    s.append(rotulo_columna(COL_MODELO, "3", "EL MODELO"))
+    s.append(rotulo_columna(COL_VIA_A, "4", "LAS DOS VÍAS"))
 
     # ---------------------------------------------------------- tarjetas
     for (tit, x, y, w, h, lns, col, ic, etq, mono, dest, _d) in CAJAS:
         s.append(tarjeta(x, y, w, h, tit, lns, col, ic, etq, mono, dest))
 
-    # ---------------------------------------------------------- conexiones
-    # Las tres entradas entran a su pieza del cliente.
-    s.append(recto(238, 382, COL_CLIENTE, 382, TXT3))
-    s.append(recto(238, 486, COL_CLIENTE, 486, TXT3))
-    s.append(recto(238, 590, COL_CLIENTE, 590, TXT3))
-    # El documento alimenta tanto a la API como a la consola.
-    s.append(f'<line x1="570" y1="590" x2="640" y2="590" stroke="{TXT3}" '
-             f'stroke-width="1.4"/>')
-    s.append(f'<line x1="640" y1="590" x2="640" y2="492" stroke="{TXT3}" '
-             f'stroke-width="1.4"/>')
-    s.append(f'<line x1="640" y1="492" x2="{COL_SERVIDOR}" y2="492" stroke="{TXT3}" '
-             f'stroke-width="1.4" marker-end="url(#punta-{TXT3[1:]})"/>')
-    # El cliente le pasa el esquema y el texto al servidor.
-    s.append(recto(570, 382, COL_SERVIDOR, 442, REGLA, "esquema + texto", dx=-6))
-    s.append(recto(570, 486, COL_SERVIDOR, 486, REGLA))
-    # El modelo y el catalogo, cargados una vez.
-    s.append(recto(COL_SERVIDOR + 120, 398, COL_SERVIDOR + 120, 444, TXT3, None, 0.8))
-    s.append(recto(COL_SERVIDOR + 120, 580, COL_SERVIDOR + 120, 540, TXT3, None, 0.8))
-    # Y del servidor salen las dos vias, de UN mismo punto.
-    s.append(f'<line x1="{COL_SERVIDOR + W_COL}" y1="492" x2="{COL_VIA - 30}" y2="492" '
-             f'stroke="{REGLA}" stroke-width="1.6"/>')
-    s.append(f'<circle cx="{COL_VIA - 30}" cy="492" r="4.5" fill="{PAPEL}" '
-             f'stroke="{REGLA}" stroke-width="1.8"/>')
-    s.append(bezier(COL_VIA - 30, 492, CENTRO, 340, REGLA, "sí · puntúa las opciones"))
-    s.append(bezier(COL_VIA - 30, 492, CENTRO, 452, CHAT, "no · relevo al chat", 0.85))
-    s.append(recto(CENTRO, 432, CENTRO, 590, REGLA))
-    s.append(recto(CENTRO, 544, CENTRO, 700, CHAT, opacidad=0.85))
+    # ---------------------------------------------------------- flechas
+    # 1 -> 2: las tres entradas, a su pieza del cliente.
+    for fila in (FILA_1, FILA_2, FILA_3):
+        s.append(flecha(COL_ENTRADA + W_ENTRADA, fila + 40, COL_CLIENTE, fila + 40,
+                        TXT3, ancho=1.5))
+    # 2: el bus. Las dos puertas y el texto extraido se juntan en un solo punto, porque
+    # acaban en la MISMA peticion.
+    s.append(f'<path d="M {COL_CLIENTE + W_CLIENTE} {FILA_1 + 40} L {BUS} {FILA_1 + 40} '
+             f'L {BUS} {FILA_3 + 40} L {COL_CLIENTE + W_CLIENTE} {FILA_3 + 40}" '
+             f'fill="none" stroke="{REGLA}" stroke-width="1.8" stroke-linecap="round"/>')
+    s.append(flecha(BUS, FILA_2 + 40, COL_MODELO, FILA_2 + 40, REGLA,
+                    "esquema + caso", dx=8, ancho=2.2))
+    # La etiqueta que resuelve la confusion: el texto del documento NO va al servidor
+    # por su cuenta, se convierte en el caso y viaja con las preguntas.
+    s.append(pildora(BUS - 96, FILA_3 + 22, "el texto es el caso", REGLA))
+    # 3: el modelo y el catalogo, cargados una vez.
+    s.append(flecha(CX_MODELO, FILA_1 + 76, CX_MODELO, FILA_2, TXT3, opacidad=0.8,
+                    ancho=1.5))
+    s.append(flecha(CX_MODELO, FILA_3, CX_MODELO, FILA_2 + 96, TXT3, opacidad=0.8,
+                    ancho=1.5))
+    # 3 -> 4: del servidor salen las dos vias, de UN mismo punto.
+    s.append(codo(COL_MODELO + W_MODELO, FILA_2 + 48, 820, FILA_VIA - 20, REGLA))
+    s.append(f'<line x1="820" y1="{FILA_VIA - 20}" x2="{CX_VIA_B}" y2="{FILA_VIA - 20}" '
+             f'stroke="{REGLA}" stroke-width="1.8" stroke-linecap="round"/>')
+    s.append(pildora(1015, FILA_VIA - 44, "la petición elige la vía", REGLA))
+    s.append(flecha(CX_VIA_A, FILA_VIA - 20, CX_VIA_A, FILA_VIA, REGLA))
+    s.append(flecha(CX_VIA_B, FILA_VIA - 20, CX_VIA_B, FILA_VIA, CHAT, opacidad=0.85))
+    # 4: cada via, a su salida.
+    s.append(flecha(CX_VIA_A, FILA_VIA + 88, CX_VIA_A, FILA_SALIDA, REGLA))
+    s.append(flecha(CX_VIA_B, FILA_VIA + 88, CX_VIA_B, FILA_SALIDA, CHAT, opacidad=0.85))
 
     # ---------------------------------------------------------- leyenda
     ly = ALTO - 46
@@ -418,9 +497,9 @@ def main():
     with open(SALIDA, "w", encoding="utf-8") as f:
         f.write("\n".join(s))
     print(f"  escrito {SALIDA}  ({ANCHO}x{ALTO})")
-    print(f"  {len(CAJAS)} tarjetas: ninguna se sale, ninguna pisa a otra, "
-          f"la frontera las contiene")
-    print("  rotulos de columna y de bifurcacion sin solapes: verificado")
+    print(f"  {len(CAJAS)} tarjetas y {len(SEGMENTOS)} tramos de flecha: ninguna "
+          f"etiqueta se sale, ninguna tarjeta pisa a otra, ninguna flecha cruza una "
+          f"tarjeta, la frontera las contiene")
 
 
 if __name__ == "__main__":
