@@ -82,8 +82,11 @@ def por_texto(cuerpo, catalogo, cfg):
     preguntas = [(k, {"type": esquema.get(k, {}).get("type"),
                       "pregunta": esquema.get(k, {}).get("description", "")})
                  for k in (r.get("fields") or {})]
+    # wall_ms, NO total_ms: el tiempo que se publica tiene que ser el mismo reloj en
+    # las dos vias (ida y vuelta completa), o la comparacion favorece a una. total_ms
+    # es lo que tarda el servidor por dentro y no cuenta la red.
     return {"resultados": _de_campos(r["fields"], preguntas),
-            "tiempo_ms": r["timings"]["total_ms"], "tokens": 0}
+            "tiempo_ms": r["timings"]["wall_ms"], "tokens": 0}
 
 
 def por_natural(cuerpo, catalogo, cfg):

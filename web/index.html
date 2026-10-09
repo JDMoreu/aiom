@@ -333,7 +333,7 @@ function pintarComparativa(d) {
 
   const resumen = `<div class="resumen">
     <span>peticiones &nbsp; decisi&oacute;n <b>${dec.peticiones}</b> · chat <b>${chat.peticiones}</b></span>
-    <span>tiempo &nbsp; decisi&oacute;n <b>${dec.tiempo_ms.toFixed(0)} ms</b> ·
+    <span>ida y vuelta &nbsp; decisi&oacute;n <b>${dec.tiempo_ms.toFixed(0)} ms</b> ·
       chat <b>${chat.tiempo_ms.toFixed(0)} ms</b></span>
     <span>tokens &nbsp; decisi&oacute;n <b>${dec.tokens}</b> · chat <b>${chat.tokens}</b></span>
     <span class="mejor">la decisi&oacute;n tarda ${ahorro}&times; menos</span>
@@ -397,8 +397,9 @@ ${esc(e.message)}</div>`;
     salida.innerHTML = d.comparar ? pintarComparativa(d) : pintarSolo(d);
     const pie = document.createElement("p");
     pie.className = "nota";
-    pie.textContent = `ida y vuelta completa: ${redondo.toFixed(0)} ms · `
-      + `formato ${d.formato} · ${d.n_preguntas} pregunta(s)`;
+    pie.textContent = `desde que pulsaste hasta que se pintó: ${redondo.toFixed(0)} ms · `
+      + `formato ${d.formato} · ${d.n_preguntas} pregunta(s)`
+      + (d.comparar ? ' · el tiempo del chat es la suma de sus peticiones' : '');
     salida.appendChild(pie);
   } catch (e) {
     cajaError.innerHTML = `<div class="error">No pude hablar con la API: ${esc(e.message)}.

@@ -122,6 +122,29 @@ Funciona con los tres formatos: en `texto` la pregunta va al catálogo y al chat
 `natural` cada pregunta del texto va a las dos vías; en `tipado` igual, usando el
 `state.input` y las `instructions`.
 
+## Qué mide exactamente `tiempo_ms`
+
+**Lo que tardas en recibir la respuesta: la ida y vuelta completa al modelo**, medida
+en el cliente, desde que sale la petición hasta que se lee el cuerpo entero.
+
+Y se mide **con el mismo reloj en las dos vías**, que es lo que hace la comparación
+honesta. Esto no es un detalle: el servidor también informa de un `total_ms` propio,
+que es lo que tarda por dentro y **no cuenta la red**. Medido en este equipo, `total_ms`
+es entre **11 y 29 ms menor** que la ida y vuelta. Si se publicara decisión con
+`total_ms` y chat con la ida y vuelta, se le estaría perdonando a una vía un coste que
+a la otra se le cobra — y la ventaja saldría inflada.
+
+El del chat es **la suma** de sus N peticiones, porque van una por pregunta: es lo que
+se tarda en tener las N respuestas, que es justo lo que se compara.
+
+**Dos avisos honestos sobre los números:**
+
+- El **chat no es determinista** (genera prosa, temperatura 0,2). La misma pregunta dio
+  entre 383 y 443 ms en seis corridas, con 33–37 tokens. La cifra de decisión es mucho
+  más estable, porque no genera nada.
+- Por eso **la razón «N× menos» no es una constante**: es una foto de esa corrida. Sirve
+  para ver el orden de magnitud, no para afirmar un factor exacto.
+
 ## La interfaz
 
 `GET /` sirve `web/index.html`: un solo fichero, sin dependencias ni compilación, que
