@@ -63,12 +63,13 @@ python preguntar.py ejemplos\1_opciones.txt
 Y verás:
 
 ```
-1 pregunta(s), una sola peticion  (122 ms, 0 tokens)
+1 pregunta(s), una sola peticion  (135 ms, 0 tokens)
 
-CHOICE  ·  ¿Qué equipo debe atenderlo? 'billing' = Pagos y reembolsos
-  billing         1.000  ##############################  <-
-  technical       0.000  ..............................
-  general         0.000  ..............................
+CHOICE  ·  ¿A qué área hay que enviar este correo?
+  soporte         1.000  ##############################  <-
+  otros           0.000  ..............................
+  facturacion     0.000  ..............................
+  comercial       0.000  ..............................
 
   confianza = 1.000
 ```
@@ -78,8 +79,9 @@ Hay un ejemplo por tipo, para probarlos todos:
 ```
 python preguntar.py ejemplos\1_opciones.txt        elegir de una lista
 python preguntar.py ejemplos\2_niveles.txt         poner algo en una escala
-python preguntar.py ejemplos\3_si_o_no.txt         preguntar si o no
+python preguntar.py ejemplos\3_booleano.txt        un si o un no
 python preguntar.py ejemplos\4_tres_preguntas.txt  las tres de golpe
+python preguntar.py ejemplos\5_correo_soporte.txt  un correo real, con las tres
 ```
 
 Todo esto está explicado paso a paso en [`MANUAL.md`](MANUAL.md).
@@ -89,13 +91,15 @@ Todo esto está explicado paso a paso en [`MANUAL.md`](MANUAL.md).
 No hace falta tocar código. Crea un fichero `.txt` con este formato y pásaselo:
 
 ```
-Entrada: Me cobraron dos veces la suscripción. ¿Pueden ayudarme?
+Entrada: Buenos días. Llevo desde ayer sin poder entrar a la aplicación: me sale un
+error 500 cada vez que intento iniciar sesión.
 
-Pregunta: ¿Qué equipo debe atenderlo?
+Pregunta: ¿A qué área hay que enviar este correo?
 Opciones:
-  billing: Pagos y reembolsos
-  technical: Errores e integraciones
-  general: Otras consultas
+  soporte: Fallos y errores del producto
+  facturacion: Cobros, facturas y reembolsos
+  comercial: Ventas y planes
+  otros: Todo lo demás
 ```
 
 ```

@@ -34,13 +34,15 @@ dos**, con idéntica confianza. El formato tipado no aporta nada aquí y sí cue
 que la puerta de entrada es el lenguaje natural.
 
 ```
-Entrada: Me cobraron dos veces la suscripción. ¿Pueden ayudarme?
+Entrada: Buenos días. Llevo desde ayer sin poder entrar a la aplicación: me sale un
+error 500 cada vez que intento iniciar sesión.
 
-Pregunta: ¿Qué equipo debe atenderlo?
+Pregunta: ¿A qué área hay que enviar este correo?
 Opciones:
-  billing: Pagos y reembolsos
-  technical: Errores e integraciones
-  general: Otras consultas
+  soporte: Fallos y errores del producto
+  facturacion: Cobros, facturas y reembolsos
+  comercial: Ventas y planes
+  otros: Todo lo demás
 ```
 
 La cabecera decide el tipo de pregunta:
@@ -56,13 +58,14 @@ Si la pregunta **no cabe** en ningún campo conocido, se releva al modo chat sob
 son los valores.
 
 ```bash
-python preguntar.py ejemplos/1_opciones.txt     # elegir de una lista
-python preguntar.py ejemplos/2_niveles.txt      # poner algo en una escala
-python preguntar.py ejemplos/3_si_o_no.txt      # preguntar sí o no
-python preguntar.py ejemplos/4_tres_preguntas.txt   # las tres de golpe
+python preguntar.py ejemplos/1_opciones.txt        # elegir de una lista
+python preguntar.py ejemplos/2_niveles.txt         # poner algo en una escala
+python preguntar.py ejemplos/3_booleano.txt        # un sí o un no
+python preguntar.py ejemplos/4_tres_preguntas.txt  # las tres de golpe
+python preguntar.py ejemplos/5_correo_soporte.txt  # un correo real, con las tres
 ```
 
-Los cuatro están explicados paso a paso, con su salida real, en
+Los cinco están explicados paso a paso, con su salida real, en
 [`docs/MANUAL.md`](docs/MANUAL.md).
 
 ## Lo que se gana, medido aquí
@@ -200,7 +203,8 @@ catalogs/            dos catálogos de ejemplo, listos para usar:
                        soporte.json  triage de tickets, con los mismos ejemplos que
                                      publica TypeSafe, para comparar respuesta a respuesta
                      se elige con la variable AIOM_CATALOG o el argumento del script
-ejemplos/            casos de ejemplo para preguntar.py, uno por tipo (los del MANUAL)
+ejemplos/            cinco casos de ejemplo para preguntar.py, sobre correos de soporte
+                     (uno por tipo de pregunta, y uno con las tres de golpe)
 docs/                la documentación (ver arriba)
 docs/arquitectura.svg  el diagrama de arquitectura (editable) y su PNG para el README
 results/             lo medido (json) y los gráficos; es la evidencia de las cifras

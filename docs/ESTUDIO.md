@@ -505,7 +505,7 @@ Para probar **preguntas propias** no hace falta tocar código: se escriben
 en lenguaje natural y se ejecutan.
 
 ```bash
-python preguntar.py ejemplos/caso_suscripcion.txt
+python preguntar.py ejemplos/5_correo_soporte.txt
 python preguntar.py --texto "Entrada: ... | Pregunta: ... | Opciones: ..."
 ```
 

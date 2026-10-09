@@ -1,6 +1,0 @@
-Entrada: Son las 22:30. Una aplicación de calendario quiere recordar una comida de equipo prevista para el próximo viernes. El usuario tiene activado el horario de descanso hasta las 07:00.
-
-Pregunta: ¿Debe esperar esta notificación hasta que termine el horario de descanso?
-Qué significa no o sí:
-  false: El recordatorio es urgente y debe enviarse ahora
-  true: Puede enviarse después sin perjudicar al usuario

@@ -1,7 +1,8 @@
-Entrada: Búsqueda: zapatillas de senderismo ligeras para días de lluvia. Resultado: una ficha de zapatillas de trail impermeables con guía de tallas y reseñas.
+Entrada: Aviso del sistema de monitorización: la aplicación completa lleva una hora sin responder. Ningún usuario puede entrar ni usar ninguna función.
 
-Pregunta: ¿Qué relevancia tiene este elemento para la solicitud?
+Pregunta: ¿Qué gravedad tiene el incidente?
 Niveles de puntuación:
-  No relevante
-  Algo relevante
-  Muy relevante
+  Aviso: no afecta al servicio
+  Menor: afecta a unos pocos usuarios
+  Grave: afecta a la mayoría
+  Crítico: el servicio está caído del todo

@@ -60,13 +60,15 @@ Se escribe la cabecera `Opciones:` y debajo, una por línea, con el formato
 que el modelo entienda cuál toca.
 
 ```
-Entrada: Me cobraron dos veces la suscripción. ¿Pueden ayudarme?
+Entrada: Buenos días. Llevo desde ayer sin poder entrar a la aplicación: me sale un
+error 500 cada vez que intento iniciar sesión. Ya probé a reinstalarla y sigue igual.
 
-Pregunta: ¿Qué equipo debe atenderlo?
+Pregunta: ¿A qué área hay que enviar este correo?
 Opciones:
-  billing: Pagos y reembolsos
-  technical: Errores e integraciones
-  general: Otras consultas
+  soporte: Fallos y errores del producto
+  facturacion: Cobros, facturas y reembolsos
+  comercial: Ventas y planes
+  otros: Todo lo demás
 ```
 
 Guardado eso como `caso.txt` y ejecutado, sale **esto de verdad**:
@@ -74,27 +76,30 @@ Guardado eso como `caso.txt` y ejecutado, sale **esto de verdad**:
 ```
 $ python preguntar.py caso.txt
 
-1 pregunta(s), una sola peticion  (138 ms, 0 tokens)
+1 pregunta(s), una sola peticion  (135 ms, 0 tokens)
 
 --------------------------------------------------------------
-CHOICE  ·  ¿Qué equipo debe atenderlo? 'billing' = Pagos y reembolsos
+CHOICE  ·  ¿A qué área hay que enviar este correo?
 --------------------------------------------------------------
-  billing         1.000  ##############################  <-
-  technical       0.000  ..............................
-  general         0.000  ..............................
+  soporte         1.000  ##############################  <-
+  otros           0.000  ..............................
+  facturacion     0.000  ..............................
+  comercial       0.000  ..............................
 
   confianza = 1.000
 ```
 
 Qué leer:
 
-- **La flecha `<‑` marca lo que eligió.** Aquí `billing`.
-- Los números son **probabilidad**, y suman 1. `billing` 1.000 significa que no dudó.
+- **La flecha `<‑` marca lo que eligió.** Aquí `soporte`.
+- Los números son **probabilidad**, y suman 1. `soporte` 1.000 significa que no dudó.
 - **`confianza`** es otra cosa: mide **lo concentrada** que está la probabilidad, no la
   probabilidad de acertar. 1.000 = una sola barra llena. Cerca de 0 = empate.
 - **`0 tokens`**: aquí no se escribió texto. Por eso es rápido.
+- La cabecera dice **solo la pregunta**. Las opciones van debajo, en su lista, para que
+  no se confunda una opción con la respuesta.
 
-> Si escribes **solo la clave** (una línea `billing`, sin descripción) también
+> Si escribes **solo la clave** (una línea `soporte`, sin descripción) también
 > funciona. La descripción ayuda al modelo, pero no es obligatoria.
 
 ---
@@ -105,39 +110,42 @@ Cabecera `Niveles de puntuación:` y debajo los niveles **de menor a mayor**. El
 sistema los numera solo: el primero es 0.
 
 ```
-Entrada: Búsqueda: zapatillas de senderismo ligeras para días de lluvia.
-Resultado: una ficha de zapatillas de trail impermeables con guía de tallas.
+Entrada: Aviso del sistema de monitorización: la aplicación completa lleva una hora
+sin responder. Ningún usuario puede entrar ni usar ninguna función.
 
-Pregunta: ¿Qué relevancia tiene este elemento para la solicitud?
+Pregunta: ¿Qué gravedad tiene el incidente?
 Niveles de puntuación:
-  No relevante
-  Algo relevante
-  Muy relevante
+  Aviso: no afecta al servicio
+  Menor: afecta a unos pocos usuarios
+  Grave: afecta a la mayoría
+  Crítico: el servicio está caído del todo
 ```
 
 Salida real:
 
 ```
-SCORE  ·  ¿Qué relevancia tiene este elemento para la solicitud?
+SCORE  ·  ¿Qué gravedad tiene el incidente?
 --------------------------------------------------------------
-  No relevante    0.000  ..............................
-  Algo relevante  0.005  ..............................
-  Muy relevante   0.995  ##############################  <-
+  Aviso: no afecta al servicio             0.009  ..........
+  Menor: afecta a unos pocos usuarios      0.009  ..........
+  Grave: afecta a la mayoría               0.165  #####.....
+  Crítico: el servicio está caído del todo 0.817  ##########  <-
 
-  puntuacion = 1.99
-  confianza = 0.969
+  puntuacion = 2.79
+  confianza = 0.605
 ```
 
-**Fíjate en `puntuacion = 1.99`.** Con tres niveles, «Muy relevante» es el 2. Devuelve
-**1,99 y no 2,00** porque la puntuación es la **media ponderada**: reparte 0.995 en el
-nivel 2 y 0.005 en el nivel 1, y `0×0.000 + 1×0.005 + 2×0.995 = 1,99`.
+**Fíjate en `puntuacion = 2.79`.** Con cuatro niveles, «Crítico» es el 3. Devuelve
+**2,79 y no 3,00** porque la puntuación es la **media ponderada**: reparte 0.817 en el
+nivel 3, 0.165 en el 2 y un poco en los otros dos, y
+`0×0.009 + 1×0.009 + 2×0.165 + 3×0.817 = 2,79`.
 
 **Pero para decidir, eso no hace falta.** Hay dos números y son cosas distintas:
 
 | número | qué es | valor | ¿para qué? |
 |---|---|---|---|
-| `value` | **el nivel elegido** (el de mayor probabilidad) | `2.0` | **esto es la decisión** |
-| `puntuacion` | **la media ponderada**, que puede caer entre niveles | `1.99` | ordenar casos finamente |
+| `value` | **el nivel elegido** (el de mayor probabilidad) | `3.0` | **esto es la decisión** |
+| `puntuacion` | **la media ponderada**, que puede caer entre niveles | `2.79` | ordenar casos finamente |
 
 **Usa `value` por defecto.** Es el nivel y es lo que casi siempre quieres.
 
@@ -169,6 +177,35 @@ Cabecera `Qué significa no o sí:` y debajo qué significa cada uno. **Aquí s�
 que poner `true:` y `false:`**, porque si no, el modelo no sabe qué estás preguntando.
 
 ```
+Entrada: Un cliente escribe diciendo que han entrado en su cuenta desde otro país
+y que no reconoce dos compras hechas esta madrugada.
+
+Pregunta: ¿Hay indicios de que la cuenta esté comprometida?
+Qué significa no o sí:
+  false: No hay indicios de acceso no autorizado
+  true: Hay indicios de acceso no autorizado
+```
+
+Salida real:
+
+```
+PROBABILITY  ·  ¿Hay indicios de que la cuenta esté comprometida?
+--------------------------------------------------------------
+  sí              0.800  ########################......
+  no              0.200  ######........................
+
+  probabilidad de que sí = 0.800
+  confianza = 0.277
+```
+
+**Qué ha pasado aquí.** El caso sí da para decidir: hay un acceso desde otro país y dos
+compras que el cliente no reconoce, así que el modelo dice que **sí** (0.800) con una
+confianza razonable (0.277) — ni un empate ni un exceso de seguridad.
+
+**Y ahora compáralo con un caso que NO da para decidir.** El mismo tipo de pregunta,
+pero con la entrada sin la información que hace falta:
+
+```
 Entrada: Son las 22:30. Una aplicación de calendario quiere recordar una comida
 de equipo el viernes. El usuario tiene activado el horario de descanso hasta las 07:00.
 
@@ -177,8 +214,6 @@ Qué significa no o sí:
   false: El recordatorio es urgente y debe enviarse ahora
   true: Puede enviarse después sin perjudicar al usuario
 ```
-
-Salida real:
 
 ```
 PROBABILITY  ·  ¿Debe esperar esta notificación hasta que termine el horario de descanso?
@@ -190,17 +225,17 @@ PROBABILITY  ·  ¿Debe esperar esta notificación hasta que termine el horario 
   confianza = 0.001
 ```
 
-**Y aquí está el detalle que engancha.** Salió **0.514**, un empate técnico: el modelo
-no sabe qué hacer con esta. Pero lo revelador es la **confianza: 0.001**. No está
-«poco seguro» — está diciendo que las dos opciones son **indistinguibles** para él.
+**Ahí está el detalle que engancha.** Salió **0.514**, un empate técnico: el modelo no
+sabe qué hacer con esta. Pero lo revelador es la **confianza: 0.001**. No está «poco
+seguro» — está diciendo que las dos opciones son **indistinguibles** para él.
 
 Esa es la diferencia entre **probabilidad** y **confianza**, y es la razón de que valga
 la pena mirar las dos:
 
 | caso | probabilidad | confianza | qué significa |
 |---|---|---|---|
-| ejemplo 2 | 0.995 | 0.969 | lo tengo claro y además no dudo |
-| este | 0.514 | **0.001** | **no tengo ni idea** |
+| el de la cuenta | 0.800 | 0.277 | lo tengo bastante claro |
+| el del calendario | 0.514 | **0.001** | **no tengo ni idea** |
 
 **Fíjate en que una probabilidad alta puede no significar nada sin la confianza.** Un
 0.514 con confianza 0.001 es una moneda al aire; un 0.514 con confianza 0.8 sería una
@@ -209,12 +244,17 @@ preferencia débil pero real.
 **Si usas esto en un programa**, la receta es: actúa solo si la probabilidad pasa de tu
 umbral **y** la confianza pasa del suyo. Lo demás, a revisión humana.
 
-> **Y aquí hay una lección de escritura de preguntas.** Esta pregunta se redactó con las
-> dos opciones explicadas («el recordatorio es urgente» / «puede enviarse después»), y
-> el modelo sigue sin poder decidir: la entrada no dice si la comida de equipo es
+> **Y aquí hay una lección de escritura de preguntas.** La del calendario se redactó con
+> las dos opciones explicadas («el recordatorio es urgente» / «puede enviarse después»),
+> y el modelo sigue sin poder decidir: la entrada no dice si la comida de equipo es
 > mañana o el viernes que viene. **El empate es información**: a este caso le falta
 > contexto para contestarse. Es exactamente el tipo de sitio donde una recuperación de
 > contexto (RAG) sí ayudaría — porque falta información, no sobra.
+
+> **Y una advertencia medida en este mismo repositorio:** en `boolean`, el orden en que
+> escribes `true:` y `false:` pesa. El mismo caso, con las dos opciones **intercambiadas**
+> de sitio, pasó de 0.463 (confianza 0.004) a 0.953 (confianza 0.728) para la misma
+> respuesta semántica. Si te importa el resultado, **prueba las dos redacciones**.
 
 ---
 
@@ -224,52 +264,80 @@ Aquí está lo bueno. Se ponen **varias preguntas sobre la misma entrada**, sepa
 una línea con `---`. Se mandan **en una sola petición** y el modelo las evalúa todas.
 
 ```
-Entrada: Un cliente escribe: llevo tres días sin poder entrar a la aplicación
-y ya me cobraron la renovación.
+Entrada: Hola, el viernes pagué el plan anual y desde entonces la aplicación se cierra
+sola cada vez que intento subir una foto. Necesito subir las fotos de un evento este
+fin de semana.
 
-Pregunta: ¿Qué equipo debe atenderlo?
+Pregunta: ¿A qué área hay que enviar este correo?
 Opciones:
-  billing: Pagos y reembolsos
-  technical: Errores e integraciones
-  general: Otras consultas
+  soporte: Fallos y errores del producto
+  facturacion: Cobros, facturas y reembolsos
+  comercial: Ventas y planes
+  otros: Todo lo demás
 
 ---
 
 Pregunta: ¿Qué urgencia tiene?
 Niveles de puntuación:
-  Baja
-  Media
-  Alta
+  Baja: puede esperar
+  Media: conviene atenderlo esta semana
+  Alta: hay una fecha límite encima
 
 ---
 
-Pregunta: ¿Hay que responder al cliente hoy?
+Pregunta: ¿El cliente ya pagó el plan anual?
 Qué significa no o sí:
-  false: Puede esperar sin perjudicarle
-  true: Necesita respuesta hoy
+  false: No ha pagado todavía
+  true: Sí, ya lo pagó
 ```
 
-Salida real (recortada):
+Salida real:
 
 ```
-3 pregunta(s), una sola peticion  (168 ms, 0 tokens)
+3 pregunta(s), una sola peticion  (157 ms, 0 tokens)
+
+--------------------------------------------------------------
+CHOICE  ·  ¿A qué área hay que enviar este correo?
+--------------------------------------------------------------
+  soporte         0.439  #############.................  <-
+  comercial       0.351  ###########...................
+  facturacion     0.198  ######........................
+  otros           0.012  ..............................
+  confianza = 0.204
+
+--------------------------------------------------------------
+SCORE  ·  ¿Qué urgencia tiene?
+--------------------------------------------------------------
+  Baja: puede esperar                    0.051  ##............
+  Media: conviene atenderlo esta semana  0.321  ##########....
+  Alta: hay una fecha límite encima      0.628  ###################...  <-
+  puntuacion = 1.58
+  confianza = 0.264
+
+--------------------------------------------------------------
+PROBABILITY  ·  ¿El cliente ya pagó el plan anual?
+--------------------------------------------------------------
+  sí              0.999  ##############################
+  no              0.001  ..............................
+  confianza = 0.985
 ```
 
-**Fíjate: 168 ms para tres preguntas, frente a 138 ms para una.** Tres preguntas
-costaron un **22% más**, no el triple. Porque el motor las puntúa **todas en la misma
+**Fíjate: 157 ms para tres preguntas, frente a 135 ms para una.** Tres preguntas
+costaron un **16% más**, no el triple. Porque el motor las puntúa **todas en la misma
 pasada**. Y siguen siendo **0 tokens**.
 
-Y este caso tiene una lectura que conviene entender: el cliente menciona **dos** cosas
-—no puede entrar **y** le cobraron—. La pregunta «¿qué equipo debe atenderlo?» se
-contestó **`billing`** (las cinco veces que se probó), porque pesa más lo del cobro. Es
-**una respuesta legítima y estable**, pero enseña dos cosas:
+**Y esto enseña lo más útil del manual: no todas las preguntas salen igual de bien.**
 
-- **Si la entrada trae dos problemas, la pregunta tiene que decir cuál te importa.**
-  Con «¿qué equipo debe atenderlo?» el modelo elige uno y no avisa de que había otro.
-- **La confianza avisa cuando hay mezcla.** En esta misma consulta, la tercera pregunta
-  («¿hay que responder hoy?») salió con probabilidad 0.435 y confianza **0.012** — un
-  empate casi perfecto. Eso es el modelo diciendo *«aquí no me mojo»*, y es la señal de
-  que esa pregunta necesita más contexto o está mal planteada.
+- La tercera («¿ya pagó?») sale **limpia**: 0.999 con confianza 0.985. El dato está en
+  el texto y el modelo lo encuentra sin dudar. **Esta se usa tal cual.**
+- La primera («¿a qué área?») sale **floja**: `soporte` gana con 0.439 y la confianza es
+  **0.204**. El caso trae **dos** cosas —pagó **y** se le cierra la app—, así que el
+  modelo reparte y no se moja. Es **una respuesta legítima**, pero avisa de que la
+  pregunta es ambigua.
+
+**Si la entrada trae dos problemas, la pregunta tiene que decir cuál te importa.** Con
+«¿a qué área hay que enviar este correo?» el modelo elige uno y no avisa de que había
+otro. Con «¿qué área corresponde al **fallo**?» la respuesta se habría separado.
 
 Es el patrón que hay que interiorizar: **la respuesta que sale limpia se usa; la que
 sale con confianza baja, se revisa.**
@@ -296,16 +364,17 @@ El ejemplo 2, tipado:
 {
   "model": "typesafe/jev-1.13",
   "state": {
-    "input": "Me cobraron dos veces la suscripción. ¿Pueden ayudarme?"
+    "input": "Buenos días. Llevo desde ayer sin poder entrar a la aplicación: me sale un error 500 cada vez que intento iniciar sesión."
   },
   "questions": {
     "decision": {
       "type": "choice",
-      "instructions": "¿Qué equipo debe atenderlo?",
+      "instructions": "¿A qué área hay que enviar este correo?",
       "criteria": {
-        "billing": "Pagos y reembolsos",
-        "technical": "Errores e integraciones",
-        "general": "Otras consultas"
+        "soporte": "Fallos y errores del producto",
+        "facturacion": "Cobros, facturas y reembolsos",
+        "comercial": "Ventas y planes",
+        "otros": "Todo lo demás"
       }
     }
   }
@@ -382,13 +451,14 @@ guarda y se ejecuta. Los ejemplos de este manual están en `ejemplos/`.
 **Entrada** (siempre la misma, cambia solo la cabecera):
 
 ```
-Entrada: Me cobraron dos veces la suscripción. ¿Pueden ayudarme?
+Entrada: Buenos días. Llevo desde ayer sin poder entrar a la aplicación: me sale un
+error 500 cada vez que intento iniciar sesión.
 ```
 
 | tipo | cabecera | lo que escribes debajo |
 |---|---|---|
-| **choice** | `Opciones:` | `billing: Pagos y reembolsos` (una por línea, `clave: descripción`) |
-| **score** | `Niveles de puntuación:` | `No relevante` (una por línea, de menor a mayor) |
+| **choice** | `Opciones:` | `soporte: Fallos y errores del producto` (una por línea, `clave: descripción`) |
+| **score** | `Niveles de puntuación:` | `Aviso: no afecta al servicio` (una por línea, de menor a mayor) |
 | **boolean** | `Qué significa no o sí:` | `true: ...` y `false: ...` |
 
 **Y esto es lo que devuelve cada uno**, ejecutado de verdad:
@@ -396,41 +466,43 @@ Entrada: Me cobraron dos veces la suscripción. ¿Pueden ayudarme?
 **choice** → da una **clave de tu lista**
 
 ```
-CHOICE  ·  ¿Qué equipo debe atenderlo?
-  billing         1.000  ##############################  <-
-  technical       0.000  ..............................
-  general         0.000  ..............................
+CHOICE  ·  ¿A qué área hay que enviar este correo?
+  soporte         1.000  ##############################  <-
+  otros           0.000  ..............................
+  facturacion     0.000  ..............................
+  comercial       0.000  ..............................
   confianza = 1.000
 ```
 
-En JSON: `"value": "billing"`, `"probabilities": {"billing": 0.9999, ...}`
+En JSON: `"value": "soporte"`, `"probabilities": {"soporte": 1.0, ...}`
 
 **score** → da un **número de nivel** y una puntuación ponderada
 
 ```
-SCORE  ·  ¿Qué relevancia tiene este elemento para la solicitud?
-  No relevante    0.000  ..............................
-  Algo relevante  0.005  ..............................
-  Muy relevante   0.995  ##############################  <-
+SCORE  ·  ¿Qué gravedad tiene el incidente?
+  Aviso: no afecta al servicio             0.009  ..........
+  Menor: afecta a unos pocos usuarios      0.009  ..........
+  Grave: afecta a la mayoría               0.165  #####.....
+  Crítico: el servicio está caído del todo 0.817  ##########  <-
 
-  puntuacion = 1.99
-  confianza = 0.969
+  puntuacion = 2.79
+  confianza = 0.605
 ```
 
-En JSON: `"value": 2.0`, `"probabilities": {"0.0": 0.0001, "1.0": 0.0053, "2.0": 0.9946}`
+En JSON: `"value": 3.0`, `"probabilities": {"0.0": 0.0088, "1.0": 0.0089, "2.0": 0.1651, "3.0": 0.8172}`
 
 **boolean** → da un **`true` o `false`**, con su probabilidad
 
 ```
-PROBABILITY  ·  ¿Debe esperar esta notificación hasta que termine el horario de descanso?
-  no              0.486  ##############................
-  sí              0.514  ###############...............
+PROBABILITY  ·  ¿Hay indicios de que la cuenta esté comprometida?
+  sí              0.800  ########################......
+  no              0.200  ######........................
 
-  probabilidad de que sí = 0.514
-  confianza = 0.001
+  probabilidad de que sí = 0.800
+  confianza = 0.277
 ```
 
-En JSON: `"value": true`, `"probabilities": {"true": 0.5143, "false": 0.4857}`
+En JSON: `"value": true`, `"probabilities": {"true": 0.8002, "false": 0.1998}`
 
 **Las tres devuelven lo mismo por dentro**: un valor (`value`) y **la probabilidad de
 cada opción posible** (`probabilities`). Cambia el tipo del valor — texto, número o

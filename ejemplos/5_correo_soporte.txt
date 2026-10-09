@@ -1,0 +1,23 @@
+Entrada: Buenas tardes. Escribo porque estoy bastante molesto: contraté el plan de 20 GB el mes pasado y llevo una semana con cortes de conexión casi todas las noches. He llamado tres veces y nadie me ha dado una solución. Además me han cobrado dos veces la factura de este mes. Si esto sigue así me voy a dar de baja.
+
+Pregunta: ¿A qué área hay que enviar este correo?
+Opciones:
+  soporte: Fallos y errores del producto
+  facturacion: Cobros, facturas y reembolsos
+  comercial: Ventas, planes y bajas
+  otros: Todo lo demás
+
+---
+
+Pregunta: ¿Qué urgencia tiene?
+Niveles de puntuación:
+  Baja: puede esperar
+  Media: conviene atenderlo esta semana
+  Alta: hay una fecha límite encima
+
+---
+
+Pregunta: ¿Amenaza el cliente con darse de baja?
+Qué significa no o sí:
+  false: No lo menciona
+  true: Sí lo menciona

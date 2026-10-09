@@ -546,7 +546,7 @@ def main():
     L.append("Para probar **preguntas propias** no hace falta tocar código: se escriben")
     L.append("en lenguaje natural y se ejecutan.\n")
     L.append("```bash")
-    L.append("python preguntar.py ejemplos/caso_suscripcion.txt")
+    L.append("python preguntar.py ejemplos/5_correo_soporte.txt")
     L.append("python preguntar.py --texto \"Entrada: ... | Pregunta: ... | Opciones: ...\"")
     L.append("```")
     L.append("")

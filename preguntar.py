@@ -2,26 +2,29 @@
 
 No hay que escribir JSON ni declarar tipos. Se escribe el caso asi:
 
-    Entrada: Me cobraron dos veces la suscripción. ¿Pueden ayudarme?
+    Entrada: Buenos días. Llevo desde ayer sin poder entrar a la aplicación: me sale
+    un error 500 cada vez que intento iniciar sesión.
 
-    Pregunta: ¿Qué equipo debe atenderlo?
+    Pregunta: ¿A qué área hay que enviar este correo?
     Opciones:
-      billing: Pagos y reembolsos
-      technical: Errores e integraciones
-      general: Otras consultas
+      soporte: Fallos y errores del producto
+      facturacion: Cobros, facturas y reembolsos
+      comercial: Ventas y planes
+      otros: Todo lo demás
 
 Y el sistema ve que hay "Opciones:" -> es un CHOICE. Si en vez de opciones hay
 
     Niveles de puntuación:
-      No relevante
-      Algo relevante
-      Muy relevante
+      Aviso: no afecta al servicio
+      Menor: afecta a unos pocos usuarios
+      Grave: afecta a la mayoría
+      Crítico: el servicio está caído del todo
 
 -> es un SCORE. Y si hay
 
     Qué significa no o sí:
-      false: El recordatorio es urgente
-      true: Puede enviarse después
+      false: No hay indicios de acceso no autorizado
+      true: Hay indicios de acceso no autorizado
 
 -> es una PROBABILITY (lo que TypeSafe llama noul).
 
@@ -138,12 +141,14 @@ def parsear(texto):
                     claves.append(l)
                     detalles.append(f"'{l}'.")
             campo = {"type": "enum", "choices": claves,
+                     "pregunta": instrucciones,
                      "description": f"{instrucciones} " + " ".join(detalles)}
 
         elif niveles:
             n = len(niveles)
             detalle = " ".join(f"{j} = {t}." for j, t in enumerate(niveles))
             campo = {"type": "number", "minimum": 0, "maximum": n - 1, "step": 1,
+                     "pregunta": instrucciones,
                      "description": f"{instrucciones} Niveles, de menor a mayor: {detalle}"}
 
         elif sino:
@@ -155,12 +160,14 @@ def parsear(texto):
             t = partes.get("true", partes.get("sí", partes.get("si", "")))
             f = partes.get("false", partes.get("no", ""))
             campo = {"type": "boolean",
+                     "pregunta": instrucciones,
                      "description": f"{instrucciones} true = {t}. false = {f}."}
 
         else:
             # sin opciones/niveles/si-no: se pregunta por un valor libre, pero como
             # el modo decision exige un conjunto finito, se trata como si/no.
             campo = {"type": "boolean",
+                     "pregunta": instrucciones,
                      "description": f"{instrucciones} Responde true si si, false si no."}
 
         preguntas.append((nombre, campo))
@@ -210,7 +217,12 @@ def mostrar(estado, preguntas, cuerpo, ms):
         tipo = tipos.get(spec["type"], spec["type"])
 
         print("\n" + "-" * 62)
-        print(f"{tipo}  ·  {spec['description'].split('.')[0]}")
+        # La cabecera muestra SOLO la pregunta. Antes imprimia la descripcion del
+        # campo cortada en el primer punto, y como la descripcion empieza por la
+        # lista de opciones, la primera opcion salia en la cabecera como si fuera
+        # la respuesta: ponia "'soporte' = Fallos y errores" mientras la flecha
+        # marcaba "facturacion".
+        print(f"{tipo}  ·  {spec.get('pregunta') or spec['description'].split('.')[0]}")
         print("-" * 62)
 
         if spec["type"] == "enum":
