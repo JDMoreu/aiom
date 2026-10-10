@@ -164,6 +164,15 @@ python preguntar.py mis_preguntas.txt --documento carta.pdf
 `formato` es `texto`, `natural` o `tipado` —se declara, no se adivina—. Detalles en
 [docs/API.md](docs/API.md).
 
+**Y si lo vas a llamar desde otro programa**, hay un ejemplo completo y ejecutable en
+[`ejemplos/integrar.py`](ejemplos/integrar.py): las dos formas de darle el caso —escrito o
+sacado de un documento—, los dos endpoints, y las respuestas de verdad:
+
+```bash
+python ejemplos/integrar.py                # el caso, escrito
+python ejemplos/integrar.py carta.pdf      # el caso, sacado de un documento
+```
+
 ## Documentación
 
 | documento | qué hay |
@@ -194,9 +203,11 @@ catalogs/            dos juegos de campos de ejemplo para el modo decisión, los
                        iot.json      operación de campo (el que se usa por defecto)
                        soporte.json  triage de tickets
                      se elige con la variable AIOM_CATALOG o el argumento del script
-ejemplos/            siete casos: cinco sobre correos de soporte (uno por tipo de
-                     pregunta, y uno con las tres de golpe) y dos con SOLO las
-                     preguntas, para usarlos con un documento
+ejemplos/            siete casos de ejemplo -cinco sobre correos de soporte, uno por tipo
+                     de pregunta y uno con las tres de golpe, y dos con SOLO las
+                     preguntas, para usarlos con un documento- y el ejemplo de integracion:
+                       integrar.py       como consultar la API desde Python, con el caso
+                                         escrito o sacado de un documento
 docs/                toda la documentación, junta:
                        API.md            la API: los tres formatos, el documento como caso
                        ARRANCAR.md       la ruta completa desde cero, y qué hacer si falla

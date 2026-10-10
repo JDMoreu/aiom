@@ -56,6 +56,26 @@ print(d["decision"]["tiempo_ms"], d["decision"]["tokens"])   # 178.0  0
 print(d["chat"]["tiempo_ms"], d["chat"]["tokens"])           # 2182.0 126
 ```
 
+Y hay un **ejemplo completo y ejecutable**, que enseña las dos formas de darle el caso
+—escrito o sacado de un documento— y los dos endpoints que hay que llamar:
+
+```bash
+python ejemplos/integrar.py                # el caso, escrito en el propio ejemplo
+python ejemplos/integrar.py carta.pdf      # el caso, sacado de un documento
+```
+
+Son **dos endpoints**, y cada uno hace una cosa:
+
+| | |
+|---|---|
+| `POST /documento` | le mandas los bytes del fichero y te devuelve su texto |
+| `POST /ask` | le mandas el caso y las preguntas, y te devuelve los valores |
+
+Con un documento son **dos llamadas**: primero a `/documento` para sacarle el texto, y
+luego a `/ask` con ese texto en el campo `documento`. Con el caso escrito es **una
+sola**: el caso va dentro de `entrada`, junto a las preguntas. **El endpoint de la
+pregunta es el mismo en los dos casos**, que es lo que conviene recordar.
+
 **Las cabeceras CORS van abiertas**, a propósito: es una herramienta local que solo
 escucha en `127.0.0.1`, y así el fichero `web/index.html` se puede servir desde otro sitio
 si hiciera falta.
