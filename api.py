@@ -134,13 +134,31 @@ def por_chat(cuerpo, cfg):
 
     Es el camino para lo que NO es una decision: redactar, explicar, resumir. Aqui no hay
     campos ni probabilidades, hay texto.
+
+    Acepta las DOS formas de darle el caso, las mismas que la via de decision:
+
+      - `question`: una frase suelta. Lo mas corto.
+      - `entrada`: el mismo texto que el formato natural, con sus cabeceras (`input:`,
+        `ask:`, `choice:`...). Asi se le puede pasar EL MISMO caso que a la decision y
+        comparar las dos respuestas sin reescribir nada.
+
+    Con `entrada` se le quitan las cabeceras antes de pasarselo al modelo, y no es un
+    capricho: medido, con los `ask:`/`choice:` delante el modelo contesta en el formato de
+    la decision -devolvio un `true` a secas en 2 tokens- y eso no es prosa.
     """
-    q = cuerpo.get("question")
-    if not isinstance(q, str) or not q.strip():
-        raise ValueError("falta 'question'")
     doc = _documento(cuerpo)
-    # Con documento, el caso es el documento y la pregunta va detras.
-    pregunta = f"{doc}\n\n{q.strip()}" if doc else q
+    texto = cuerpo.get("entrada")
+    if isinstance(texto, str) and texto.strip():
+        estado, preguntas = preguntar.parsear(texto, entrada=doc)
+        lista = "\n".join(f"{i}. {c['pregunta']}"
+                          for i, (_, c) in enumerate(preguntas, 1))
+        pregunta = f"{estado}\n\nResponde a estas preguntas:\n{lista}"
+    else:
+        q = cuerpo.get("question")
+        if not isinstance(q, str) or not q.strip():
+            raise ValueError("falta 'question' o 'entrada'")
+        # Con documento, el caso es el documento y la pregunta va detras.
+        pregunta = f"{doc}\n\n{q.strip()}" if doc else q
     r = aiom.chat(pregunta, cfg)
     return {"resultados": [{"via": "chat", "texto": r["text"]}],
             "tiempo_ms": r["timings"]["wall_ms"],
@@ -324,7 +342,9 @@ la API contesta con un error y la lista de los que acepta.
 - **`tipado`** — el formato de TypeSafe/Jev, tal cual. La otra via de decision: el mismo
   caso, pero con el esquema en JSON.
 - **`chat`** — una pregunta suelta, en prosa. Aqui no hay campos ni probabilidades: el
-  modelo escribe. Es el camino para lo que no es una decision (redactar, explicar).
+  modelo escribe. Es el camino para lo que no es una decision (redactar, explicar). Acepta
+  `question` (una frase) o `entrada`, el **mismo texto** que el formato natural, para poder
+  pasarle el mismo caso y comparar.
 
 `natural` y `tipado` aceptan ademas:
 

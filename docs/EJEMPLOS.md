@@ -26,10 +26,14 @@ no se adivina**.
 |---|---|---|
 | `natural` | una o varias preguntas de decisión, con cabeceras | `entrada` |
 | `tipado` | lo mismo, en el JSON de TypeSafe | `state` + `questions` |
-| `chat` | una pregunta suelta, en prosa | `question` |
+| `chat` | lo mismo que `natural`, pero en prosa | `entrada` (o `question`, una frase) |
 
 Los dos primeros son **vías de decisión**: traen su propio esquema y devuelven valores, sin
 generar un token. El tercero es **prosa**: el modelo escribe.
+
+`natural` y `chat` aceptan **la misma entrada**, así que el mismo caso se puede mandar por
+las dos y comparar las respuestas sin reescribir nada. `tipado` es lo mismo con el esquema
+en JSON.
 
 Si no mandas `formato`, la API lo **deduce** del campo que traigas. Pero declararlo es más
 claro, y es lo que hacen todos los ejemplos de esta página.
@@ -38,27 +42,37 @@ claro, y es lo que hacen todos los ejemplos de esta página.
 
 ## 1. Una pregunta suelta, en prosa (`chat`)
 
-El formato `chat` es el más corto: una frase y ya está. Aquí **no hay esquema**: ni campos,
-ni opciones, ni probabilidades. El modelo escribe la respuesta, y es el camino para lo que
-no es una decisión —redactar, explicar, resumir—.
+El formato `chat` no tiene esquema: ni campos, ni opciones, ni probabilidades. El modelo
+escribe la respuesta, y es el camino para lo que no es una decisión —redactar, explicar,
+resumir—.
+
+**Acepta la misma entrada que `natural`**, así que se le puede pasar **el mismo caso** y
+comparar las dos respuestas sin reescribir nada. El texto de abajo es exactamente el mismo
+que el del apartado 2:
 
 ```bash
 curl -s http://127.0.0.1:8100/ask -H "Content-Type: application/json" -d '{
   "formato": "chat",
-  "question": "Explícame en dos frases qué es una red de sensores"
+  "entrada": "input: Llevo desde ayer sin poder entrar a la aplicación: me sale un error 500 cada vez que intento iniciar sesión.\n\nask: ¿A qué área hay que enviar este correo?\nchoice:\n  soporte: Fallos y errores del producto\n  facturacion: Cobros, facturas y reembolsos\n  otros: Todo lo demás"
 }'
 ```
+
+Lo mismo desde Python, con el texto legible en vez de escapado:
 
 ```python
 import json, urllib.request
 
-cuerpo = {
-    "formato": "chat",
-    "question": "Explícame en dos frases qué es una red de sensores",
-}
+ENTRADA = """input: Llevo desde ayer sin poder entrar a la aplicación: me sale un error 500 cada vez que intento iniciar sesión.
+
+ask: ¿A qué área hay que enviar este correo?
+choice:
+  soporte: Fallos y errores del producto
+  facturacion: Cobros, facturas y reembolsos
+  otros: Todo lo demás"""
+
 peticion = urllib.request.Request(
     "http://127.0.0.1:8100/ask",
-    data=json.dumps(cuerpo).encode(),
+    data=json.dumps({"formato": "chat", "entrada": ENTRADA}).encode(),
     headers={"Content-Type": "application/json"})
 with urllib.request.urlopen(peticion, timeout=600) as r:
     respuesta = json.loads(r.read().decode())
@@ -67,19 +81,18 @@ print(respuesta["tiempo_ms"], "ms,", respuesta["tokens"], "tokens")
 print(respuesta["resultados"][0]["texto"])
 ```
 
-Lo que devuelve no es una lista de campos, es la prosa entera. Esta es la respuesta de
-verdad, tal cual llegó:
+Y esto es lo que devuelve —la prosa, recortada—:
 
 ```json
 {
   "resultados": [
     {
       "via": "chat",
-      "texto": "Una red de sensores es un sistema tecnológico que conecta varios dispositivos para recopilar, transmitir y procesar datos de forma automática.\n\nSu función principal es detectar y reportar información en tiempo real, lo que permite tomar decisiones más eficientes y precisas en cualquier entorno."
+      "texto": "Entiendo tu situación, y es muy frustrante no poder acceder a la aplicación cuando necesitas usarla. El error 500 es un problema técnico que indica que hay un fallo en el servidor o en el proceso de carga de la aplicación...\n\nA continuación, respondo a las preguntas que has planteado:\n\n**1. ¿A qué área hay que enviar este correo?**\nDeberías enviar el correo a la **sección de soporte técnico o atención al cliente**..."
     }
   ],
-  "tiempo_ms": 808.0,
-  "tokens": 74,
+  "tiempo_ms": 4094.0,
+  "tokens": 421,
   "formato": "chat",
   "n_preguntas": 1
 }
@@ -88,37 +101,20 @@ verdad, tal cual llegó:
 Fíjate en lo que **no** hay: ni `campo`, ni `tipo`, ni `probability`, ni `confidence`. Esos
 campos son de la decisión, y aquí no existen porque no hay nada que elegir.
 
-Y si le pasas un `documento`, el texto del fichero va delante de la pregunta, igual que en
-los otros formatos (ver el apartado 5).
+**Las cabeceras no llegan al modelo.** Con `entrada`, el `input:`, los `ask:` y los
+`choice:` se quitan antes de pasárselo: medido, con ellos delante el modelo contesta en el
+formato de la decisión —devolvió un `true` a secas en 2 tokens— y eso no es prosa.
 
-**Diferencia con los otros dos, en una línea:** `natural` y `tipado` **eligen** un valor de
-una lista que tú escribes; `chat` **escribe** lo que le parece. Los dos primeros gastan 0
-tokens; el tercero escribe, y por eso tarda mucho más.
+**Y también acepta una pregunta suelta**, si lo que quieres es preguntar algo y ya está:
 
-```bash
-curl -s http://127.0.0.1:8100/ask -H "Content-Type: application/json" -d '{
-  "formato": "chat",
-  "question": "Explícame en dos frases qué es una red de sensores"
-}'
+```json
+{"formato": "chat", "question": "Explícame en dos frases qué es una red de sensores"}
 ```
 
-```python
-import json, urllib.request
-
-cuerpo = {
-    "formato": "chat",
-    "question": "Explícame en dos frases qué es una red de sensores",
-}
-peticion = urllib.request.Request(
-    "http://127.0.0.1:8100/ask",
-    data=json.dumps(cuerpo).encode(),
-    headers={"Content-Type": "application/json"})
-with urllib.request.urlopen(peticion, timeout=600) as r:
-    respuesta = json.loads(r.read().decode())
-
-print(respuesta["tiempo_ms"], "ms,", respuesta["tokens"], "tokens")
-print(respuesta["resultados"][0]["texto"])
-```
+**La diferencia con los otros dos, en una línea:** `natural` y `tipado` **eligen** un valor
+de una lista que tú escribes; `chat` **escribe** lo que le parece. Los dos primeros gastan 0
+tokens; el tercero escribe, y por eso tarda mucho más. Con el mismo caso de arriba: 160 ms
+y 0 tokens la decisión, 4094 ms y 421 tokens el chat.
 
 ---
 

@@ -111,16 +111,24 @@ Aquí no hay campos ni probabilidades: **el modelo escribe**. Es el camino para 
 una decisión (redactar, explicar, resumir), y acepta `documento` igual que los otros dos.
 `comparar` no aplica aquí: las dos vías serían la misma cosa.
 
+**Acepta la misma `entrada` que `natural`**, así que se le puede pasar el mismo caso:
+
+```json
+{"formato": "chat", "entrada": "input: Llevo desde ayer sin poder entrar: me sale un error 500.\n\nask: ¿A qué área hay que enviar este correo?\nchoice:\n  soporte: Fallos y errores del producto\n  facturacion: Cobros, facturas y reembolsos\n  otros: Todo lo demás"}
+```
+
+Y también una pregunta suelta, si es una sola y no hay esquema que darle:
+
 ```json
 {"formato": "chat", "question": "Explícame en dos frases qué es una red de sensores"}
 ```
 
-Y devuelve:
+Con cualquiera de las dos devuelve lo mismo: la prosa, entera.
 
 ```json
 {"resultados": [{"via": "chat",
-                 "texto": "Una red de sensores es un sistema tecnológico que conecta varios dispositivos para recopilar, transmitir y procesar datos de forma automática..."}],
- "tiempo_ms": 808.0, "tokens": 74, "n_preguntas": 1, "formato": "chat"}
+                 "texto": "Entiendo tu situación, y es muy frustrante no poder acceder a la aplicación..."}],
+ "tiempo_ms": 4094.0, "tokens": 421, "n_preguntas": 1, "formato": "chat"}
 ```
 
 ### 2. `natural` — el contenido de un `.txt`, entero

@@ -32,8 +32,8 @@ LOS TRES FORMATOS DE ENTRADA
                 ejemplo, y el mas comodo de escribir a mano.
     tipado      el JSON de TypeSafe: `state.input` + `questions`. Para cuando el que
                 llama ya trabaja con esquemas.
-    chat        una pregunta suelta, en prosa. Aqui no hay esquema ni valores: el modelo
-                escribe. Para lo que NO es una decision (redactar, explicar).
+    chat        lo mismo que `natural`, pero en prosa. Aqui no hay esquema ni valores: el
+                modelo escribe. Para lo que NO es una decision (redactar, explicar).
 
 `natural` y `tipado` son las vias de DECISION: devuelven valores y no generan un token.
 `chat` es la via de prosa, y por eso escribe y tarda mas.
@@ -43,7 +43,7 @@ Para ver el mismo caso en `tipado`, ejecuta este fichero con `--tipado`.
     python ejemplos/integrar.py                     # el caso escrito, en natural
     python ejemplos/integrar.py carta.pdf           # el caso sacado de un documento
     python ejemplos/integrar.py --tipado            # el mismo caso, en JSON tipado
-    python ejemplos/integrar.py --chat              # una pregunta suelta, en prosa
+    python ejemplos/integrar.py --chat              # el mismo caso, en prosa
     python ejemplos/integrar.py --comparar          # y ademas, la misma pregunta al chat
 
 Solo usa la biblioteca estandar. No hay nada que instalar.
@@ -304,9 +304,13 @@ def con_tipado(comparar):
 
 
 def con_chat():
-    """Una pregunta suelta, en prosa. Sin esquema: aqui no hay valores que elegir."""
-    return {"formato": "chat",
-            "question": "Explica en dos frases que es una red de sensores y para que sirve"}
+    """El mismo caso que en natural, pero por la via de prosa.
+
+    Se le pasa LA MISMA entrada, no una pregunta distinta: asi las dos respuestas se pueden
+    comparar sin reescribir nada. El chat le quita las cabeceras antes de darselas al
+    modelo.
+    """
+    return {"formato": "chat", "entrada": f"input: {CASO}\n\n{PREGUNTAS}"}
 
 
 # --------------------------------------------------------------------------- #
@@ -318,7 +322,7 @@ def correr():
     rutas = [a for a in args if not a.startswith("--")]
 
     if chat:
-        print("1. Una pregunta suelta en `question`, sin esquema (chat)")
+        print("1. La misma entrada que en natural, por la via de prosa (chat)")
         cuerpo = con_chat()
     elif tipado:
         print("1. El caso va en `state.input` y las preguntas en `questions` (tipado)")
