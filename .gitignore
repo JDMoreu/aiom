@@ -14,6 +14,11 @@ env/
 *.log
 *.tmp
 
+# Las herramientas de mantenimiento: el diagrama y el chequeo del repositorio. Viven en
+# la maquina del autor y no se publican -el repositorio es el programa y su
+# documentacion-, pero se quedan aqui para poder usarlas.
+herramientas/
+
 # Nota: results/ ya no existe. Los benchmarks salieron del repositorio: lo unico que se
 # mide es la comparacion de las dos vias, en vivo.
 

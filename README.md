@@ -207,9 +207,6 @@ docs/                toda la documentación, junta:
                        CREDITOS.md       de quién es cada pieza, con commit y SHA256
                        arquitectura.svg  el diagrama de arquitectura de arriba
                        arquitectura.png  el mismo, en mapa de bits
-herramientas/        lo que mantiene el repositorio, no lo que pregunta:
-                       diagrama.py       dibuja el diagrama (SVG, sin librerías)
-                       verificar.py      comprueba que el repositorio cuadre consigo mismo
 requirements.txt     las dependencias, y para qué es cada una
 LICENSE              MIT
 .gitignore           lo que no se publica: cachés, entornos, estado de herramientas
