@@ -86,7 +86,7 @@ los valores.
 ```bash
 python preguntar.py ejemplos/1_opciones.txt        # elegir de una lista
 python preguntar.py ejemplos/2_niveles.txt         # poner algo en una escala
-python preguntar.py ejemplos/3_booleano.txt        # un sí o un no
+python preguntar.py ejemplos/3_booleano.txt        # verdadero o falso
 python preguntar.py ejemplos/4_tres_preguntas.txt  # las tres de golpe
 python preguntar.py ejemplos/5_correo_soporte.txt  # un correo real, con las tres
 ```
@@ -165,12 +165,14 @@ python preguntar.py mis_preguntas.txt --documento carta.pdf
 [docs/API.md](docs/API.md).
 
 **Y si lo vas a llamar desde otro programa**, hay un ejemplo completo y ejecutable en
-[`ejemplos/integrar.py`](ejemplos/integrar.py): las dos formas de darle el caso —escrito o
-sacado de un documento—, los dos endpoints, y las respuestas de verdad:
+[`ejemplos/integrar.py`](ejemplos/integrar.py): las tres formas de darle el caso, los dos
+endpoints, seis preguntas de los tres tipos, y cada campo de la respuesta explicado.
 
 ```bash
 python ejemplos/integrar.py                # el caso, escrito
 python ejemplos/integrar.py carta.pdf      # el caso, sacado de un documento
+python ejemplos/integrar.py --tipado       # el mismo caso, en JSON tipado
+python ejemplos/integrar.py --comparar     # y además, lo mismo al chat
 ```
 
 ## Documentación

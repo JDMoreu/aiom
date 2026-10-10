@@ -56,12 +56,15 @@ print(d["decision"]["tiempo_ms"], d["decision"]["tokens"])   # 178.0  0
 print(d["chat"]["tiempo_ms"], d["chat"]["tokens"])           # 2182.0 126
 ```
 
-Y hay un **ejemplo completo y ejecutable**, que enseña las dos formas de darle el caso
-—escrito o sacado de un documento— y los dos endpoints que hay que llamar:
+Y hay un **ejemplo completo y ejecutable**, que enseña las tres formas de darle el caso
+—escrito, sacado de un documento, o en JSON— y los dos endpoints que hay que llamar. Lleva
+**seis preguntas, dos de cada tipo**, y las resuelve todas en una petición:
 
 ```bash
-python ejemplos/integrar.py                # el caso, escrito en el propio ejemplo
+python ejemplos/integrar.py                # el caso, escrito
 python ejemplos/integrar.py carta.pdf      # el caso, sacado de un documento
+python ejemplos/integrar.py --tipado       # el mismo caso, en JSON tipado
+python ejemplos/integrar.py --comparar     # y además, lo mismo al chat
 ```
 
 Son **dos endpoints**, y cada uno hace una cosa:
@@ -164,7 +167,7 @@ Cada campo del esquema se declara así:
 
 - **`choice`** — elegir una de una lista (`choices`, en orden)
 - **`score`** — una escala o un número (`minimum`, `maximum`, `step`)
-- **`noul`** — sí o no
+- **`noul`** — verdadero o falso
 
 **El motor de llama-server habla otro idioma por dentro** (`enum`, `number`, `boolean`), y
 esa diferencia se resuelve en **un solo sitio**: el mapa `AL_MOTOR` de `aiom.py`. En

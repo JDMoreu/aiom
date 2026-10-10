@@ -24,7 +24,7 @@ Estos son los nombres de verdad, los que usa el código:
 |---|---|---|---|
 | elegir de una lista | **choice** | `choice:` | la opción elegida + probabilidad de cada una |
 | poner algo en una escala | **score** | `score:` | **el nivel** (y, si lo quieres, una puntuación ponderada) |
-| un sí o un no | **noul** | `noul:` | `true` o `false`, con su probabilidad |
+| verdadero o falso | **noul** | `noul:` | `true` o `false`, con su probabilidad |
 
 *(`noul` es la primitiva que define Jev. Dentro del programa el campo se llama
 `boolean`, que es el tipo que entiende el motor — es el mismo concepto con el nombre
@@ -44,14 +44,14 @@ de pregunta es —**`choice`, `score` o `noul`**— es **`preguntar.py`**, leyen
 |---|---|
 | `choice:` | **choice** — elegir una de una lista |
 | `score:` | **score** — una escala |
-| `noul:` | **noul** — sí o no |
+| `noul:` | **noul** — verdadero o falso |
 
 **La cabecera que escribes ES el tipo del campo.** No hay que declararlo además, y las
 tres palabras son las mismas en todo el proyecto: en esta cabecera, en el formato tipado,
 en los catálogos y en lo que devuelve la API.
 
 Y si no escribes ninguna de las tres, el sistema no se queda sin responder: lo trata
-como un sí o un no. (Si la pregunta es de texto libre, es el relevo al modo chat, ver
+como un verdadero o falso. (Si la pregunta es de texto libre, es el relevo al modo chat, ver
 apartado 8.)
 
 ---
@@ -174,10 +174,10 @@ el resultado. Si dudas, quédate con `value`.
 
 ---
 
-## 4. Boolean (un sí o un no, con su probabilidad)
+## 4. Boolean (verdadero o falso, con su probabilidad)
 
-Cabecera `noul:` y debajo qué significa cada uno. **Aquí sí o sí hay
-que poner `true:` y `false:`**, porque si no, el modelo no sabe qué estás preguntando.
+Cabecera `noul:` y debajo qué significa cada uno. **Aquí es obligatorio poner `true:` y
+`false:`**, porque si no, el modelo no sabe qué estás preguntando.
 
 ```
 input: Un cliente escribe diciendo que han entrado en su cuenta desde otro país
@@ -470,7 +470,7 @@ El estándar son cinco, cortas:
 | `noul:` | el significado de `false` y de `true` |
 
 Las tres del medio son las que **declaran el tipo**: `choice` es una elección, `score`
-una escala y `noul` un sí o un no. No hay que deducirlo, se lee en la cabecera.
+una escala y `noul` un verdadero o falso. No hay que deducirlo, se lee en la cabecera.
 
 Las formas largas en español (`Entrada:`, `Pregunta:`, `Opciones:`,
 `Niveles de puntuación:`, `Qué significa no o sí:`) **se siguen aceptando**, pero el

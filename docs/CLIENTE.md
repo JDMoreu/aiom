@@ -60,7 +60,7 @@ Tres detalles que ahorran disgustos:
 - **El caso vive fuera de las vistas, y las pestañas debajo de él.** El caso escrito a
   mano es la entrada, la misma en los tres modos, así que no es parte de ninguno: se
   escribe una vez y las pestañas —que sí cambian de modo— van después.
-- Un **`noul` es un sí o un no**: sus dos valores son `false` y `true` y **no se pueden
+- Un **`noul` es verdadero o falso**: sus dos valores son `false` y `true` y **no se pueden
   añadir más**. Solo se cambia lo que significa cada uno. La interfaz no deja añadir un
   tercero porque no existiría.
 - Al cambiar el tipo de una pregunta, las opciones se reajustan: al entrar en un `noul` se

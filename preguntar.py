@@ -13,7 +13,7 @@ No hay que escribir JSON. Se escribe el caso asi:
       otros: Todo lo demás
 
 El tipo se DECLARA con la cabecera: `choice` elige de una lista, `score` pone algo en
-una escala y `noul` es un si o un no.
+una escala y `noul` es verdadero o falso.
 
     ask: ¿Qué urgencia tiene?
     score:
@@ -65,6 +65,9 @@ TITULOS = {
     "opciones": ("choice", "opciones", "choices", "criterios"),
     "niveles": ("score", "niveles", "niveles de puntuación", "niveles de puntuacion",
                 "escala", "niveles de score"),
+    # El tipo es verdadero o falso, pero aqui se aceptan tambien las formas en
+    # espanol ("si o no", "que significa no o si"...) por COMPATIBILIDAD: quien ya
+    # tenga ficheros escritos con esas cabeceras no tiene por que cambiarlos.
     "sino": ("noul", "boolean", "qué significa no o sí", "que significa no o si",
              "no o sí", "no o si", "significado", "sí o no", "si o no"),
 }

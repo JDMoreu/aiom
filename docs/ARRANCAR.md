@@ -148,7 +148,7 @@ Hay un ejemplo por tipo, para probarlos todos:
 ```bash
 python preguntar.py ejemplos\1_opciones.txt        elegir de una lista
 python preguntar.py ejemplos\2_niveles.txt         poner algo en una escala
-python preguntar.py ejemplos\3_booleano.txt        un sí o un no
+python preguntar.py ejemplos\3_booleano.txt        verdadero o falso
 python preguntar.py ejemplos\4_tres_preguntas.txt  las tres de golpe
 python preguntar.py ejemplos\5_correo_soporte.txt  un correo real, con las tres
 ```
