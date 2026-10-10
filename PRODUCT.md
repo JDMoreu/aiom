@@ -45,7 +45,8 @@ cosas a la vez, y las tres son propiedades del mecanismo, no promesas:
 
 1. **0 tokens generados** en la vía de decisión.
 2. **La distribución completa** de cada pregunta, no solo la respuesta.
-3. **N preguntas en una sola petición**, cuando el chat necesita una por pregunta.
+3. **Elige entre las opciones que le das**, en vez de escribir lo que le parece. El chat
+   no ve esas opciones: contesta con lo que sabe.
 
 No es un chat más rápido: es otra cosa, y por eso la interfaz tiene que enseñar las dos
 vías a la vez para que la diferencia se vea, no se lea.

@@ -83,12 +83,21 @@ errores. Las páginas solo se informan en un PDF, que es el único formato donde
 real: en un `.txt` o un `.docx` no hay páginas hasta que alguien lo maqueta, así que no se
 inventa.
 
-## La comparación, por pregunta
+## La comparación: la decisión por pregunta, el chat entero
 
 Con «Comparar con el chat» activado, la interfaz pide **las dos vías en la misma
-petición**, para que los tiempos sean de la misma corrida. El resultado va **emparejado
-por pregunta**: la decisión de la pregunta 1 al lado del chat de la pregunta 1, y así. Se
-puede comparar sin bajar y subir por la página.
+petición**, para que los tiempos sean de la misma corrida. Y cada vía resuelve **una sola
+petición**: la decisión devuelve un valor por pregunta, y el chat escribe una respuesta
+que las cubre todas.
+
+Por eso el resultado no va emparejado fila a fila: a la izquierda van **los valores de la
+decisión, uno por pregunta**, y a la derecha **la respuesta del chat, entera**. Es lo que
+hay: el chat no contesta por preguntas sueltas, contesta de una vez.
+
+Al chat **no se le pasan los criterios** —ni las cabeceras `ask:`/`choice:`—, solo el caso
+y los enunciados. Con los criterios delante contesta en el formato de la decisión: medido,
+devolvió un `true` a secas en 2 tokens. Los criterios son el mecanismo de la decisión; el
+chat contesta con lo que sabe.
 
 Arriba de la lectura, **con ella**, una caja enseña los totales de las dos vías con su
 rótulo y el multiplicador. Antes de la primera medición esa caja no existe: la pantalla

@@ -106,7 +106,8 @@ curl -X POST localhost:8100/ask -H "Content-Type: application/json" \
 ```
 
 O en la interfaz web, con «Comparar» activado: pregunta lo mismo por las dos vías y las
-pone **lado a lado, pregunta por pregunta**, para no perderse en el scroll.
+pone **lado a lado** — los valores de la decisión uno por pregunta, y la respuesta del
+chat entera, porque el chat contesta de una vez.
 
 La diferencia no es de acierto, es de **trabajo**: la vía de decisión **puntúa** las
 opciones y devuelve un valor; la de chat **escribe** prosa que hay que interpretar. Con
@@ -169,7 +170,7 @@ python preguntar.py mis_preguntas.txt --documento carta.pdf
 |---|---|
 | **[docs/ARRANCAR.md](docs/ARRANCAR.md)** | **la ruta completa, de cero**: el modelo, compilar el servidor, arrancarlo, y las dos puertas para preguntar. Con qué hacer si algo no arranca |
 | [docs/MANUAL.md](docs/MANUAL.md) | el manual de uso, con un ejemplo de cada tipo (opciones, niveles, sí/no), cómo se hacen varias preguntas a la vez y cómo se escribe en formato tipado |
-| [docs/CLIENTE.md](docs/CLIENTE.md) | la interfaz web: cómo se despliega, los tres modos, el documento como caso, la comparación por pregunta y cómo se lee una respuesta |
+| [docs/CLIENTE.md](docs/CLIENTE.md) | la interfaz web: cómo se despliega, los tres modos, el documento como caso, la comparación de las dos vías y cómo se lee una respuesta |
 | [docs/API.md](docs/API.md) | la API HTTP: cómo se despliega y cómo se consume, los tres formatos de entrada, el documento como caso, qué devuelve y cómo probarla con `curl` |
 | [PRODUCT.md](PRODUCT.md) | la verdad del producto: quién lo usa, qué hace, qué no se puede inventar |
 | [DESIGN.md](DESIGN.md) | el sistema visual de la interfaz, con sus tokens, sus reglas y sus prohibiciones. Los nombres de los tokens son los mismos que los de las variables CSS, así que se puede comprobar contra el código |

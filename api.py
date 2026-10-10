@@ -211,15 +211,33 @@ def prompts_texto(cuerpo, catalogo, cfg):
 
 
 def prompts_natural(cuerpo, catalogo, cfg):
+    """El chat recibe el caso y TODAS las preguntas, de una vez y en lenguaje llano.
+
+    Una sola peticion, que es como se le pregunta a un asistente, y con la misma entrada
+    que resuelve la decision, para que la comparacion sea en igualdad.
+
+    Se le pasan los ENUNCIADOS, no el .txt tal cual. El .txt lleva las cabeceras `ask:`,
+    `choice:`, `noul:` y los criterios, y con eso delante el modelo contesta en el formato
+    de la decision: medido, devolvio un `true` a secas en 2 tokens. Eso no es prosa y no
+    se puede comparar con nada. Los criterios son el mecanismo de la decision; el chat
+    contesta con lo que sabe.
+    """
     estado, preguntas = preguntar.parsear(cuerpo["entrada"], entrada=_documento(cuerpo))
-    return [f"{estado}\n\nask: {c['pregunta']}" for _, c in preguntas]
+    lista = "\n".join(f"{i}. {c['pregunta']}" for i, (_, c) in enumerate(preguntas, 1))
+    return [f"{estado}\n\nResponde a estas preguntas:\n{lista}"]
 
 
 def prompts_tipado(cuerpo, catalogo, cfg):
+    """Lo mismo en el formato tipado: aqui no hay .txt, asi que el texto se arma.
+
+    El caso y los enunciados juntos, en UNA peticion, sin los `criteria`: son el
+    mecanismo de la decision, y el chat no los usa.
+    """
     doc = _documento(cuerpo)
     entrada = doc or cuerpo["state"].get("input", "")
-    return [f"{entrada}\n\nask: {c.get('instructions', '')}"
-            for c in cuerpo["questions"].values()]
+    lista = "\n".join(f"{i}. {c.get('instructions', '')}"
+                      for i, c in enumerate(cuerpo["questions"].values(), 1))
+    return [f"{entrada}\n\nResponde a estas preguntas:\n{lista}"]
 
 
 PROMPTS = {"texto": prompts_texto, "natural": prompts_natural, "tipado": prompts_tipado}
@@ -230,6 +248,10 @@ def comparar(r_decision, cuerpo, catalogo, cfg, formato):
 
     Se hace aqui y no en el cliente para que los dos tiempos sean de la MISMA corrida:
     medir en dos llamadas separadas daria tiempos de momentos distintos.
+
+    Las dos vias reciben la misma entrada, y cada una UNA peticion: la decision resuelve
+    todos los campos de golpe y el chat contesta todo en una sola respuesta. Es lo que
+    hace que la comparacion sea en igualdad de condiciones.
     """
     respuestas = [_chat(p, catalogo, cfg) for p in PROMPTS[formato](cuerpo, catalogo, cfg)]
     return {

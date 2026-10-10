@@ -211,14 +211,17 @@ textarea.mono{font-family:var(--mono);font-size:13.5px;line-height:1.65;
 .comp-cab .et{justify-self:start;margin:9px 14px;font-size:11.5px;letter-spacing:.13em;
               text-transform:uppercase;padding:2px 7px;border-radius:2px;color:var(--papel)}
 .comp-cab .et:last-child{margin-left:14px}
+/* La decision ocupa la izquierda, pregunta a pregunta. El chat es UNA respuesta -recibe
+   todo el texto de una vez-, asi que va en una sola celda a la derecha, a lo alto. */
+.comp-cuerpo{display:grid;grid-template-columns:1fr 1fr;align-items:start}
+.comp-izq{border-right:1px solid var(--hairline)}
+.comp-der{min-width:0}
 .comp-pregunta{border-bottom:1px solid var(--hairline)}
 .comp-pregunta:last-child{border-bottom:0}
 .comp-enunciado{display:flex;gap:10px;align-items:baseline;padding:11px 14px 0;
                 font-size:13.5px}
 .comp-enunciado .num{font-family:var(--mono);font-size:11.5px;color:var(--tenue)}
-.comp-celdas{display:grid;grid-template-columns:1fr 1fr}
 .comp-celda{padding:12px 14px 16px;min-width:0}
-.comp-celda + .comp-celda{border-left:1px solid var(--hairline)}
 .comp-celda .preg{border-bottom:0;padding-bottom:0;margin-bottom:0}
 .lectura{background:var(--papel);border:1px solid var(--hairline-fuerte);border-radius:3px}
 .lectura>header{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
@@ -289,8 +292,8 @@ textarea.mono{font-family:var(--mono);font-size:13.5px;line-height:1.65;
      border-top:1px solid var(--hairline);line-height:1.5}
 @media (max-width:940px){
   /* La comparativa se apila: la decision de una pregunta y debajo su chat. */
-  .comp-celdas{grid-template-columns:1fr}
-  .comp-celda + .comp-celda{border-left:0;border-top:1px solid var(--hairline)}
+  .comp-cuerpo{grid-template-columns:1fr}
+  .comp-izq{border-right:0;border-bottom:1px solid var(--hairline)}
 }
 @media (max-width:640px){
   /* Los numeros se apilan en un grupo por via, sin celdas sueltas. */
@@ -881,37 +884,35 @@ function tarjeta(titulo, tipo, claseEt, cifras, cuerpo, pie) {
   </div>`;
 }
 
-// La comparativa va POR PREGUNTA, no por via: la decision de la pregunta 1 al lado del
-// chat de la pregunta 1, y asi. Emparejadas, comparar no obliga a bajar y subir.
+// La comparativa: la decision pregunta a pregunta, y el chat UNA sola vez.
 //
-// Se pueden emparejar por orden porque el servidor arma los prompts del chat recorriendo
-// las mismas preguntas, en el mismo orden, que resuelve la decision.
+// Las dos vias reciben la misma entrada, y cada una la lee una vez: la decision resuelve
+// todos los campos en una peticion, y el chat contesta todo en una sola respuesta. Antes
+// al chat se le mandaba una peticion por pregunta, repitiendole el caso entero en cada
+// una: eso medía el peor caso posible para el, y no era comparar en igualdad.
 function pintarComparativa(d) {
   const dec = d.decision, chat = d.chat;
-  const n = Math.min(dec.resultados.length, chat.resultados.length);
-  const descuadre = dec.resultados.length !== chat.resultados.length;
+  const una = chat.resultados[0] || {};
 
-  const filas = dec.resultados.slice(0, n).map((q, i) => {
-    const c = chat.resultados[i] || {};
-    return `<div class="comp-pregunta">
+  const filas = dec.resultados.map((q, i) => `<div class="comp-pregunta">
       <div class="comp-enunciado"><span class="num">${String(i + 1).padStart(2, "0")}</span>
         <span>${esc(q.pregunta || q.campo)}</span></div>
-      <div class="comp-celdas">
-        <div class="comp-celda">${lecturaDecision(q)}</div>
-        <div class="comp-celda"><div class="prosa">${esc(c.texto || "")}</div></div>
-      </div>
-    </div>`;
-  }).join("");
+      <div class="comp-celda">${lecturaDecision(q)}</div>
+    </div>`).join("");
 
   return `<div class="comparacion">
     <div class="comp-cab">
-      <span class="et et-choice">Decisión · valores</span>
-      <span class="et et-chat">Chat · prosa</span>
+      <span class="et et-choice">Decisión · ${dec.peticiones} petición · ${dec.resultados.length} valores</span>
+      <span class="et et-chat">Chat · ${chat.peticiones} petición · prosa</span>
     </div>
-    ${filas}
-    ${descuadre ? `<p class="nota" style="padding:10px 14px">Ojo: la decisión devolvió
-      ${dec.resultados.length} respuestas y el chat ${chat.resultados.length}; se emparejan
-      por orden hasta donde llegan las dos.</p>` : ""}
+    <div class="comp-cuerpo">
+      <div class="comp-izq">${filas}</div>
+      <div class="comp-der">
+        <div class="comp-enunciado"><span class="num">·</span>
+          <span>La respuesta del chat, entera</span></div>
+        <div class="comp-celda"><div class="prosa">${esc(una.texto || "")}</div></div>
+      </div>
+    </div>
   </div>`;
 }
 

@@ -230,8 +230,8 @@ Y devuelve:
 {
   "formato": "natural",
   "comparar": true,
-  "decision": {"peticiones": 1, "tiempo_ms": 151.0, "tokens": 0, "resultados": [ ... ]},
-  "chat":     {"peticiones": 3, "tiempo_ms": 1502.0, "tokens": 119, "resultados": [ ... ]}
+  "decision": {"peticiones": 1, "tiempo_ms": 72.0, "tokens": 0, "resultados": [ ... ]},
+  "chat":     {"peticiones": 1, "tiempo_ms": 4418.0, "tokens": 446, "resultados": [ ... ]}
 }
 ```
 
@@ -349,11 +349,12 @@ prosa que hay que interpretar.
 
 ## Muchas preguntas a la vez: rápido, pero ojo
 
-Agrupar es lo que hace rápida a la decisión: **N preguntas en una sola petición**, cuando
-el chat necesita una por pregunta.
+**Las dos vías reciben la misma entrada y en una sola petición**: el caso y todas las
+preguntas juntas. Es lo que hace la comparación justa — al chat no se le repite el caso
+por pregunta, que sería medirle el peor caso posible.
 
-Pero hay un pero, y es importante. **Las preguntas se estorban entre sí**, y no todas
-igual. Se separan solas en dos grupos:
+Dicho eso, **las preguntas se estorban entre sí** en la decisión, y no todas igual. Se
+separan solas en dos grupos:
 
 - **«¿aparece X?»** (¿menciona contacto? ¿estudios? ¿nube?) → **no se mueven**. Agruparlas
   no cuesta nada.
@@ -378,8 +379,8 @@ que es lo que tarda por dentro y **no cuenta la red**. Si se publicara la decisi
 `total_ms` y el chat con la ida y vuelta, se le estaría perdonando a una vía un coste que
 a la otra se le cobra — y la ventaja saldría inflada.
 
-El del chat es **la suma** de sus N peticiones, porque van una por pregunta: es lo que
-se tarda en tener las N respuestas, que es justo lo que se compara.
+El del chat es **su única petición**: las dos vías leen la misma entrada una sola vez, así
+que lo que se compara es lo que cada una tarda en resolverla.
 
 ## La interfaz
 
