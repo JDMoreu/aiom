@@ -248,7 +248,7 @@ el texto que sale de él pasa a ser la `entrada`.
 POST /documento        (el cuerpo en crudo, el nombre en la cabecera X-Nombre)
   -> {"texto": "...", "nombre": "carta.pdf", "tipo": "pdf",
       "caracteres": 3925, "palabras": 587, "lineas": 71,
-      "paginas": 1, "paginas_con_texto": 1,
+      "paginas": 1, "paginas_con_texto": 1, "paginas_con_ocr": 0,
       "paginas_ilegibles": 0, "paginas_sin_texto": 0}
 ```
 
@@ -269,31 +269,36 @@ el problema en vez de devolver texto a medias.
 
 ### Un PDF no siempre trae texto que se pueda leer
 
-Y eso no se puede tapar con un `try`. Hay dos casos, y en los dos el texto **no está**:
+Y eso no se puede tapar con un `try`. Hay dos casos, y se tratan distinto:
 
 - **Páginas que son un escaneo.** No tienen capa de texto: la página *es* una imagen.
-  Se cuentan en `paginas_sin_texto`.
+  Esas van al **OCR** y, si sale texto, se usa. Se cuentan en `paginas_con_ocr`.
 - **Páginas con fuentes sin traducir.** El PDF trae una fuente *Type3* —los glifos están
   dibujados— y ninguna tabla que diga qué letra es cada uno. pymupdf no puede inventarlo
-  y devuelve los códigos internos de la fuente, que no son letras. Se cuentan en
-  `paginas_ilegibles`.
+  y devuelve los códigos internos de la fuente, que no son letras. Esas **se tiran**, y
+  se cuentan en `paginas_ilegibles`.
 
-Las dos se detectan y **se tiran**, en vez de colárselas al modelo como si fueran el
-documento. Y se avisa, porque el texto que devuelve `POST /documento` parece el
-documento entero y no lo es:
+El OCR es `rapidocr-onnxruntime`, también opcional:
 
-```json
-"aviso": "de 17 paginas, 16 no se pudieron leer: 3 con texto ilegible (glifos de una
-          fuente sin traducir) y 13 solo con imagenes (un escaneo, sin capa de texto).
-          El texto de arriba es solo el de la pagina legible."
+```bash
+pip install rapidocr-onnxruntime     # ~100 MB, y ~2 s por página
 ```
 
-Los cuatro números cuadran con `paginas`: `paginas_con_texto + paginas_ilegibles +
-paginas_sin_texto == paginas`. Si una página no sale en ninguno de los tres, es un fallo
-de la cuenta y hay que mirarlo.
+Solo se usa **cuando una página no tiene texto**, así que un PDF normal no paga ese
+tiempo. Y se dice siempre de dónde salió cada página, porque un texto leído de una imagen
+**puede traer errores**:
 
-Si **ninguna** página se puede leer, `POST /documento` contesta con un `400` y lo dice,
-en vez de devolver un texto vacío o a medias.
+```json
+"aviso": "de 17 paginas: 1 con texto propio; 13 leidas con OCR (eran escaneos, el texto
+          puede traer errores); 3 con texto ilegible (glifos de una fuente sin traducir)."
+```
+
+Los números cuadran con `paginas`: `paginas_con_texto + paginas_con_ocr +
+paginas_ilegibles + paginas_sin_texto == paginas`. Si una página no sale en ninguno de
+los cuatro, es un fallo de la cuenta y hay que mirarlo.
+
+Si **ninguna** página se puede leer, `POST /documento` contesta con un `400` y lo dice
+—incluido si el OCR no está instalado— en vez de devolver un texto vacío o a medias.
 
 ## Un aviso medido: preguntar «¿aparece X?» con `noul` falla
 

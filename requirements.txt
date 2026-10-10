@@ -5,10 +5,16 @@
 #
 #      pip install fastapi "uvicorn[standard]"
 #
-# 2. LEER DOCUMENTOS. pymupdf es solo para los PDF. Los .txt, .md, .csv, .json y .docx se
-#    leen sin instalar nada: un .docx es un ZIP y se abre con la biblioteca estandar.
+# 2. LEER DOCUMENTOS. pymupdf es para los PDF. Los .txt, .md, .csv, .json y .docx se leen
+#    sin instalar nada: un .docx es un ZIP y se abre con la biblioteca estandar.
 #
 #      pip install pymupdf
+#
+# 3. LEER UN ESCANEO. rapidocr-onnxruntime lee por OCR las paginas de un PDF que son una
+#    imagen. Tambien opcional: sin el, esas paginas no se leen y se dice, pero el resto
+#    del documento funciona igual. Son unos 100 MB, y el OCR tarda ~2 s por pagina.
+#
+#      pip install rapidocr-onnxruntime
 #
 # Para todo de golpe:
 #
@@ -17,4 +23,5 @@
 fastapi>=0.115
 uvicorn[standard]>=0.30
 pymupdf>=1.24
+rapidocr-onnxruntime>=1.3
 

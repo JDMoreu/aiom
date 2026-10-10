@@ -208,5 +208,7 @@ verificar.py         comprueba que los módulos importen y que los enlaces cuadr
 - Un `llama-server` con el endpoint `/v1/decision`, del backend
   [`parallel-decision`](https://github.com/thecodacus/llama.cpp/tree/parallel-decision).
 - Para leer **PDF** como caso, `pip install pymupdf` (un `.docx` o un `.txt` no piden nada).
+- Para leer un **PDF escaneado**, `pip install rapidocr-onnxruntime` (~100 MB). Es
+  opcional: sin él las páginas escaneadas no se leen y se dice.
 - Para **levantar el servidor** hay que compilar el fork de llama.cpp (Vulkan), con las
   instrucciones de [`docs/ARRANCAR.md`](docs/ARRANCAR.md).

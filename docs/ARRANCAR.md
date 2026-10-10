@@ -222,7 +222,8 @@ preguntas— usan **solo la biblioteca estándar**. Se instalan dos cosas más:
 
 ```bash
 pip install fastapi "uvicorn[standard]"   # la API: es un framework web
-pip install pymupdf                       # solo si vas a usar un PDF como caso
+pip install pymupdf                       # leer PDF
+pip install rapidocr-onnxruntime          # leer un PDF escaneado (OCR, ~100 MB)
 ```
 
 Un `.docx`, un `.txt` o un `.md` se leen sin instalar nada.

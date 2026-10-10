@@ -90,6 +90,8 @@ origen   : end000/Spark-X2.5-4B-Q8_0-GGUF  (coincidencia exacta de tamaño)
 |---|---|
 | **TypeSafe / Jev** | El concepto de *System One* (un modelo que decide en vez de redactar) y las tres primitivas: choice, score y noul. <https://docs.typesafe.ai/> |
 | **FastAPI y uvicorn** | Lo que sirve la API, la interfaz y la página de pruebas. <https://fastapi.tiangolo.com/> |
+| **pymupdf** | Leer el texto de un PDF. <https://pymupdf.readthedocs.io/> |
+| **rapidocr-onnxruntime** | El OCR que lee las páginas escaneadas de un PDF. Es opcional. <https://github.com/RapidAI/RapidOCR> |
 
 ## Lo que es de este repositorio
 

@@ -20,7 +20,11 @@ los graficos de un pdf): si no esta, se dice que falta en vez de fallar por dent
 
 Un PDF no siempre trae texto que se pueda leer, y de eso se encarga `_de_pdf`: los
 escaneos no tienen capa de texto, y algunas fuentes no dicen que letra es cada glifo.
-Esas paginas no se cuelan como si fueran el documento: se cuentan y se dicen.
+Las paginas escaneadas se le pasan al OCR -`rapidocr-onnxruntime`, tambien opcional- y
+las de fuente sin traducir se cuentan y se dicen. Nada de eso se cuela como si fuera el
+documento:
+
+    pip install rapidocr-onnxruntime
 
 El `.doc` y el `.rtf` antiguos NO se leen: hay que convertirlos antes (a .docx, a
 .pdf o a texto). Se dice claramente en vez de devolver basura.
@@ -78,6 +82,81 @@ def _hay(modulo):
         return True
     except ImportError:
         return False
+
+
+# --------------------------------------------------------------------------- #
+# OCR: para las paginas que son una imagen
+# --------------------------------------------------------------------------- #
+_MOTOR_OCR = None       # None = sin intentar | False = no esta instalado | el motor
+
+
+def motor_ocr():
+    """El motor de OCR, cargado UNA sola vez.
+
+    `rapidocr-onnxruntime` es opcional, como pymupdf. Si no esta, las paginas escaneadas
+    no se leen y se dice; el resto del documento funciona igual. Se guarda el motor
+    porque cargarlo cuesta medio segundo y memoria, y un PDF de 17 paginas lo usaria 13
+    veces.
+    """
+    global _MOTOR_OCR
+    if _MOTOR_OCR is False:
+        return None                     # ya se intento y no esta
+    if _MOTOR_OCR is None:
+        try:
+            from rapidocr_onnxruntime import RapidOCR
+        except ImportError:
+            _MOTOR_OCR = False
+            return None
+        _MOTOR_OCR = RapidOCR()
+    return _MOTOR_OCR
+
+
+def _reagrupar(piezas):
+    """Las piezas sueltas del OCR -> texto por lineas.
+
+    El OCR devuelve cada trozo con su caja, y en el orden en que le apetece. Se agrupan
+    por lineas -las cajas que se solapan en vertical- y dentro de cada linea se ordenan
+    de izquierda a derecha. Sin esto el texto sale como una lista de trozos, que no se
+    puede leer ni preguntar sobre el.
+    """
+    if not piezas:
+        return ""
+    piezas.sort()                       # por arriba, y a igualdad por la izquierda
+    lineas, actual = [], [piezas[0]]
+    for p in piezas[1:]:
+        # Misma linea si esta empieza antes de que acabe la anterior. Se deja un margen:
+        # dos trozos de la misma linea no acaban exactamente a la misma altura.
+        if p[0] < actual[-1][1] - 3:
+            actual.append(p)
+        else:
+            lineas.append(actual)
+            actual = [p]
+    lineas.append(actual)
+    return "\n".join(" ".join(t for _, _, _, t in sorted(l, key=lambda p: p[2]))
+                     for l in lineas)
+
+
+def ocr_pagina(pagina, dpi=200):
+    """El texto de una pagina escaneada, leido con OCR. None si no hay OCR.
+
+    La pagina se dibuja a imagen y se le pasa al motor. A 200 ppp se lee bien; mas
+    resolucion no mejora el texto y multiplica el tiempo, que es de unos dos segundos
+    por pagina.
+    """
+    motor = motor_ocr()
+    if motor is None:
+        return None
+    import numpy as np
+    pix = pagina.get_pixmap(dpi=dpi)
+    img = np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.height, pix.width, pix.n)
+    res, _ = motor(img)
+    piezas = []
+    for caja, texto, _confianza in res or []:
+        ys = [p[1] for p in caja]
+        xs = [p[0] for p in caja]
+        if texto.strip():
+            piezas.append((min(ys), max(ys), min(xs), texto.strip()))
+    return _reagrupar(piezas)
 
 
 # --------------------------------------------------------------------------- #
@@ -206,14 +285,21 @@ def _de_pdf(datos):
             import fitz as pymupdf                 # nombre antiguo
         except ImportError:
             raise ValueError("para leer PDF hace falta pymupdf: pip install pymupdf")
-    legibles, ilegibles, sin_texto = [], 0, 0
+    legibles, ilegibles, sin_texto, con_ocr = [], 0, 0, 0
     with pymupdf.open(stream=datos, filetype="pdf") as doc:
         total = doc.page_count
         for pagina in doc:
             trozos = [b[4] for b in pagina.get_text("blocks")
                       if b[6] == 0 and b[4].strip()]
             if not trozos:
-                sin_texto += 1
+                # No hay capa de texto: la pagina es una imagen, o sea un escaneo. El
+                # OCR es lo unico que puede sacar algo de ahi.
+                t = ocr_pagina(pagina)
+                if t and t.strip():
+                    legibles.append(t)
+                    con_ocr += 1
+                else:
+                    sin_texto += 1
                 continue
             # Primero la pagina ENTERA: si su texto no se puede leer, no hay trozo bueno
             # que rascarle. Y luego trozo a trozo, por si una pagina buena trae uno malo.
@@ -226,15 +312,18 @@ def _de_pdf(datos):
             else:
                 ilegibles += 1
         if not legibles:
+            falta = "" if motor_ocr() else " (y el OCR no esta instalado: "\
+                                           "pip install rapidocr-onnxruntime)"
             raise ValueError(
                 "el PDF no tiene texto que se pueda leer: "
                 f"{ilegibles} paginas con glifos sin traducir y {sin_texto} solo con "
-                "imagenes. Un escaneo necesita un OCR antes de entrar aqui")
+                f"imagenes{falta}")
     # El numero de paginas solo es un dato REAL en un PDF. En un .txt o un .docx no
     # hay paginas hasta que alguien lo maqueta, asi que ahi no se inventa.
     return ("\n\n".join(legibles),
-            {"paginas": total, "paginas_con_texto": len(legibles),
-             "paginas_ilegibles": ilegibles, "paginas_sin_texto": sin_texto})
+            {"paginas": total, "paginas_con_texto": len(legibles) - con_ocr,
+             "paginas_con_ocr": con_ocr, "paginas_ilegibles": ilegibles,
+             "paginas_sin_texto": sin_texto})
 
 
 # Cada lector devuelve (texto, extras). Los extras son los datos que SOLO ese formato

@@ -76,9 +76,12 @@ las palabras, las páginas y **el texto entero**, que es exactamente lo que reci
 modelo. Es la forma de comprobar que la extracción hizo lo que tenía que hacer antes de
 preguntar nada.
 
-Un `.docx` se lee sin instalar nada; un `.pdf` pide `pip install pymupdf`. Las páginas
-solo se informan en un PDF, que es el único formato donde ese dato es real: en un `.txt` o
-un `.docx` no hay páginas hasta que alguien lo maqueta, así que no se inventa.
+Un `.docx` se lee sin instalar nada; un `.pdf` pide `pip install pymupdf`. Y si el PDF es
+un escaneo, sus páginas las lee el **OCR** (`rapidocr-onnxruntime`, opcional, ~2 s por
+página): la vista previa dice cuántas salieron por OCR, porque ese texto puede traer
+errores. Las páginas solo se informan en un PDF, que es el único formato donde ese dato es
+real: en un `.txt` o un `.docx` no hay páginas hasta que alguien lo maqueta, así que no se
+inventa.
 
 ## La comparación, por pregunta
 
