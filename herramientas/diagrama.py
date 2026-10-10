@@ -24,13 +24,15 @@ Se autocomprueba ANTES de escribir: que ningun texto se salga de su tarjeta, que
 tarjeta se pise, que ninguna flecha cruce una tarjeta que no sea su origen o su destino,
 y que las etiquetas no pisen nada.
 
-    python diagrama.py     # escribe docs/arquitectura.svg
+    python herramientas/diagrama.py     # escribe docs/arquitectura.svg
 """
 
 import os
 
-AQUI = os.path.dirname(os.path.abspath(__file__))
-SALIDA = os.path.join(AQUI, "docs", "arquitectura.svg")
+# La raiz del repositorio. Este fichero vive en herramientas/, y el diagrama se guarda
+# con la documentacion, en docs/: la raiz es la carpeta padre de esta.
+RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SALIDA = os.path.join(RAIZ, "docs", "arquitectura.svg")
 
 # --- tokens, copiados de DESIGN.md --------------------------------------------
 PANEL = "#E4E5DF"

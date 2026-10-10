@@ -42,7 +42,7 @@ Esa copia está en la máquina del autor, en `Documents/llm-local/llama-decision
 ahí**: el binario compilado no se versiona, porque pesa 60 MB y se regenera. Para
 reconstruirlo hace falta compilarlo. Los pasos, con los dos obstáculos que aparecieron
 (el backend de Vulkan y la versión de GCC), están en
-[`docs/ARRANCAR.md`](docs/ARRANCAR.md):
+[`ARRANCAR.md`](ARRANCAR.md):
 
 ```bash
 git clone -b parallel-decision https://github.com/thecodacus/llama.cpp llama-decision
@@ -110,7 +110,7 @@ modelo. Todo eso es de terceros y está acreditado arriba.
 
 ## Licencia del repositorio
 
-MIT — ver [`LICENSE`](LICENSE). Cubre **lo propio** de este repositorio. Las piezas de
+MIT — ver [`LICENSE`](../LICENSE). Cubre **lo propio** de este repositorio. Las piezas de
 terceros mantienen su licencia (MIT para llama.cpp y parallel-decision, Apache 2.0 para
 el modelo), y este repositorio **no incluye sus binarios ni sus pesos**, solo los
 referencia.

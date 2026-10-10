@@ -13,7 +13,7 @@ olvidarse de la documentacion:
 Las tres ultimas son las que evitan que la documentacion se quede atras sin que nadie se
 entere: son afirmaciones concretas y comprobables, asi que se comprueban.
 
-    python verificar.py
+    python herramientas/verificar.py
 """
 
 import importlib
@@ -22,9 +22,16 @@ import re
 import subprocess
 import sys
 
-AQUI = os.path.dirname(os.path.abspath(__file__))
-MODULOS = ("aiom", "api", "documento", "preguntar", "tipado", "diagrama")
-DOCS = ("README.md", "CREDITOS.md", "DESIGN.md", "PRODUCT.md",
+# La raiz del repositorio. Este fichero vive en `herramientas/`, asi que la raiz es su
+# carpeta padre: todo lo que se comprueba -los modulos, los documentos, los ejemplos-
+# cuelga de ahi.
+RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Y los modulos del proyecto estan en la raiz, no junto a este fichero. Sin esto,
+# importarlos falla y la primera comprobacion se cae sola.
+sys.path.insert(0, RAIZ)
+
+MODULOS = ("aiom", "api", "documento", "preguntar", "tipado")
+DOCS = ("README.md", "docs/CREDITOS.md", "docs/DESIGN.md", "docs/PRODUCT.md",
         "docs/API.md", "docs/ARRANCAR.md", "docs/CLIENTE.md", "docs/MANUAL.md")
 
 # Los enlaces a ficheros: [texto](ruta), sin URLs ni anclas.
@@ -50,7 +57,7 @@ def revisar_imports():
 def revisar_enlaces():
     fallos, vistos = [], 0
     for doc in DOCS:
-        ruta = os.path.join(AQUI, doc)
+        ruta = os.path.join(RAIZ, doc)
         if not os.path.exists(ruta):
             fallos.append(f"falta el documento {doc}")
             continue
@@ -69,13 +76,13 @@ def revisar_enlaces():
 def revisar_huerfanos():
     """Un modulo que no menciona nadie es un modulo que sobra."""
     fuentes = {}
-    for f in os.listdir(AQUI):
+    for f in os.listdir(RAIZ):
         if f.endswith(".py"):
-            with open(os.path.join(AQUI, f), encoding="utf-8") as fh:
+            with open(os.path.join(RAIZ, f), encoding="utf-8") as fh:
                 fuentes[f] = fh.read()
     textos_docs = ""
     for d in DOCS:
-        ruta = os.path.join(AQUI, d)
+        ruta = os.path.join(RAIZ, d)
         if os.path.exists(ruta):
             with open(ruta, encoding="utf-8") as fh:
                 textos_docs += fh.read()
@@ -93,7 +100,7 @@ def revisar_huerfanos():
 
 def ficheros_del_repo():
     """Lo que git conoce: es lo que se publica, ni mas ni menos."""
-    salida = subprocess.run(["git", "ls-files"], cwd=AQUI, capture_output=True,
+    salida = subprocess.run(["git", "ls-files"], cwd=RAIZ, capture_output=True,
                             text=True, check=True).stdout
     return sorted(l.strip() for l in salida.splitlines() if l.strip())
 
@@ -106,7 +113,7 @@ def revisar_arbol():
     compara por NOMBRE y no por ruta, porque el arbol escribe `iot.json` indentado bajo
     `catalogs/` y eso se lee mejor que la ruta entera.
     """
-    with open(os.path.join(AQUI, "README.md"), encoding="utf-8") as f:
+    with open(os.path.join(RAIZ, "README.md"), encoding="utf-8") as f:
         readme = f.read()
     bloques = re.findall(r"```[a-z]*\n(.*?)```", readme, re.S)
     # El bloque del arbol es en el que `preguntar.py` EMPIEZA una linea: en el de los
@@ -150,13 +157,13 @@ def revisar_rutas():
     Las que FastAPI pone solas (/docs, /redoc, /openapi.json, /docs/oauth2-redirect) no
     se cuentan: no las declara este proyecto.
     """
-    with open(os.path.join(AQUI, "api.py"), encoding="utf-8") as f:
+    with open(os.path.join(RAIZ, "api.py"), encoding="utf-8") as f:
         codigo = f.read()
     propias = set(RUTA_DECLARADA.findall(codigo))
 
     nombradas = set()
     for doc in DOCS:
-        ruta = os.path.join(AQUI, doc)
+        ruta = os.path.join(RAIZ, doc)
         if os.path.exists(ruta):
             with open(ruta, encoding="utf-8") as f:
                 nombradas |= set(RUTA_NOMBRADA.findall(f.read()))
@@ -176,10 +183,10 @@ def revisar_campos():
     tiene que ver con la documentacion.
     """
     import documento
-    r = documento.extraer(os.path.join(AQUI, "ejemplos", "1_opciones.txt"))
+    r = documento.extraer(os.path.join(RAIZ, "ejemplos", "1_opciones.txt"))
     reales = set(r)
 
-    with open(os.path.join(AQUI, "docs", "API.md"), encoding="utf-8") as f:
+    with open(os.path.join(RAIZ, "docs", "API.md"), encoding="utf-8") as f:
         api_md = f.read()
     nombrados = set(re.findall(r'"(texto|nombre|tipo|caracteres|palabras|lineas|'
                               r'paginas|paginas_con_texto|paginas_con_ocr|'

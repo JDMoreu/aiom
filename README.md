@@ -49,7 +49,7 @@ python preguntar.py ejemplos/1_opciones.txt
 Para preguntar por consola **no hace falta instalar nada**: la consola, el tipado y el
 motor son solo biblioteca estándar. La API usa **FastAPI**, y con ella trae su propia
 página de pruebas en `http://127.0.0.1:8100/docs`. De dónde sale cada pieza está en
-[`CREDITOS.md`](CREDITOS.md).
+[`CREDITOS.md`](docs/CREDITOS.md).
 
 ## Las dos formas de preguntar
 
@@ -137,7 +137,7 @@ valor sale mal. Acótalo al rango real.
 - **No reivindica el motor.** El endpoint es de terceros; lo propio es el cliente, el
   traductor de lenguaje natural, la técnica de los dos modos sobre un solo modelo y la
   comparación en vivo. Está desglosado, con autoría y licencia de cada pieza, en
-  [`CREDITOS.md`](CREDITOS.md).
+  [`CREDITOS.md`](docs/CREDITOS.md).
 - **No es un modelo entrenado.** No hay ajuste fino en ninguna parte.
 
 ## Desde el navegador, y desde un programa
@@ -172,9 +172,9 @@ python preguntar.py mis_preguntas.txt --documento carta.pdf
 | [docs/MANUAL.md](docs/MANUAL.md) | el manual de uso, con un ejemplo de cada tipo (opciones, niveles, sí/no), cómo se hacen varias preguntas a la vez y cómo se escribe en formato tipado |
 | [docs/CLIENTE.md](docs/CLIENTE.md) | la interfaz web: cómo se despliega, los tres modos, el documento como caso, la comparación de las dos vías y cómo se lee una respuesta |
 | [docs/API.md](docs/API.md) | la API HTTP: cómo se despliega y cómo se consume, los tres formatos de entrada, el documento como caso, qué devuelve y cómo probarla con `curl` |
-| [PRODUCT.md](PRODUCT.md) | la verdad del producto: quién lo usa, qué hace, qué no se puede inventar |
-| [DESIGN.md](DESIGN.md) | el sistema visual de la interfaz, con sus tokens, sus reglas y sus prohibiciones. Los nombres de los tokens son los mismos que los de las variables CSS, así que se puede comprobar contra el código |
-| [CREDITOS.md](CREDITOS.md) | **de quién es cada pieza**, con commit exacto, licencias y el SHA256 del modelo |
+| [docs/PRODUCT.md](docs/PRODUCT.md) | la verdad del producto: quién lo usa, qué hace, qué no se puede inventar |
+| [docs/DESIGN.md](docs/DESIGN.md) | el sistema visual de la interfaz, con sus tokens, sus reglas y sus prohibiciones. Los nombres de los tokens son los mismos que los de las variables CSS, así que se puede comprobar contra el código |
+| [CREDITOS.md](docs/CREDITOS.md) | **de quién es cada pieza**, con commit exacto, licencias y el SHA256 del modelo |
 
 ## Estructura
 
@@ -197,22 +197,23 @@ catalogs/            dos juegos de campos de ejemplo para el modo decisión, los
 ejemplos/            siete casos: cinco sobre correos de soporte (uno por tipo de
                      pregunta, y uno con las tres de golpe) y dos con SOLO las
                      preguntas, para usarlos con un documento
-docs/                la documentación, además de este README:
+docs/                toda la documentación, junta:
                        API.md            la API: los tres formatos, el documento como caso
                        ARRANCAR.md       la ruta completa desde cero, y qué hacer si falla
                        CLIENTE.md        la interfaz web
                        MANUAL.md         el manual de uso, con un ejemplo de cada tipo
+                       PRODUCT.md        la verdad del producto: qué hace y qué no
+                       DESIGN.md         el sistema visual de la interfaz
+                       CREDITOS.md       de quién es cada pieza, con commit y SHA256
                        arquitectura.svg  el diagrama de arquitectura de arriba
                        arquitectura.png  el mismo, en mapa de bits
-diagrama.py          dibuja el diagrama de arquitectura (SVG, sin librerías)
-verificar.py         comprueba que el repositorio cuadre consigo mismo
+herramientas/        lo que mantiene el repositorio, no lo que pregunta:
+                       diagrama.py       dibuja el diagrama (SVG, sin librerías)
+                       verificar.py      comprueba que el repositorio cuadre consigo mismo
 requirements.txt     las dependencias, y para qué es cada una
 LICENSE              MIT
 .gitignore           lo que no se publica: cachés, entornos, estado de herramientas
 README.md            este fichero
-PRODUCT.md           la verdad del producto: quién lo usa, qué hace, qué no se inventa
-DESIGN.md            el sistema visual de la interfaz
-CREDITOS.md          de quién es cada pieza, con commit y SHA256
 ```
 
 ## Requisitos

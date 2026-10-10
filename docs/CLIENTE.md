@@ -140,7 +140,7 @@ Dos números que conviene no confundir:
 ## El sistema visual
 
 La interfaz sigue un sistema declarado, no improvisado: está en
-[`../DESIGN.md`](../DESIGN.md), con sus tokens, sus reglas y sus prohibiciones. Los
+[`DESIGN.md`](DESIGN.md), con sus tokens, sus reglas y sus prohibiciones. Los
 nombres de los tokens son **los mismos** que los de las variables CSS, así que el
 documento se puede comprobar contra el código en vez de confiar en que digan lo mismo.
 

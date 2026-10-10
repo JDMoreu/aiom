@@ -30,7 +30,7 @@ sha256  : 5c2c3c190e4337e1016b8593ca8e26e8b18c972200b107385d4ec61a25d9dea2
 > **Por qué el SHA256 y no solo el nombre:** de este modelo existen **al menos cinco
 > conversiones distintas** a GGUF, hechas por gente distinta. Se llaman igual y no son lo
 > mismo. El hash es lo único que identifica la que se midió aquí. El resto de
-> procedencias, en [`../CREDITOS.md`](../CREDITOS.md).
+> procedencias, en [`CREDITOS.md`](CREDITOS.md).
 
 Colócalo donde quieras y apunta la ruta: la vas a necesitar en el paso 3.
 
