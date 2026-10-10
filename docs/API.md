@@ -388,7 +388,7 @@ que lo que se compara es lo que cada una tarda en resolverla.
 usa esta misma API.
 
 El caso y las preguntas se escriben **una sola vez**, y hay tres formas de hacerlo —
-**por bloques**, en **lenguaje natural** o en **JSON tipado**— que son tres vistas del
+**por bloques**, en **lenguaje natural** o en **JSON**— que son tres vistas del
 mismo contenido, no tres sitios donde teclear por separado. Se cambia de pestaña y lo
 escrito aparece en la otra forma. Con «Comparar» activado se pregunta lo mismo por las
 dos vías y se ven juntas.

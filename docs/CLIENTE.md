@@ -48,7 +48,7 @@ escriben una sola vez**, y hay tres formas de hacerlo.
   hagan falta.
 - **Lenguaje natural** — el formato de cabeceras: `input:`, `ask:`, `choice:`, `score:`,
   `noul:`.
-- **JSON tipado** — el formato de TypeSafe: `state.input` más `questions`.
+- **JSON** — el formato de TypeSafe: `state.input` más `questions`.
 
 No son tres sitios donde teclear por separado: **son tres vistas de lo mismo**. Se cambia
 de pestaña y lo escrito aparece en la otra forma, en los dos sentidos. Por eso el nombre
@@ -57,9 +57,9 @@ y con los mismos nombres los tres modos dan exactamente el mismo resultado.
 
 Tres detalles que ahorran disgustos:
 
-- **La barra de añadir pregunta va arriba de la lista**, con los tres tipos a un clic. Al
-  final de la lista obligaba a bajar hasta abajo cada vez que se quería una más, que con
-  cinco o seis preguntas es un viaje por cada una.
+- **El caso vive fuera de las vistas, y las pestañas debajo de él.** El caso escrito a
+  mano es la entrada, la misma en los tres modos, así que no es parte de ninguno: se
+  escribe una vez y las pestañas —que sí cambian de modo— van después.
 - Un **`noul` es un sí o un no**: sus dos valores son `false` y `true` y **no se pueden
   añadir más**. Solo se cambia lo que significa cada uno. La interfaz no deja añadir un
   tercero porque no existiría.

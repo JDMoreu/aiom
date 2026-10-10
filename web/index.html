@@ -159,10 +159,10 @@ main{max-width:var(--ancho);margin:0 auto;padding:clamp(16px,3vw,26px)
 .tipo-sel button[data-t="choice"][aria-pressed="true"]{background:var(--tipo-choice)}
 .tipo-sel button[data-t="score"][aria-pressed="true"]{background:var(--tipo-score)}
 .tipo-sel button[data-t="noul"][aria-pressed="true"]{background:var(--tipo-noul)}
-/* La barra de anadir pregunta. Va ARRIBA de la lista, entre la entrada y las preguntas:
-   al final de la lista obligaba a bajar cada vez que se queria una mas. Sus botones no
-   llevan aria-pressed -no son un estado, son una accion-, asi que se marcan al pasar. */
-.barra-anadir{margin-bottom:12px}
+/* La barra de anadir pregunta, DEBAJO de la lista: se anade al final, que es donde
+   aparece la nueva. Sus botones no llevan aria-pressed -no son un estado, son una
+   accion-, asi que se marcan al pasar. */
+.barra-anadir{margin-top:14px}
 .barra-anadir .tipo-sel button{cursor:pointer}
 .barra-anadir .tipo-sel button:hover{background:var(--papel-hundido)}
 .bloque-cab .quitar{margin-left:auto}
@@ -335,13 +335,6 @@ textarea.mono{font-family:var(--mono);font-size:13.5px;line-height:1.65;
 </header>
 
 <main>
-  <nav class="modos" role="tablist">
-    <button role="tab" id="tab-bloques" aria-selected="true" aria-controls="vista-bloques">Bloques</button>
-    <button role="tab" id="tab-natural" aria-selected="false" aria-controls="vista-natural">Lenguaje natural</button>
-    <button role="tab" id="tab-tipado" aria-selected="false" aria-controls="vista-tipado">JSON tipado</button>
-    <span class="cinta" id="cinta"></span>
-  </nav>
-
   <section class="caja" id="caja-caso">
     <p class="rotulo">El caso <span class="raya"></span></p>
     <div class="doc" id="doc">
@@ -358,16 +351,28 @@ textarea.mono{font-family:var(--mono);font-size:13.5px;line-height:1.65;
     <p class="nota" id="doc-nota">Sin documento, el caso es lo que escribas abajo.</p>
   </section>
 
-  <section id="vista-bloques">
-    <div class="caja" style="margin-bottom:16px">
-      <p class="rotulo">El caso escrito a mano <span class="raya"></span></p>
-      <textarea id="caso-texto" rows="4"
-        placeholder="Pega aquí el texto sobre el que vas a preguntar. Si has cargado un documento, esto se ignora: el caso es el documento."></textarea>
-      <p class="nota">Con un documento cargado, este campo no se usa.</p>
-    </div>
+  <!-- El caso escrito a mano vive AQUI, con el otro caso y fuera de las vistas: es el
+       mismo en los tres modos -es la entrada-, asi que no tiene sentido que sea parte de
+       la vista de bloques. De ahi que las pestanas vayan debajo: primero la entrada, y
+       luego como se escriben las preguntas. -->
+  <section class="caja" id="caja-entrada">
+    <p class="rotulo">El caso escrito a mano <span class="raya"></span></p>
+    <textarea id="caso-texto" rows="4"
+      placeholder="Pega aquí el texto sobre el que vas a preguntar. Si has cargado un documento, esto se ignora: el caso es el documento."></textarea>
+    <p class="nota">Con un documento cargado, este campo no se usa.</p>
+  </section>
 
+  <nav class="modos" role="tablist">
+    <button role="tab" id="tab-bloques" aria-selected="true" aria-controls="vista-bloques">Bloques</button>
+    <button role="tab" id="tab-natural" aria-selected="false" aria-controls="vista-natural">Lenguaje natural</button>
+    <button role="tab" id="tab-tipado" aria-selected="false" aria-controls="vista-tipado">JSON</button>
+    <span class="cinta" id="cinta"></span>
+  </nav>
+
+  <section id="vista-bloques">
     <p class="rotulo">Las preguntas <span class="raya"></span>
       <span class="ayuda" id="cuenta-preguntas"></span></p>
+    <div class="bloques" id="bloques"></div>
     <div class="fila barra-anadir">
       <span class="ayuda">Añadir pregunta:</span>
       <span class="tipo-sel" id="anadir-tipos" role="group"
@@ -375,7 +380,6 @@ textarea.mono{font-family:var(--mono);font-size:13.5px;line-height:1.65;
       <span class="ayuda">Cada pregunta es una fila del esquema. Todas se resuelven en
         una sola petición.</span>
     </div>
-    <div class="bloques" id="bloques"></div>
   </section>
 
   <section id="vista-natural" hidden>
@@ -391,7 +395,7 @@ textarea.mono{font-family:var(--mono);font-size:13.5px;line-height:1.65;
 
   <section id="vista-tipado" hidden>
     <div class="caja">
-      <p class="rotulo">JSON tipado <span class="raya"></span>
+      <p class="rotulo">JSON <span class="raya"></span>
         <span class="ayuda">state.input + questions</span></p>
       <textarea id="tipado-texto" class="mono" spellcheck="false"></textarea>
       <p class="nota">El mismo caso en el formato de TypeSafe. Las claves de los campos
@@ -517,7 +521,7 @@ function deNatural(texto) {
   return m;
 }
 
-/* --- modelo -> JSON tipado --- */
+/* --- modelo -> JSON --- */
 function aTipado(m) {
   const o = {state: {input: m.caso.trim()}, questions: {}};
   m.preguntas.forEach((p, i) => {
@@ -533,7 +537,7 @@ function aTipado(m) {
   return JSON.stringify(o, null, 2);
 }
 
-/* --- JSON tipado -> modelo --- */
+/* --- JSON -> modelo --- */
 function deTipado(texto) {
   const o = JSON.parse(texto);
   if (!o || typeof o !== "object" || !o.questions) {
@@ -657,9 +661,13 @@ function pintarBloques() {
 
 // Al cambiar de modo se vuelca el modelo a la vista que entra. El modo que se abandona
 // no se relee: sus cambios ya estan en el modelo al escribirlos.
+//
+// El caso escrito se vuelca SIEMPRE, no solo en bloques: desde que vive fuera de las
+// vistas -es la entrada, la misma en los tres modos- esta a la vista en todos, y si solo
+// se rellenara en bloques se quedaria con el valor viejo al editar el .txt en natural.
 function pintarVista() {
+  $("caso-texto").value = modelo.caso;
   if (modo === "bloques") {
-    $("caso-texto").value = modelo.caso;
     pintarBloques();
   } else if (modo === "natural") {
     $("natural-texto").value = aNatural(modelo);
@@ -684,9 +692,8 @@ $("tab-natural").onclick = () => cambiarModo("natural");
 $("tab-tipado").onclick = () => cambiarModo("tipado");
 
 $("caso-texto").oninput = () => { modelo.caso = $("caso-texto").value; };
-// La barra de añadir va ARRIBA de las preguntas, para no tener que bajar al final de
-// la lista cada vez que se quiere una mas. Los botones salen de TIPOS, los mismos que
-// los de cada pregunta: una sola lista de tipos en todo el fichero.
+// Los botones de la barra de anadir salen de TIPOS, los mismos que los de cada pregunta:
+// una sola lista de tipos en todo el fichero.
 $("anadir-tipos").innerHTML = TIPOS.map((t) =>
   `<button data-anadir="${t}">${t}</button>`).join("");
 $("anadir-tipos").querySelectorAll("[data-anadir]").forEach((b) => {
@@ -700,12 +707,20 @@ $("anadir-tipos").querySelectorAll("[data-anadir]").forEach((b) => {
 // se deja el modelo como estaba, en vez de perder lo que ya habia.
 $("natural-texto").oninput = () => {
   const a = $("natural-aviso");
-  try { modelo = deNatural($("natural-texto").value); a.hidden = true; }
+  try {
+    modelo = deNatural($("natural-texto").value); a.hidden = true;
+    // El caso vive fuera de la vista, asi que se refresca aqui: si no, editando el
+    // `input:` del .txt el campo del caso se quedaria con el texto de antes.
+    $("caso-texto").value = modelo.caso;
+  }
   catch (e) { a.hidden = false; a.textContent = "Todavía no se puede leer: " + e.message; }
 };
 $("tipado-texto").oninput = () => {
   const a = $("tipado-aviso");
-  try { modelo = deTipado($("tipado-texto").value); a.hidden = true; }
+  try {
+    modelo = deTipado($("tipado-texto").value); a.hidden = true;
+    $("caso-texto").value = modelo.caso;
+  }
   catch (e) { a.hidden = false; a.textContent = "Todavía no se puede leer: " + e.message; }
 };
 
