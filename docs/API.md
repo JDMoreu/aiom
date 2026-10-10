@@ -411,6 +411,8 @@ no contra un agente ya especializado en el tema.
 | | |
 |---|---|
 | `GET /` | la interfaz |
+| `GET /ui` | lo mismo: alias de `/`, por si se escribe |
+| `GET /index.html` | lo mismo: alias de `/` |
 | `GET /docs` | **Swagger**: la documentación *y* las pruebas de la API |
 | `GET /redoc` | lo mismo, en el formato de ReDoc |
 | `GET /openapi.json` | el esquema, para generar un cliente |

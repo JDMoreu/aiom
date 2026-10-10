@@ -38,8 +38,8 @@ fecha  : 2026-09-25
 título : perf(parallel-decision): score hybrid-model branches in one pass
 ```
 
-Esa copia está en `C:\Users\JDMoreu\Documents\llm-local\llama-decision` **solo en esta
-máquina**: el binario compilado no se versiona, porque pesa 60 MB y se regenera. Para
+Esa copia está en la máquina del autor, en `Documents/llm-local/llama-decision`, y **solo
+ahí**: el binario compilado no se versiona, porque pesa 60 MB y se regenera. Para
 reconstruirlo hace falta compilarlo. Los pasos, con los dos obstáculos que aparecieron
 (el backend de Vulkan y la versión de GCC), están en
 [`docs/ARRANCAR.md`](docs/ARRANCAR.md):
@@ -72,7 +72,7 @@ XHToken. La conversión se identifica por su tamaño exacto:
 
 ```
 fichero  : Spark-X2.5-4B-Q8_0.gguf
-tamaño   : 4 375 021 152 bytes (4,38 GB)
+tamaño   : 4375021152 bytes  (4,07 GiB / 4,38 GB)
 sha256   : 5c2c3c190e4337e1016b8593ca8e26e8b18c972200b107385d4ec61a25d9dea2
 origen   : end000/Spark-X2.5-4B-Q8_0-GGUF  (coincidencia exacta de tamaño)
 ```

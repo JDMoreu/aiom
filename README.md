@@ -73,7 +73,7 @@ La cabecera decide el tipo de pregunta:
 |---|---|---|
 | `choice:` | **choice** | la opción elegida + probabilidad de todas + confianza |
 | `score:` | **score** | posición en la escala (puede caer entre dos niveles) |
-| `noul:` | **noul** | un valor entre 0 y 1 |
+| `noul:` | **noul** | `true` o `false`, con su probabilidad y su confianza |
 
 **Tipada**, el mismo caso con el esquema explícito —es el formato de TypeSafe, traducido
 tal cual—. Las dos dan exactamente lo mismo; el traductor está en `tipado.py`, y su tabla
@@ -197,8 +197,22 @@ catalogs/            dos juegos de campos de ejemplo para el modo decisión, los
 ejemplos/            siete casos: cinco sobre correos de soporte (uno por tipo de
                      pregunta, y uno con las tres de golpe) y dos con SOLO las
                      preguntas, para usarlos con un documento
-diagrama.py          dibuja el diagrama de arquitectura de arriba (SVG, sin librerías)
-verificar.py         comprueba que los módulos importen y que los enlaces cuadren
+docs/                la documentación, además de este README:
+                       API.md            la API: los tres formatos, el documento como caso
+                       ARRANCAR.md       la ruta completa desde cero, y qué hacer si falla
+                       CLIENTE.md        la interfaz web
+                       MANUAL.md         el manual de uso, con un ejemplo de cada tipo
+                       arquitectura.svg  el diagrama de arquitectura de arriba
+                       arquitectura.png  el mismo, en mapa de bits
+diagrama.py          dibuja el diagrama de arquitectura (SVG, sin librerías)
+verificar.py         comprueba que el repositorio cuadre consigo mismo
+requirements.txt     las dependencias, y para qué es cada una
+LICENSE              MIT
+.gitignore           lo que no se publica: cachés, entornos, estado de herramientas
+README.md            este fichero
+PRODUCT.md           la verdad del producto: quién lo usa, qué hace, qué no se inventa
+DESIGN.md            el sistema visual de la interfaz
+CREDITOS.md          de quién es cada pieza, con commit y SHA256
 ```
 
 ## Requisitos

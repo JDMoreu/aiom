@@ -109,8 +109,10 @@ Lo que se ve al comparar, y que no hay que inventar porque **se mide en vivo**:
 Todo esto es real y está en el repositorio; **nada de esto se puede inventar**:
 
 - La comparación en vivo de las dos vías, que cualquiera puede repetir con sus preguntas.
-- Casos de ejemplo reales, en `ejemplos/` (correos de soporte, un CV, un documento).
-- El CV del autor (`C:\Users\JDMoreu\CV\`) y un PDF real de 9,3 MB, usados como casos.
+- Casos de ejemplo reales, en `ejemplos/`: cinco correos de soporte —uno por tipo de
+  pregunta, y uno con las tres de golpe— y dos con solo las preguntas, para usarlos con
+  un documento.
+- El CV del autor y un PDF real de 9,3 MB, usados como casos en las pruebas.
 - El diagrama de arquitectura (`docs/arquitectura.svg`), dibujado por el propio código.
 
 **Ausencias que no se deben rellenar con invención:** no hay usuarios externos, ni

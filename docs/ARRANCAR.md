@@ -23,7 +23,7 @@ El fichero tiene que dar exactamente esto:
 
 ```
 fichero : Spark-X2.5-4B-Q8_0.gguf
-tamano  : 4375021152 bytes  (4,07 GiB)
+tamano  : 4375021152 bytes  (4,07 GiB / 4,38 GB)
 sha256  : 5c2c3c190e4337e1016b8593ca8e26e8b18c972200b107385d4ec61a25d9dea2
 ```
 
