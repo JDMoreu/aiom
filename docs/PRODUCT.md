@@ -62,7 +62,7 @@ vías a la vez para que la diferencia se vea, no se lea.
 - Terminología del producto: **caso** (el texto), **pregunta**, **opción**, **nivel**
   (en las escalas), **valor**, **probabilidad**, **confianza**, **vía** (decisión o
   chat). Los tres tipos de pregunta: **choice** (opciones con nombre), **score**
-  (escala ordenada) y **noul** (sí/no). La cabecera que se escribe, el tipo del motor y
+  (escala ordenada) y **noul** (verdadero/falso). La cabecera que se escribe, el tipo del motor y
   la etiqueta de la API son tres capas del mismo concepto.
 
 ## Capabilities and Constraints

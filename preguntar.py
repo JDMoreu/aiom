@@ -183,7 +183,7 @@ def parsear(texto, entrada=None):
 
         else:
             # sin opciones/niveles/si-no: se pregunta por un valor libre, pero como
-            # el modo decision exige un conjunto finito, se trata como si/no.
+            # el modo decision exige un conjunto finito, se trata como verdadero/falso.
             campo = {"type": "boolean",
                      "pregunta": instrucciones,
                      "description": f"{instrucciones} Responde true si si, false si no."}

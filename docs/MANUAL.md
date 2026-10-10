@@ -483,14 +483,14 @@ Dos reglas que conviene conocer:
    espacios delante). Así una opción llamada `pregunta:` no se confunde con la cabecera.
 2. **La entrada va antes de la primera cabecera**, y solo cuenta la del primer bloque.
 
-*(Si escribes un `ask:` sin ninguna de las tres, se trata como un sí/no. Es el único
+*(Si escribes un `ask:` sin ninguna de las tres, se trata como un verdadero o falso. Es el único
 caso en que el tipo no se declara.)*
 
 ---
 
 ## 8. Qué pasa si la pregunta no es de estos tres tipos
 
-Se puede preguntar algo que no sea ni una lista, ni una escala, ni un sí/no — por
+Se puede preguntar algo que no sea ni una lista, ni una escala, ni un verdadero o falso — por
 ejemplo «redáctame un resumen». Eso **no es una decisión**: es texto libre.
 
 En ese caso el sistema **releva la pregunta al modo chat** sobre el mismo modelo. No
@@ -501,11 +501,12 @@ hay que hacer nada especial: es automático. Y es la razón de que existan los d
 ## 9. Ejecutarlo
 
 ```bash
-# desde un fichero
+# desde un fichero (lo recomendado: el caso y las preguntas, con sus saltos de línea)
 python preguntar.py caso.txt
 
-# escribiéndolo en la línea de comandos
-python preguntar.py --texto "input: ... ask: ... choice: ..."
+# escribiéndolo en la línea de comandos. Los saltos de línea van con $'...': si no,
+# todo cae en la primera línea y no hay ningún 'ask:' que valga.
+python preguntar.py --texto $'input: Llevo desde ayer sin poder entrar: me sale un error 500.\n\nask: ¿A qué área hay que enviar este correo?\nchoice:\n  soporte: Fallos y errores del producto\n  facturacion: Cobros, facturas y reembolsos\n  otros: Todo lo demás'
 
 # con el caso sacado de un documento: el fichero trae solo las preguntas
 # (ejemplos/6_preguntas_sobre_un_documento.txt es uno de esos, listo para probar)

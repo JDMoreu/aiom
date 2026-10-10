@@ -35,8 +35,10 @@ web en el mismo proceso, así que no hay un segundo servidor que arrancar.
 Se pregunta siempre al mismo endpoint, **declarando el formato**:
 
 ```bash
-curl -X POST localhost:8100/ask -H "Content-Type: application/json" \
-  -d '{"formato":"natural","entrada":"input: ...\n\nask: ...\nchoice:\n  si: ..."}'
+curl -s http://127.0.0.1:8100/ask -H "Content-Type: application/json" -d '{
+  "formato": "natural",
+  "entrada": "input: Llevo desde ayer sin poder entrar: me sale un error 500.\n\nask: ¿A qué área hay que enviar este correo?\nchoice:\n  soporte: Fallos y errores del producto\n  facturacion: Cobros, facturas y reembolsos\n  otros: Todo lo demás"
+}'
 ```
 
 Y desde Python, con la biblioteca estándar y sin instalar nada más:
@@ -44,16 +46,23 @@ Y desde Python, con la biblioteca estándar y sin instalar nada más:
 ```python
 import json, urllib.request
 
-cuerpo = {"formato": "natural", "entrada": "input: ... / ask: ... / choice: ...",
-          "comparar": True}
-req = urllib.request.Request("http://127.0.0.1:8100/ask",
-                             data=json.dumps(cuerpo).encode(),
-                             headers={"Content-Type": "application/json"})
-with urllib.request.urlopen(req, timeout=600) as r:
-    d = json.loads(r.read().decode())
+ENTRADA = """input: Llevo desde ayer sin poder entrar: me sale un error 500.
 
-print(d["decision"]["tiempo_ms"], d["decision"]["tokens"])   # 178.0  0
-print(d["chat"]["tiempo_ms"], d["chat"]["tokens"])           # 2182.0 126
+ask: ¿A qué área hay que enviar este correo?
+choice:
+  soporte: Fallos y errores del producto
+  facturacion: Cobros, facturas y reembolsos
+  otros: Todo lo demás"""
+
+peticion = urllib.request.Request(
+    "http://127.0.0.1:8100/ask",
+    data=json.dumps({"formato": "natural", "entrada": ENTRADA}).encode(),
+    headers={"Content-Type": "application/json"})
+with urllib.request.urlopen(peticion, timeout=600) as r:
+    respuesta = json.loads(r.read().decode())
+
+for r_ in respuesta["resultados"]:
+    print(r_["campo"], "=", r_["value"], r_["probabilities"])
 ```
 
 Y hay un **ejemplo completo y ejecutable**, que enseña las tres formas de darle el caso
@@ -66,6 +75,10 @@ python ejemplos/integrar.py carta.pdf      # el caso, sacado de un documento
 python ejemplos/integrar.py --tipado       # el mismo caso, en JSON tipado
 python ejemplos/integrar.py --comparar     # y además, lo mismo al chat
 ```
+
+**Todos los ejemplos de consulta, completos y para copiar, están en
+[`EJEMPLOS.md`](EJEMPLOS.md)**: los tres formatos, los tres tipos de pregunta, con documento,
+la comparación y desde el navegador. Sin un solo `...`.
 
 Son **dos endpoints**, y cada uno hace una cosa:
 
@@ -104,7 +117,7 @@ Responde contra los campos que declara el **catálogo** (`--catalog`). `mode` es
 ### 2. `natural` — el contenido de un `.txt`, entero
 
 ```json
-{"formato": "natural", "entrada": "input: ...\n\nask: ...\nchoice:\n  a: ..."}
+{"formato": "natural", "entrada": "input: Llevo desde ayer sin poder entrar: me sale un error 500.\n\nask: ¿A qué área hay que enviar este correo?\nchoice:\n  soporte: Fallos y errores del producto\n  facturacion: Cobros, facturas y reembolsos\n  otros: Todo lo demás"}
 ```
 
 Trae su propio esquema en el texto, así que **no usa el catálogo**. Admite varias
@@ -244,7 +257,7 @@ de la **misma corrida** y se pueden comparar; midiéndolos en dos llamadas separ
 serían de momentos distintos.
 
 ```json
-{"formato": "natural", "entrada": "input: ... ask: ... choice: ...", "comparar": true}
+{"formato": "natural", "entrada": "input: Llevo desde ayer sin poder entrar: me sale un error 500.\n\nask: ¿A qué área hay que enviar este correo?\nchoice:\n  soporte: Fallos y errores del producto\n  facturacion: Cobros, facturas y reembolsos\n  otros: Todo lo demás", "comparar": true}
 ```
 
 Y devuelve:

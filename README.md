@@ -101,8 +101,11 @@ preguntas: qué responde cada vía y cuánto tarda cada una.
 
 ```bash
 # por la API, con las dos vías en la misma corrida
-curl -X POST localhost:8100/ask -H "Content-Type: application/json" \
-  -d '{"formato":"natural","entrada":"input: ... ask: ... choice: ...","comparar":true}'
+curl -s http://127.0.0.1:8100/ask -H "Content-Type: application/json" -d '{
+  "formato": "natural",
+  "entrada": "input: Llevo desde ayer sin poder entrar: me sale un error 500.\n\nask: ¿A qué área hay que enviar este correo?\nchoice:\n  soporte: Fallos y errores del producto\n  facturacion: Cobros, facturas y reembolsos\n  otros: Todo lo demás",
+  "comparar": true
+}'
 ```
 
 O en la interfaz web, con «Comparar» activado: pregunta lo mismo por las dos vías y las
@@ -175,13 +178,18 @@ python ejemplos/integrar.py --tipado       # el mismo caso, en JSON tipado
 python ejemplos/integrar.py --comparar     # y además, lo mismo al chat
 ```
 
+Y **[`docs/EJEMPLOS.md`](docs/EJEMPLOS.md)** tiene todos los ejemplos de consulta, completos
+y para copiar y pegar: los tres formatos, los tres tipos de pregunta, con documento, la
+comparación y desde el navegador.
+
 ## Documentación
 
 | documento | qué hay |
 |---|---|
 | **[docs/ARRANCAR.md](docs/ARRANCAR.md)** | **la ruta completa, de cero**: el modelo, compilar el servidor, arrancarlo, y las dos puertas para preguntar. Con qué hacer si algo no arranca |
-| [docs/MANUAL.md](docs/MANUAL.md) | el manual de uso, con un ejemplo de cada tipo (opciones, niveles, sí/no), cómo se hacen varias preguntas a la vez y cómo se escribe en formato tipado |
+| [docs/MANUAL.md](docs/MANUAL.md) | el manual de uso, con un ejemplo de cada tipo (opciones, niveles, verdadero/falso), cómo se hacen varias preguntas a la vez y cómo se escribe en formato tipado |
 | [docs/CLIENTE.md](docs/CLIENTE.md) | la interfaz web: cómo se despliega, los tres modos, el documento como caso, la comparación de las dos vías y cómo se lee una respuesta |
+| **[docs/EJEMPLOS.md](docs/EJEMPLOS.md)** | **todos los ejemplos de consulta, completos y para copiar**: los tres formatos, los tres tipos de pregunta, con documento, la comparación y desde el navegador. Sin un solo `...` |
 | [docs/API.md](docs/API.md) | la API HTTP: cómo se despliega y cómo se consume, los tres formatos de entrada, el documento como caso, qué devuelve y cómo probarla con `curl` |
 | [docs/PRODUCT.md](docs/PRODUCT.md) | la verdad del producto: quién lo usa, qué hace, qué no se puede inventar |
 | [docs/DESIGN.md](docs/DESIGN.md) | el sistema visual de la interfaz, con sus tokens, sus reglas y sus prohibiciones. Los nombres de los tokens son los mismos que los de las variables CSS, así que se puede comprobar contra el código |
@@ -212,6 +220,7 @@ ejemplos/            siete casos de ejemplo -cinco sobre correos de soporte, uno
                                          escrito o sacado de un documento
 docs/                toda la documentación, junta:
                        API.md            la API: los tres formatos, el documento como caso
+                       EJEMPLOS.md       todos los ejemplos de consulta, completos y para copiar
                        ARRANCAR.md       la ruta completa desde cero, y qué hacer si falla
                        CLIENTE.md        la interfaz web
                        MANUAL.md         el manual de uso, con un ejemplo de cada tipo

@@ -174,8 +174,10 @@ segundo servidor ni un paso de compilación. Desde ahí:
 Lo mismo desde la línea de comandos, sin navegador:
 
 ```bash
-curl -X POST localhost:8100/ask -H "Content-Type: application/json" ^
-  -d "{\"formato\":\"natural\",\"entrada\":\"input: ... / ask: ... / choice: ...\"}"
+curl -s http://127.0.0.1:8100/ask -H "Content-Type: application/json" -d '{
+  "formato": "natural",
+  "entrada": "input: Llevo desde ayer sin poder entrar: me sale un error 500.\n\nask: ¿A qué área hay que enviar este correo?\nchoice:\n  soporte: Fallos y errores del producto\n  facturacion: Cobros, facturas y reembolsos\n  otros: Todo lo demás"
+}'
 ```
 
 **Los dos modos —decisión y chat— se piden en la misma petición** con `"comparar":true`, y
