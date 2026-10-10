@@ -144,7 +144,11 @@ def chat(question: str, catalog: dict, cfg: dict) -> dict:
             {"role": "user", "content": question},
         ],
         "temperature": 0.2,
-        "max_tokens": 512,
+        # El tope es alto a proposito. Con 512 el chat se cortaba a media respuesta en
+        # cuanto habia tres o cuatro preguntas, y una respuesta cortada no se puede
+        # comparar con nada. El contexto del servidor son 32768 tokens, asi que 2048 deja
+        # sitio de sobra para que el caso y las respuestas quepan enteros.
+        "max_tokens": 2048,
         # El modelo trae el razonamiento activado por defecto: sin esto se gasta
         # el presupuesto entero pensando y devuelve contenido vacio.
         "chat_template_kwargs": {"enable_thinking": False},

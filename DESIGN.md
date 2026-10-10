@@ -261,9 +261,10 @@ medidas. Un rótulo en mono para que parezca técnico es un disfraz.
 ## Layout
 
 Una sola columna, y el orden lo manda el trabajo: el armazón, las pestañas de los tres
-modos, el caso (con su documento y su vista previa), las preguntas, **la acción de
-preguntar debajo de ellas** —es lo último que haces— y al final la lectura, con su
-medida encima.
+modos, el caso (con su documento y su vista previa), **la barra de añadir pregunta** —con
+sus tipos, justo antes de la lista: al final obligaba a bajar cada vez—, las preguntas,
+**la acción de preguntar debajo de ellas** —es lo último que haces— y al final la lectura,
+con su medida encima.
 
 - **Ancho de contenido:** 1180px, centrado, con relleno lateral fluido
   (`clamp(14px, 3vw, 26px)`).

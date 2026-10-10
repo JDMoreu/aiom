@@ -55,8 +55,11 @@ de pestaña y lo escrito aparece en la otra forma, en los dos sentidos. Por eso 
 de los campos se numera `q1`, `q2`, `q3`: **el nombre del campo también llega al modelo**,
 y con los mismos nombres los tres modos dan exactamente el mismo resultado.
 
-Dos detalles que ahorran disgustos:
+Tres detalles que ahorran disgustos:
 
+- **La barra de añadir pregunta va arriba de la lista**, con los tres tipos a un clic. Al
+  final de la lista obligaba a bajar hasta abajo cada vez que se quería una más, que con
+  cinco o seis preguntas es un viaje por cada una.
 - Un **`noul` es un sí o un no**: sus dos valores son `false` y `true` y **no se pueden
   añadir más**. Solo se cambia lo que significa cada uno. La interfaz no deja añadir un
   tercero porque no existiría.

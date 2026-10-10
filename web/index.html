@@ -159,6 +159,12 @@ main{max-width:var(--ancho);margin:0 auto;padding:clamp(16px,3vw,26px)
 .tipo-sel button[data-t="choice"][aria-pressed="true"]{background:var(--tipo-choice)}
 .tipo-sel button[data-t="score"][aria-pressed="true"]{background:var(--tipo-score)}
 .tipo-sel button[data-t="noul"][aria-pressed="true"]{background:var(--tipo-noul)}
+/* La barra de anadir pregunta. Va ARRIBA de la lista, entre la entrada y las preguntas:
+   al final de la lista obligaba a bajar cada vez que se queria una mas. Sus botones no
+   llevan aria-pressed -no son un estado, son una accion-, asi que se marcan al pasar. */
+.barra-anadir{margin-bottom:12px}
+.barra-anadir .tipo-sel button{cursor:pointer}
+.barra-anadir .tipo-sel button:hover{background:var(--papel-hundido)}
 .bloque-cab .quitar{margin-left:auto}
 .campo{display:flex;align-items:center;gap:9px;margin-bottom:8px}
 .campo label{font-size:11.5px;color:var(--tenue);letter-spacing:.08em;
@@ -362,12 +368,14 @@ textarea.mono{font-family:var(--mono);font-size:13.5px;line-height:1.65;
 
     <p class="rotulo">Las preguntas <span class="raya"></span>
       <span class="ayuda" id="cuenta-preguntas"></span></p>
-    <div class="bloques" id="bloques"></div>
-    <div class="fila" style="margin-top:14px">
-      <button class="btn" id="anadir-pregunta">Añadir pregunta</button>
+    <div class="fila barra-anadir">
+      <span class="ayuda">Añadir pregunta:</span>
+      <span class="tipo-sel" id="anadir-tipos" role="group"
+            aria-label="Tipo de la pregunta que se añade"></span>
       <span class="ayuda">Cada pregunta es una fila del esquema. Todas se resuelven en
         una sola petición.</span>
     </div>
+    <div class="bloques" id="bloques"></div>
   </section>
 
   <section id="vista-natural" hidden>
@@ -676,10 +684,17 @@ $("tab-natural").onclick = () => cambiarModo("natural");
 $("tab-tipado").onclick = () => cambiarModo("tipado");
 
 $("caso-texto").oninput = () => { modelo.caso = $("caso-texto").value; };
-$("anadir-pregunta").onclick = () => {
-  modelo.preguntas.push(nuevaPregunta("choice"));
-  pintarBloques();
-};
+// La barra de añadir va ARRIBA de las preguntas, para no tener que bajar al final de
+// la lista cada vez que se quiere una mas. Los botones salen de TIPOS, los mismos que
+// los de cada pregunta: una sola lista de tipos en todo el fichero.
+$("anadir-tipos").innerHTML = TIPOS.map((t) =>
+  `<button data-anadir="${t}">${t}</button>`).join("");
+$("anadir-tipos").querySelectorAll("[data-anadir]").forEach((b) => {
+  b.onclick = () => {
+    modelo.preguntas.push(nuevaPregunta(b.dataset.anadir));
+    pintarBloques();
+  };
+});
 
 // Escribir en natural o en JSON actualiza el modelo; si no se puede leer, se avisa y
 // se deja el modelo como estaba, en vez de perder lo que ya habia.
