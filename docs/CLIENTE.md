@@ -79,6 +79,10 @@ las palabras, las páginas y **el texto entero**, que es exactamente lo que reci
 modelo. Es la forma de comprobar que la extracción hizo lo que tenía que hacer antes de
 preguntar nada.
 
+Y **mientras hay documento, el campo de escribir el caso a mano se oculta**: el caso es el
+documento, así que ese campo no se usa, y tenerlo a la vista invita a escribir en un sitio
+que se ignora. Vuelve solo en cuanto se quita el documento.
+
 Un `.docx` se lee sin instalar nada; un `.pdf` pide `pip install pymupdf`. Y si el PDF es
 un escaneo, sus páginas las lee el **OCR** (`rapidocr-onnxruntime`, opcional, ~2 s por
 página): la vista previa dice cuántas salieron por OCR, porque ese texto puede traer

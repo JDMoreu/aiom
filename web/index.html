@@ -358,8 +358,7 @@ textarea.mono{font-family:var(--mono);font-size:13.5px;line-height:1.65;
   <section class="caja" id="caja-entrada">
     <p class="rotulo">El caso escrito a mano <span class="raya"></span></p>
     <textarea id="caso-texto" rows="4"
-      placeholder="Pega aquí el texto sobre el que vas a preguntar. Si has cargado un documento, esto se ignora: el caso es el documento."></textarea>
-    <p class="nota">Con un documento cargado, este campo no se usa.</p>
+      placeholder="Pega aquí el texto sobre el que vas a preguntar."></textarea>
   </section>
 
   <nav class="modos" role="tablist">
@@ -735,8 +734,14 @@ function pintarDoc() {
     $("doc-quitar").hidden = true;
     $("doc-extraido").hidden = true;
     $("doc-nota").textContent = "txt · md · csv · json · log · docx · pdf";
+    // Sin documento, el caso hay que escribirlo: el campo vuelve.
+    $("caja-entrada").hidden = false;
     return;
   }
+  // Con un documento cargado, el campo de escribir el caso SOBRA: el caso es el
+  // documento, y tenerlo ahi visible invita a escribir en un sitio que se ignora. Se
+  // oculta, y vuelve en cuanto se quita el documento.
+  $("caja-entrada").hidden = true;
   $("doc").className = "doc cargado";
   $("doc-icono").textContent = documento.tipo;
   const cifras = [documento.tipo, documento.caracteres + " caracteres",
