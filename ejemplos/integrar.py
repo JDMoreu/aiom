@@ -32,14 +32,18 @@ LOS TRES FORMATOS DE ENTRADA
                 ejemplo, y el mas comodo de escribir a mano.
     tipado      el JSON de TypeSafe: `state.input` + `questions`. Para cuando el que
                 llama ya trabaja con esquemas.
-    texto       una pregunta suelta, contra los campos de un CATALOGO. Para preguntas
-                rapidas sin escribir el esquema.
+    chat        una pregunta suelta, en prosa. Aqui no hay esquema ni valores: el modelo
+                escribe. Para lo que NO es una decision (redactar, explicar).
+
+`natural` y `tipado` son las vias de DECISION: devuelven valores y no generan un token.
+`chat` es la via de prosa, y por eso escribe y tarda mas.
 
 Para ver el mismo caso en `tipado`, ejecuta este fichero con `--tipado`.
 
     python ejemplos/integrar.py                     # el caso escrito, en natural
     python ejemplos/integrar.py carta.pdf           # el caso sacado de un documento
     python ejemplos/integrar.py --tipado            # el mismo caso, en JSON tipado
+    python ejemplos/integrar.py --chat              # una pregunta suelta, en prosa
     python ejemplos/integrar.py --comparar          # y ademas, la misma pregunta al chat
 
 Solo usa la biblioteca estandar. No hay nada que instalar.
@@ -299,14 +303,24 @@ def con_tipado(comparar):
     return {"formato": "tipado", "comparar": comparar, **PREGUNTAS_TIPADO}
 
 
+def con_chat():
+    """Una pregunta suelta, en prosa. Sin esquema: aqui no hay valores que elegir."""
+    return {"formato": "chat",
+            "question": "Explica en dos frases que es una red de sensores y para que sirve"}
+
+
 # --------------------------------------------------------------------------- #
 def correr():
     args = sys.argv[1:]
     comparar = "--comparar" in args
     tipado = "--tipado" in args
+    chat = "--chat" in args
     rutas = [a for a in args if not a.startswith("--")]
 
-    if tipado:
+    if chat:
+        print("1. Una pregunta suelta en `question`, sin esquema (chat)")
+        cuerpo = con_chat()
+    elif tipado:
         print("1. El caso va en `state.input` y las preguntas en `questions` (tipado)")
         cuerpo = con_tipado(comparar)
     elif rutas:
@@ -319,7 +333,15 @@ def correr():
     respuesta = pedir("/ask", cuerpo)
     print()
 
-    if comparar:
+    if chat:
+        # En chat no hay valores: la respuesta es la prosa entera.
+        r = respuesta["resultados"][0]
+        print(f"   {respuesta['tiempo_ms']:.0f} ms, {respuesta['tokens']} tokens, "
+              f"{len(r['texto'])} caracteres")
+        print()
+        for linea in r["texto"].splitlines():
+            print("   ", linea)
+    elif comparar:
         mostrar_comparacion(respuesta)
     else:
         mostrar(respuesta)

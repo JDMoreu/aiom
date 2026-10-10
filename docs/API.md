@@ -11,8 +11,7 @@ Necesita un `llama-server` con el endpoint `/v1/decision` ya levantado (ver
 ```bash
 python api.py                 # escucha en 127.0.0.1:8100
 python api.py --port 9000     # otro puerto
-python api.py --ui            # además abre el navegador en la interfaz
-python api.py --catalog catalogs/soporte.json   # cambia los campos del formato `texto`
+python api.py --ui otro.html  # sirve otra interfaz en vez de web/index.html
 ```
 
 Es **FastAPI sobre uvicorn**, así que la API necesita instalar algo:
@@ -28,7 +27,6 @@ web en el mismo proceso, así que no hay un segundo servidor que arrancar.
 | | |
 |---|---|
 | `AIOM_SERVER` | dónde está el `llama-server` (por defecto `http://127.0.0.1:8096`) |
-| `AIOM_CATALOG` | qué catálogo usar, si no se pasa `--catalog` |
 
 ## Consumirla
 
@@ -105,17 +103,14 @@ si hiciera falta.
 El campo `formato` dice qué se manda. **No se adivina**: si falta o no es uno de los
 tres, la API contesta con un error y la lista de los que acepta.
 
-### 1. `texto` — una pregunta suelta, contra el catálogo
+### 1. `chat` — una pregunta suelta, en prosa
 
-**`texto` no es «modo chat»**: dice cómo está escrita la pregunta (una frase suelta, sin
-esquema), y por eso se usa el del **catálogo** (`--catalog`). Quién contesta lo decide
-`mode`, que solo tiene este formato: `auto` (por defecto; la decisión, y el chat si el
-catálogo no cubre la pregunta), `decision` (la decisión, siempre) o `chat` (prosa, siempre).
-Se usa cuando los campos ya están fijos y son los mismos para todas las preguntas: así no
-hay que escribir ningún esquema. Los otros dos formatos **no usan el catálogo**.
+Aquí no hay campos ni probabilidades: **el modelo escribe**. Es el camino para lo que no es
+una decisión (redactar, explicar, resumir), y acepta `documento` igual que los otros dos.
+`comparar` no aplica aquí: las dos vías serían la misma cosa.
 
 ```json
-{"formato": "texto", "question": "El sensor de humedad del predio 7 lleva dos días sin reportar.", "mode": "decision"}
+{"formato": "chat", "question": "Explícame en dos frases qué es una red de sensores"}
 ```
 
 ### 2. `natural` — el contenido de un `.txt`, entero
@@ -124,8 +119,8 @@ hay que escribir ningún esquema. Los otros dos formatos **no usan el catálogo*
 {"formato": "natural", "entrada": "input: Llevo desde ayer sin poder entrar: me sale un error 500.\n\nask: ¿A qué área hay que enviar este correo?\nchoice:\n  soporte: Fallos y errores del producto\n  facturacion: Cobros, facturas y reembolsos\n  otros: Todo lo demás"}
 ```
 
-Trae su propio esquema en el texto, así que **no usa el catálogo**. Admite varias
-preguntas separadas por `---`, y las resuelve todas en **una sola petición**.
+Trae su propio esquema en el texto. Admite varias preguntas separadas por `---`, y las
+resuelve todas en **una sola petición**.
 
 ### 3. `tipado` — el formato de TypeSafe, tal cual
 
@@ -141,32 +136,11 @@ preguntas separadas por `---`, y las resuelve todas en **una sola petición**.
 `questions` admite **varias**: cada una es un campo del esquema y todas se resuelven en
 la misma petición, igual que en el formato natural.
 
-## Qué es el catálogo, y qué no
+## El chat no lleva persona de dominio, y es a propósito
 
-El catálogo (`catalogs/*.json`, se elige con `--catalog` o la variable `AIOM_CATALOG`) es
-**un juego de campos preparado para el modo decisión**. Tiene cuatro claves, y todas son
-de la vía de decisión:
-
-| clave | para qué |
-|---|---|
-| `fields` | los campos del esquema: **lo que la decisión elige como valores** |
-| `instructions` | el prompt del modo decisión |
-| `gate_field` | qué campo decide «¿es respondible?» |
-| `description` | nadie: es para quien lee el fichero |
-
-Lo usa **solo el formato `texto`**, el de «una pregunta suelta contra campos ya
-preparados». **Si usas `natural` o `tipado` —que es lo que hace la interfaz— el catálogo
-no se toca**: tú traes el esquema en el cuerpo de la petición.
-
-**El chat no lleva persona de dominio, y es a propósito.** Contesta como asistente
-genérico: el modo decisión es el que está diseñado para la tarea, y el chat es el listón
-con el que se compara. Para que la comparación diga algo, tiene que ser un LLM corriente y
-no un agente ya especializado en el tema. Si aun así quieres darle una voz concreta, un
-catálogo **puede** traer `chat_system` y se usará; los dos ejemplos no lo traen.
-
-Los dos que hay son **dos ejemplos** de juego de campos, para que el formato `texto` tenga
-contra qué responder sin que escribas un esquema. `GET /catalog` devuelve el que esté
-cargado.
+Contesta como **asistente genérico**: el modo decisión es el que está diseñado para la
+tarea, y el chat es el listón con el que se compara. Para que la comparación diga algo,
+tiene que ser un LLM corriente y no un agente ya especializado en el tema.
 
 ### El formato de un campo
 
@@ -188,14 +162,8 @@ Cada campo del esquema se declara así:
 
 **El motor de llama-server habla otro idioma por dentro** (`enum`, `number`, `boolean`), y
 esa diferencia se resuelve en **un solo sitio**: el mapa `AL_MOTOR` de `aiom.py`. En
-ningún otro fichero del repositorio aparecen esos nombres, ni hay que saberlos para leer
-un catálogo. Si escribes un tipo que no existe, el error te dice cuáles hay.
-
-**No hay clave `examples`.** La hubo —consultas de ejemplo para calibrar dónde está la
-frontera del `gate_field`— y **se midió: no sirve**. Alargar el enunciado con ellas no
-ayuda: con ejemplos largos el `gate_field` empeora (3 de 5 casos se vuelven «no
-respondible»), y con ejemplos cortos queda exactamente igual que sin ellos. Es la misma
-lección que está en el README, comprobada aquí: **el texto de más diluye la pregunta**.
+ningún otro fichero del repositorio aparecen esos nombres, ni hay que saberlos para
+escribir un esquema. Si escribes un tipo que no existe, el error te dice cuáles hay.
 
 ## Los dos formatos dan lo mismo
 
@@ -247,10 +215,11 @@ mayor y numerados desde 0**, así que el primero es `0`.
 `confidence` no es la probabilidad de acertar, es lo concentrada que está la
 distribución (ver el MANUAL, apartado 11).
 
-En modo `chat` el resultado es distinto, porque no hay valores:
+En el formato `chat` el resultado es distinto, porque no hay valores: la respuesta es la
+prosa, entera, en un solo campo.
 
 ```json
-{"resultados": [{"modo": "chat", "texto": "..."}], "tokens": 136}
+{"formato": "chat", "resultados": [{"modo": "chat", "texto": "..."}], "tokens": 136}
 ```
 
 ## Comparar las dos vías
@@ -275,9 +244,9 @@ Y devuelve:
 }
 ```
 
-Funciona con los tres formatos: en `texto` la pregunta va al catálogo y al chat; en
-`natural` cada pregunta del texto va a las dos vías; en `tipado` igual, usando el
-`state.input` y las `instructions`.
+Funciona con los **dos formatos de decisión**: en `natural` cada pregunta del texto va a las
+dos vías; en `tipado` igual, usando el `state.input` y las `instructions`. En `chat` no
+aplica, porque las dos vías serían la misma cosa.
 
 ## El documento como caso
 
@@ -441,10 +410,9 @@ La **medida** —los números de las dos vías— vive **con la respuesta**, no 
 pegada arriba: son los números de esto que acabas de leer, y separarlos obligaba a mirar
 en dos sitios para juntar el dato con su tiempo.
 
-El **catálogo** no se enseña en la interfaz, y no hace falta: solo lo usa el formato
-`texto` de la API. El chat, además, **no lleva persona de dominio**: contesta como
-asistente genérico, para que la comparación con la decisión sea contra un LLM corriente y
-no contra un agente ya especializado en el tema.
+El **chat no lleva persona de dominio**: contesta como asistente genérico, para que la
+comparación con la decisión sea contra un LLM corriente y no contra un agente ya
+especializado en el tema.
 
 ## Los otros endpoints
 
@@ -457,7 +425,6 @@ no contra un agente ya especializado en el tema.
 | `GET /redoc` | lo mismo, en el formato de ReDoc |
 | `GET /openapi.json` | el esquema, para generar un cliente |
 | `GET /health` | estado de la API **y** del `llama-server` |
-| `GET /catalog` | el catálogo cargado |
 
 `/docs` es Swagger desde que la API es FastAPI. Ahí está la guía de los tres formatos y
 un botón para probar cada uno sin escribir una línea de código: se elige un ejemplo, se

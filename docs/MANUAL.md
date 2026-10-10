@@ -51,7 +51,8 @@ tres palabras son las mismas en todo el proyecto: en esta cabecera, en el format
 en los catálogos y en lo que devuelve la API.
 
 Y si no escribes ninguna de las tres, el sistema no se queda sin responder: lo trata
-como un verdadero o falso. (Si la pregunta es de texto libre, es el relevo al modo chat, ver
+como un verdadero o falso. (Si la pregunta es de texto libre, lo que quieres es el formato
+`chat`, ver
 apartado 8.)
 
 ---
@@ -365,43 +366,47 @@ Se puede comprobar a mano, con dos comandos. El caso es
 python preguntar.py ejemplos/5_correo_soporte.txt
 ```
 
-**2. En modo chat** — la misma primera pregunta, en prosa:
+**2. En modo chat** — la misma pregunta, en prosa. Con `--comparar` salen las dos vías en
+la **misma corrida**, que es lo que hace que los dos tiempos se puedan comparar:
 
 ```bash
-python aiom.py --catalog catalogs/soporte.json ask "Buenas tardes. Contraté el plan de
-20 GB el mes pasado y llevo una semana con cortes de conexión casi todas las noches.
-Además me han cobrado dos veces la factura de este mes.
-
-ask: ¿A qué área hay que enviar este correo?" --mode chat
+python ejemplos/integrar.py --comparar
 ```
 
-> **Ojo con la posición de `--catalog`:** va **antes** de `ask`. Después, `argparse`
-> no lo reconoce. Y sí importa: el catálogo trae el *system prompt* del chat, así que
-> con el de IoT el modelo contesta como si fueran sensores de campo.
+Las dos vías van sobre el mismo caso y con una sola petición cada una: la decisión resuelve
+todas las preguntas de golpe y el chat contesta todo en una respuesta. Por la API es
+`"comparar": true`, y está explicado en [`API.md`](API.md).
 
 Lo que sale, medido aquí:
 
-**Decisión** — 1 petición, 181 ms, **0 tokens**:
+**Decisión** — 1 petición, 211 ms, **0 tokens**:
 
 ```
 CHOICE  ·  ¿A qué área hay que enviar este correo?
-  facturacion     0.665  <-
-  soporte         0.296
-  comercial       0.038
+  facturacion     0.683  <-
+  soporte         0.280
+  comercial       0.036
   otros           0.000
-  confianza = 0.453
+  confianza = 0.467
 ```
 
-**Chat** — prosa, y sin decir con cuánto acierta:
+**Chat** — 1 petición, 2423 ms, 146 tokens, y en prosa:
 
-> **Área: Soporte Técnico / Resolución de Problemas**
-> *(Nota: Si tu sistema de soporte tiene un área más específica, como «Tecnología de
-> la Información» o «Soporte de Servicios», también es válido.)*
+> **soporte: Fallos y errores del producto**
+>
+> **Explicación:** El cliente está quejándose principalmente de un problema técnico grave
+> con su servicio (cortes de conexión casi todas las noches) y de que no ha recibido
+> soluciones de su equipo. Aunque también menciona problemas de cobro (facturas dobles),
+> el núcleo de su queja es el fallo del servicio.
+
+**Y aquí está lo que merece la pena mirar: no coinciden.** La decisión dice `facturacion`
+(0.683) y el chat dice `soporte`. Los dos tienen su argumento —el correo habla de cortes
+**y** de un cobro duplicado—, pero solo uno de los dos da **un número con el que decidir**.
 
 **La diferencia no es el tiempo, es la forma.** Decisión da **un valor y el reparto
-entero**: se ve que dudaba (0.665 no es 1.000) y se le puede poner un umbral. El chat da
-una respuesta **y una nota al margen** diciendo que otra también valdría — hay que leerla,
-decidir a mano cuál vale, y un programa no puede hacerlo.
+entero**: se ve que dudaba (0.683 no es 1.000) y se le puede poner un umbral. El chat da
+una respuesta **y un párrafo justificándola** — hay que leerlo, decidir a mano si vale, y un
+programa no puede hacerlo.
 
 Esa es la diferencia de fondo: **las dos responden, pero solo una es comparable.**
 
@@ -491,10 +496,11 @@ caso en que el tipo no se declara.)*
 ## 8. Qué pasa si la pregunta no es de estos tres tipos
 
 Se puede preguntar algo que no sea ni una lista, ni una escala, ni un verdadero o falso — por
-ejemplo «redáctame un resumen». Eso **no es una decisión**: es texto libre.
+ejemplo «redáctame un resumen». Sin tipo, la pregunta se trata como un **verdadero o falso**:
+el modo decisión necesita un conjunto finito y no puede devolver texto libre.
 
-En ese caso el sistema **releva la pregunta al modo chat** sobre el mismo modelo. No
-hay que hacer nada especial: es automático. Y es la razón de que existan los dos modos.
+Para eso está el formato **`chat`**: una pregunta suelta y el modelo escribe la respuesta.
+No es una decisión, es prosa, y por eso es el otro camino.
 
 ---
 

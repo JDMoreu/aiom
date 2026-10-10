@@ -24,56 +24,28 @@ no se adivina**.
 
 | `formato` | para qué | el caso va en |
 |---|---|---|
-| `texto` | una pregunta suelta, contra los campos de un catálogo | `question` |
-| `natural` | una o varias preguntas, con cabeceras | `entrada` |
-| `tipado` | el JSON de TypeSafe | `state` + `questions` |
+| `natural` | una o varias preguntas de decisión, con cabeceras | `entrada` |
+| `tipado` | lo mismo, en el JSON de TypeSafe | `state` + `questions` |
+| `chat` | una pregunta suelta, en prosa | `question` |
+
+Los dos primeros son **vías de decisión**: traen su propio esquema y devuelven valores, sin
+generar un token. El tercero es **prosa**: el modelo escribe.
 
 Si no mandas `formato`, la API lo **deduce** del campo que traigas. Pero declararlo es más
 claro, y es lo que hacen todos los ejemplos de esta página.
 
 ---
 
-## 1. Lo mínimo: una pregunta suelta (`texto`)
+## 1. Una pregunta suelta, en prosa (`chat`)
 
-**Ojo con el nombre: `texto` no es «modo chat».** Son dos cosas distintas y se confunden
-fácil, así que van separadas:
-
-- **`formato`** dice **cómo está escrita la pregunta**. `texto` es una frase suelta, sin
-  esquema. Y como no trae esquema, se usa el del **catálogo** (`--catalog`, por defecto
-  `catalogs/iot.json`).
-- **`mode`** dice **quién contesta**, y solo existe en este formato:
-
-| `mode` | quién contesta | qué devuelve |
-|---|---|---|
-| `auto` (por defecto) | la decisión; y si el catálogo no cubre la pregunta, el chat | valores, o prosa |
-| `decision` | la decisión, siempre | un valor por cada campo del catálogo |
-| `chat` | el chat, siempre | prosa |
-
-**Para qué se usa `texto`:** cuando los campos ya están fijos y son los mismos para todas
-las preguntas. El catálogo de ejemplo tiene cinco (`respondible`, `magnitud`, `predio`,
-`predio_valido`, `urgencia`), así que cualquier pregunta sobre esa red devuelve esos cinco
-valores y nada más. Es el camino más corto: **no hay que escribir ningún esquema**.
-
-La misma pregunta, en los tres modos, medida en esta máquina:
-
-| se manda | contesta | resultado | tiempo |
-|---|---|---|---|
-| `"mode": "decision"` | la decisión | los 5 valores del catálogo | 73 ms, 0 tokens |
-| `"mode": "chat"` | el chat | prosa | 8399 ms, 793 tokens |
-| sin `mode` (`auto`) | la decisión | los 5 valores del catálogo | 73 ms, 0 tokens |
-| sin `mode`, pregunta que el catálogo no cubre | el chat | prosa | 11446 ms, 1162 tokens |
-
-En las dos últimas filas se ve el `auto`: decide por su cuenta, y cuando la pregunta pide
-algo que el catálogo no puede dar (un informe, por ejemplo) se la pasa al chat.
-
-**Los otros dos formatos no usan el catálogo.** `natural` y `tipado` traen su propio
-esquema, pregunta a pregunta, y van siempre por la decisión.
+El formato `chat` es el más corto: una frase y ya está. Aquí **no hay esquema**: ni campos,
+ni opciones, ni probabilidades. El modelo escribe la respuesta, y es el camino para lo que
+no es una decisión —redactar, explicar, resumir—.
 
 ```bash
 curl -s http://127.0.0.1:8100/ask -H "Content-Type: application/json" -d '{
-  "formato": "texto",
-  "question": "El sensor del predio 3 lleva dos días sin reportar temperatura",
-  "mode": "decision"
+  "formato": "chat",
+  "question": "Explícame en dos frases qué es una red de sensores"
 }'
 ```
 
@@ -81,9 +53,8 @@ curl -s http://127.0.0.1:8100/ask -H "Content-Type: application/json" -d '{
 import json, urllib.request
 
 cuerpo = {
-    "formato": "texto",
-    "question": "El sensor del predio 3 lleva dos días sin reportar temperatura",
-    "mode": "decision",          # auto | decision | chat. Con auto, elige el motor
+    "formato": "chat",
+    "question": "Explícame en dos frases qué es una red de sensores",
 }
 peticion = urllib.request.Request(
     "http://127.0.0.1:8100/ask",
@@ -93,8 +64,46 @@ with urllib.request.urlopen(peticion, timeout=600) as r:
     respuesta = json.loads(r.read().decode())
 
 print(respuesta["tiempo_ms"], "ms,", respuesta["tokens"], "tokens")
-for campo in respuesta["resultados"]:
-    print(campo["campo"], "=", campo["value"], f"({campo['confidence']:.2f})")
+print(respuesta["resultados"][0]["texto"])
+```
+
+Lo que devuelve no es una lista de campos, es la prosa entera:
+
+```json
+{"formato": "chat", "n_preguntas": 1, "tiempo_ms": 770.0, "tokens": 63,
+ "resultados": [{"modo": "chat", "texto": "Una red de sensores es un sistema..."}]}
+```
+
+Y si le pasas un `documento`, el texto del fichero va delante de la pregunta, igual que en
+los otros formatos (ver el apartado 5).
+
+**Diferencia con los otros dos, en una línea:** `natural` y `tipado` **eligen** un valor de
+una lista que tú escribes; `chat` **escribe** lo que le parece. Los dos primeros gastan 0
+tokens; el tercero escribe, y por eso tarda mucho más.
+
+```bash
+curl -s http://127.0.0.1:8100/ask -H "Content-Type: application/json" -d '{
+  "formato": "chat",
+  "question": "Explícame en dos frases qué es una red de sensores"
+}'
+```
+
+```python
+import json, urllib.request
+
+cuerpo = {
+    "formato": "chat",
+    "question": "Explícame en dos frases qué es una red de sensores",
+}
+peticion = urllib.request.Request(
+    "http://127.0.0.1:8100/ask",
+    data=json.dumps(cuerpo).encode(),
+    headers={"Content-Type": "application/json"})
+with urllib.request.urlopen(peticion, timeout=600) as r:
+    respuesta = json.loads(r.read().decode())
+
+print(respuesta["tiempo_ms"], "ms,", respuesta["tokens"], "tokens")
+print(respuesta["resultados"][0]["texto"])
 ```
 
 ---
@@ -470,8 +479,8 @@ Y lo que devuelve `/documento`:
 | lo que ves | qué pasa |
 |---|---|
 | `formato no valido: None` | no mandaste `formato` y tampoco se pudo deducir: no hay `question`, ni `entrada`, ni `questions` |
-| `formato no valido: 'raro'` | `formato` no es `texto`, `natural` ni `tipado` |
-| `falta 'question'` | mandaste `formato: "texto"` sin `question` |
+| `formato no valido: 'raro'` | `formato` no es `natural`, `tipado` ni `chat` |
+| `falta 'question'` | mandaste `formato: "chat"` sin `question` |
 | `falta 'entrada'` | mandaste `formato: "natural"` sin `entrada` |
 | `Falta el 'input:'` | la entrada no trae el caso. Si es un documento, va en el campo `documento` |
 | `llama-server 400` | el modelo rechazó la petición: mira el `detail`, suele decir cuál |
@@ -481,7 +490,7 @@ Y lo que devuelve `/documento`:
 Todos los errores vienen en JSON, con un campo `error` que lo dice. No hay que adivinar.
 
 Y si mandas `formato` **no** pasa nada malo: la API lo **deduce** del campo que traigas
-—`question` → `texto`, `entrada` → `natural`, `questions` → `tipado`—. Pero declararlo es
+—`entrada` → `natural`, `questions` → `tipado`, `question` → `chat`—. Pero declararlo es
 más claro, y es lo que hacen todos los ejemplos de arriba.
 
 ---

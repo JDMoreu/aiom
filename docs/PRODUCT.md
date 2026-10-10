@@ -77,12 +77,12 @@ Confirmado y en uso:
 - **Comparación** decisión-vs-chat en una sola corrida, con peticiones, tiempo y tokens.
 - **Documento como caso**: txt, md, csv, json, log, docx, pdf.
 - **Un solo modelo local**, sin servicios externos ni claves.
-- API HTTP con `/ask`, `/documento`, `/health`, `/catalog`.
+- API HTTP con `/ask`, `/documento`, `/health`.
 
 Restricciones que el diseño debe respetar:
 
 - **Un solo fichero HTML/CSS/JS, sin dependencias ni build**, servido por la propia
-  API. El repositorio es Python puro: `python api.py --ui` y ya está. Nada de CDN,
+  API. El repositorio es Python puro: `python api.py` y ya está. Nada de CDN,
   fuentes de fuera, ni segundo servidor.
 - **Sin emojis** en documentos ni en nombres de fichero.
 - **Nada de credenciales** en ningún artefacto.

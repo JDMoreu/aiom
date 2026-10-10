@@ -79,9 +79,11 @@ La cabecera decide el tipo de pregunta:
 tal cual—. Las dos dan exactamente lo mismo; el traductor está en `tipado.py`, y su tabla
 de equivalencias está en su cabecera.
 
-Si la pregunta **no cabe** en ningún campo conocido, se releva al modo chat sobre el
-**mismo** modelo. Una sola pasada decide las dos cosas: si era respondible, y cuáles son
-los valores.
+Los dos formatos son **vías de decisión**: traen su propio esquema y devuelven valores, sin
+generar un token. Una pregunta sin tipo (ni `choice:`, ni `score:`, ni `noul:`) se trata
+como un verdadero o falso —el modo decisión necesita un conjunto finito—. Para texto libre
+está el formato **`chat`**, que es la otra vía del servidor: una pregunta suelta y el modelo
+escribe la respuesta.
 
 ```bash
 python preguntar.py ejemplos/1_opciones.txt        # elegir de una lista
@@ -125,9 +127,9 @@ las etiquetas. Hay casos que fallan *con* la descripción y acierta *sin* ella. 
 se resiste, prueba a quitarle texto, no a añadírselo.
 
 **Y no le pongas ejemplos.** Suena a que debería ayudar —consultas de ejemplo que le
-enseñen dónde está la frontera— y está medido que no: con ejemplos largos el criterio de
-«¿es respondible?» **empeora** (3 de 5 casos dejan de reconocerse como contestables), y con
-ejemplos cortos queda igual que sin ellos. Es lo mismo que arriba: el texto de más diluye.
+enseñen el criterio— y está medido que no: con ejemplos largos el resultado **empeora**, y
+con ejemplos cortos queda igual que sin ellos. Es lo mismo que arriba: el texto de más
+diluye la pregunta.
 
 **Un rango ancho es una trampa.** Un campo numérico con muchos valores posibles obliga al
 modelo a puntuar muchos nodos y la probabilidad se reparte: la confianza se cae y el
@@ -164,7 +166,8 @@ las preguntas van sobre él. Un `.docx` se lee sin instalar nada; un `.pdf` pide
 python preguntar.py mis_preguntas.txt --documento carta.pdf
 ```
 
-`formato` es `texto`, `natural` o `tipado` —se declara, no se adivina—. Detalles en
+`formato` es `natural`, `tipado` o `chat` —se declara, no se adivina—. Los dos primeros son
+vías de decisión (valores, 0 tokens); el tercero es prosa. Detalles en
 [docs/API.md](docs/API.md).
 
 **Y si lo vas a llamar desde otro programa**, hay un ejemplo completo y ejecutable en
@@ -203,16 +206,12 @@ Esto es todo el proyecto. No hay nada más:
 preguntar.py         LA PUERTA DE ENTRADA: escribes en lenguaje natural y deduce el
                      tipo por la cabecera; una o varias preguntas en una petición
                      (--documento hace que el caso salga de un pdf, docx, txt...)
-aiom.py              el motor: los tres modos, y las dos vías del servidor
+aiom.py              el núcleo: hablar con llama-server, el vocabulario del proyecto y la
+                     vía de chat. El esquema no vive aquí: lo trae cada petición
 tipado.py            el traductor del formato tipado (el de TypeSafe, tal cual)
 documento.py         saca el texto de un documento para usarlo como caso
 api.py               la API HTTP (FastAPI), que además sirve la interfaz web
 web/index.html       la interfaz: un solo fichero, HTML+CSS+JS sin dependencias
-catalogs/            dos juegos de campos de ejemplo para el modo decisión, los que usa
-                     el formato `texto` de la API:
-                       iot.json      operación de campo (el que se usa por defecto)
-                       soporte.json  triage de tickets
-                     se elige con la variable AIOM_CATALOG o el argumento del script
 ejemplos/            siete casos de ejemplo -cinco sobre correos de soporte, uno por tipo
                      de pregunta y uno con las tres de golpe, y dos con SOLO las
                      preguntas, para usarlos con un documento- y el ejemplo de integracion:

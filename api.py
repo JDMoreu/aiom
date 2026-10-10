@@ -5,26 +5,26 @@ es la puerta de PROGRAMA: otro sistema manda la pregunta por HTTP y recibe JSON.
 
 Se elige el formato con el campo `formato`, y no se adivina:
 
-    POST /ask   {"formato": "texto",   "question": "..."}       una pregunta suelta
-    POST /ask   {"formato": "natural", "entrada": "..."}        el contenido de un .txt
+    POST /ask   {"formato": "natural", "entrada": "..."}          el contenido de un .txt
     POST /ask   {"formato": "tipado",  "state": ..., "questions": ...}
+    POST /ask   {"formato": "chat",    "question": "..."}         una pregunta suelta
 
-`texto` pregunta contra el CATALOGO (los campos que el catalogo declara). `natural` y
-`tipado` traen su propio esquema en el cuerpo, asi que no usan el catalogo.
+`natural` y `tipado` son las vias de DECISION: traen su propio esquema y devuelven
+valores, sin generar un token. `chat` es la via de prosa: una pregunta libre y el modelo
+escribe la respuesta.
 
     python api.py                    # escucha en 8100
     python api.py --port 9000
 
-    curl -s localhost:8100/docs      # la documentacion de esta API, en JSON
+    curl -s localhost:8100/docs      # Swagger: la documentacion y las pruebas de la API
 
 Dos cosas que se conservan de la version de la biblioteca estandar, porque son parte del
 comportamiento y no del framework:
 
   - El JSON sale INDENTADO y sin escapar los acentos, igual que antes. Los ejemplos de
     la documentacion son literales y no habria que reescribirlos.
-  - Las rutas y los codigos no cambian: `/docs` sigue siendo la documentacion DE ESTA
-    API en JSON, no la autodocumentacion de FastAPI (que va desactivada, para no
-    pisarla).
+  - Las rutas y los codigos no cambian: `/docs` es Swagger, con la guia de los tres
+    formatos y un boton para probar cada uno desde el navegador.
 """
 
 import argparse
@@ -48,8 +48,6 @@ import aiom                    # noqa: E402
 import documento as doc_mod    # noqa: E402  (saca el texto de pdf, docx, txt...)
 import tipado                  # noqa: E402  (el traductor del formato tipado)
 import preguntar               # noqa: E402
-
-FORMATOS = ("texto", "natural", "tipado")
 
 # "0 = espanol: español. 1 = ingles: ingles." -> ['espanol: español', 'ingles: ingles']
 NIVEL = re.compile(r"\d+ = ([^.]+)\.")
@@ -120,34 +118,25 @@ def _de_campos(campos, preguntas):
     return salida
 
 
-def por_texto(cuerpo, catalogo, cfg):
-    """Una pregunta suelta contra el catalogo (lo que hacia aiom.ask)."""
+def por_chat(cuerpo, cfg):
+    """Una pregunta suelta, en prosa. Sin esquema y sin valores: el modelo escribe.
+
+    Es el camino para lo que NO es una decision: redactar, explicar, resumir. Aqui no hay
+    campos ni probabilidades, hay texto.
+    """
     q = cuerpo.get("question")
     if not isinstance(q, str) or not q.strip():
         raise ValueError("falta 'question'")
     doc = _documento(cuerpo)
     # Con documento, el caso es el documento y la pregunta va detras.
     pregunta = f"{doc}\n\n{q.strip()}" if doc else q
-    r = aiom.ask(pregunta, catalogo, cfg, cuerpo.get("mode", "auto"))
-    if r["mode"] == "chat":
-        return {"resultados": [{"modo": "chat", "texto": r.get("text")}],
-                "tiempo_ms": r["timings"]["wall_ms"],
-                "tokens": r["usage"].get("tokens_generated") or 0}
-    # El `tipo` y el nombre de cada campo salen del CATALOGO: la respuesta del servidor
-    # trae value/probabilities/confidence, pero no de que tipo es el campo.
-    esquema = catalogo.get("fields", {})
-    preguntas = [(k, {"type": esquema.get(k, {}).get("type"),
-                      "pregunta": esquema.get(k, {}).get("description", ""),
-                      "description": esquema.get(k, {}).get("description", "")})
-                 for k in (r.get("fields") or {})]
-    # wall_ms, NO total_ms: el tiempo que se publica tiene que ser el mismo reloj en las
-    # dos vias (ida y vuelta completa), o la comparacion favorece a una. total_ms es lo
-    # que tarda el servidor por dentro y no cuenta la red.
-    return {"resultados": _de_campos(r["fields"], preguntas),
-            "tiempo_ms": r["timings"]["wall_ms"], "tokens": 0}
+    r = aiom.chat(pregunta, cfg)
+    return {"resultados": [{"modo": "chat", "texto": r["text"]}],
+            "tiempo_ms": r["timings"]["wall_ms"],
+            "tokens": r["usage"].get("tokens_generated") or 0}
 
 
-def por_natural(cuerpo, catalogo, cfg):
+def por_natural(cuerpo, cfg):
     """El contenido de un .txt: una o varias preguntas, en una sola peticion.
 
     Si viene 'documento', es el caso y el texto de arriba trae solo las preguntas.
@@ -164,7 +153,7 @@ def por_natural(cuerpo, catalogo, cfg):
             "tokens": 0, "n_preguntas": len(preguntas)}
 
 
-def por_tipado(cuerpo, catalogo, cfg):
+def por_tipado(cuerpo, cfg):
     """El formato de TypeSafe: state.input + questions.<nombre> con criteria.
 
     `questions` admite varias: cada una es un campo del esquema y todas se resuelven en
@@ -190,27 +179,28 @@ def por_tipado(cuerpo, catalogo, cfg):
             "tiempo_ms": round(ms, 1), "tokens": 0, "n_preguntas": len(preguntas)}
 
 
-CONVERSORES = {"texto": por_texto, "natural": por_natural, "tipado": por_tipado}
+CONVERSORES = {"natural": por_natural, "tipado": por_tipado, "chat": por_chat}
 
 
 # --------------------------------------------------------------------------- #
 # la comparativa: la misma pregunta por las dos vias, en una sola peticion
 # --------------------------------------------------------------------------- #
-def _chat(texto, catalogo, cfg):
+def _chat(texto, cfg):
     """Una pregunta por la via de chat (prosa)."""
-    r = aiom.ask(texto, catalogo, cfg, "chat")
-    return {"modo": "chat", "texto": r.get("text"),
+    r = aiom.chat(texto, cfg)
+    return {"modo": "chat", "texto": r["text"],
             "tiempo_ms": r["timings"]["wall_ms"],
             "tokens": r["usage"].get("tokens_generated") or 0}
 
 
-def prompts_texto(cuerpo, catalogo, cfg):
+def prompts_chat(cuerpo, cfg):
+    """El chat recibe la pregunta tal cual, con el documento delante si lo hay."""
     doc = _documento(cuerpo)
     q = cuerpo["question"].strip()
     return [f"{doc}\n\n{q}" if doc else q]
 
 
-def prompts_natural(cuerpo, catalogo, cfg):
+def prompts_natural(cuerpo, cfg):
     """El chat recibe el caso y TODAS las preguntas, de una vez y en lenguaje llano.
 
     Una sola peticion, que es como se le pregunta a un asistente, y con la misma entrada
@@ -227,7 +217,7 @@ def prompts_natural(cuerpo, catalogo, cfg):
     return [f"{estado}\n\nResponde a estas preguntas:\n{lista}"]
 
 
-def prompts_tipado(cuerpo, catalogo, cfg):
+def prompts_tipado(cuerpo, cfg):
     """Lo mismo en el formato tipado: aqui no hay .txt, asi que el texto se arma.
 
     El caso y los enunciados juntos, en UNA peticion, sin los `criteria`: son el
@@ -240,10 +230,12 @@ def prompts_tipado(cuerpo, catalogo, cfg):
     return [f"{entrada}\n\nResponde a estas preguntas:\n{lista}"]
 
 
-PROMPTS = {"texto": prompts_texto, "natural": prompts_natural, "tipado": prompts_tipado}
+# Solo los dos formatos de DECISION tienen con que compararse: en `chat` las dos vias
+# serian la misma cosa, asi que ahi `comparar` no se ofrece.
+PROMPTS = {"natural": prompts_natural, "tipado": prompts_tipado}
 
 
-def comparar(r_decision, cuerpo, catalogo, cfg, formato):
+def comparar(r_decision, cuerpo, cfg, formato):
     """Envuelve el resultado de decision y le anade la via de chat, lado a lado.
 
     Se hace aqui y no en el cliente para que los dos tiempos sean de la MISMA corrida:
@@ -253,7 +245,7 @@ def comparar(r_decision, cuerpo, catalogo, cfg, formato):
     todos los campos de golpe y el chat contesta todo en una sola respuesta. Es lo que
     hace que la comparacion sea en igualdad de condiciones.
     """
-    respuestas = [_chat(p, catalogo, cfg) for p in PROMPTS[formato](cuerpo, catalogo, cfg)]
+    respuestas = [_chat(p, cfg) for p in PROMPTS[formato](cuerpo, cfg)]
     return {
         "formato": formato,
         "comparar": True,
@@ -315,25 +307,24 @@ GUIA_FORMATOS = """
 El campo `formato` dice cual es, y **no se adivina**: si falta o no es uno de los tres,
 la API contesta con un error y la lista de los que acepta.
 
-- **`texto`** — una pregunta suelta, contra los campos del catalogo (`--catalog`).
 - **`natural`** — el contenido de un `.txt`: una o varias preguntas separadas por `---`.
-- **`tipado`** — el formato de TypeSafe/Jev, tal cual.
+  Es la via de **decision**: trae su esquema en el texto y devuelve valores, sin generar
+  un token.
+- **`tipado`** — el formato de TypeSafe/Jev, tal cual. La otra via de decision: el mismo
+  caso, pero con el esquema en JSON.
+- **`chat`** — una pregunta suelta, en prosa. Aqui no hay campos ni probabilidades: el
+  modelo escribe. Es el camino para lo que no es una decision (redactar, explicar).
 
-Los tres aceptan ademas:
+`natural` y `tipado` aceptan ademas:
 
 - **`documento`** — el texto sacado de un fichero con `POST /documento`. Ese texto pasa a
   ser el caso, y las preguntas van sobre el en vez de escribirlo.
 - **`comparar: true`** — resuelve la misma pregunta por las dos vias y las devuelve
-  juntas, para que los tiempos sean de la misma corrida.
+  juntas, para que los tiempos sean de la misma corrida. En `chat` no aplica: las dos
+  vias serian la misma cosa.
 """
 
 EJEMPLOS_ASK = {
-    "texto": {
-        "summary": "Una pregunta suelta, contra el catalogo",
-        "value": {"formato": "texto",
-                  "question": "El sensor del predio 3 lleva dos dias sin reportar",
-                  "mode": "decision"},
-    },
     "natural": {
         "summary": "El contenido de un .txt, entero",
         "value": {"formato": "natural",
@@ -354,12 +345,17 @@ EJEMPLOS_ASK = {
                       "criteria": {"billing": "Pagos y reembolsos",
                                    "technical": "Errores e integraciones"}}}},
     },
+    "chat": {
+        "summary": "Una pregunta suelta, en prosa",
+        "value": {"formato": "chat",
+                  "question": "Explicame en dos frases que es una red de sensores IoT"},
+    },
     "comparar": {
         "summary": "La misma pregunta por las dos vias, en una sola corrida",
         "value": {"formato": "natural", "comparar": True,
                   "entrada": "input: Se cayo la senal en el predio 11.\n\n"
                              "ask: ¿Es urgente?\n"
-                             "noul:\n  si: Si, hay una falla activa\n  no: No corre prisa"},
+                             "noul:\n  false: No corre prisa\n  true: Si, hay una falla activa"},
     },
 }
 
@@ -378,23 +374,31 @@ def _responder(cuerpo: dict) -> JsonBonito:
     # tampoco, se dice que falta en vez de adivinar.
     formato = cuerpo.get("formato")
     if formato is None:
-        formato = ("texto" if "question" in cuerpo else
-                   "natural" if "entrada" in cuerpo else
-                   "tipado" if "questions" in cuerpo else None)
+        formato = ("natural" if "entrada" in cuerpo else
+                   "tipado" if "questions" in cuerpo else
+                   "chat" if "question" in cuerpo else None)
     if formato not in CONVERSORES:
         return fallo(400, error=f"formato no valido: {formato!r}",
                      formatos=list(CONVERSORES),
-                     pista="manda 'formato' junto con su campo: question / entrada / "
-                           "state+questions")
+                     pista="manda 'formato' junto con su campo: entrada / state+questions "
+                           "/ question")
     try:
-        r = CONVERSORES[formato](cuerpo, CFG["catalog"], CFG)
-        if cuerpo.get("comparar"):
-            return JsonBonito(comparar(r, cuerpo, CFG["catalog"], CFG, formato))
+        r = CONVERSORES[formato](cuerpo, CFG)
+        # `comparar` solo tiene sentido en las vias de decision: en chat las dos vias
+        # serian la misma cosa.
+        if cuerpo.get("comparar") and formato in PROMPTS:
+            return JsonBonito(comparar(r, cuerpo, CFG, formato))
     except ValueError as e:
         return fallo(400, error=str(e), formato=formato)
     except urllib.error.HTTPError as e:
         return fallo(502, error=f"llama-server {e.code}",
                      detail=e.read()[:300].decode("utf-8", "replace"))
+    except urllib.error.URLError as e:
+        # No hay nadie al otro lado. Es el fallo mas comun al empezar, asi que se dice
+        # cual es y donde se le busca, en vez de un 500 sin explicacion.
+        return fallo(502, error="no puedo hablar con llama-server",
+                     detail=str(e.reason), servidor=CFG.get("server"),
+                     pista="esta levantado el servidor del modelo?")
     except Exception as e:                                          # noqa: BLE001
         return fallo(500, error=f"{type(e).__name__}: {e}")
 
@@ -503,11 +507,6 @@ def health():
         return fallo(503, aiom="ok", llama_server=f"unreachable: {e}")
 
 
-@app.get("/catalog", summary="El catalogo cargado")
-def catalog():
-    return JsonBonito(CFG["catalog"])
-
-
 @app.get("/", summary="La interfaz web")
 @app.get("/ui", include_in_schema=False)
 @app.get("/index.html", include_in_schema=False)
@@ -530,28 +529,20 @@ def main() -> int:
     ap.add_argument("--port", type=int, default=8100)
     ap.add_argument("--server", default=aiom.DEFAULTS["server"])
     ap.add_argument("--model", default=aiom.DEFAULTS["model"])
-    ap.add_argument("--catalog", default=aiom.DEFAULTS["catalog"])
     ap.add_argument("--timeout", type=int, default=aiom.DEFAULTS["timeout"])
     ap.add_argument("--ui", default=os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                                  "web", "index.html"))
     a = ap.parse_args()
 
-    try:
-        with open(a.catalog, encoding="utf-8") as f:
-            catalogo = json.load(f)
-    except OSError as e:
-        print(f"no puedo leer el catalogo {a.catalog}: {e}", file=sys.stderr)
-        return 2
-
     CFG.update({"server": a.server, "model": a.model, "timeout": a.timeout,
-                "ui": a.ui, "catalog": catalogo})
+                "ui": a.ui})
 
     print(f"AIOM escuchando en http://127.0.0.1:{a.port}")
     print(f"  interfaz:    http://127.0.0.1:{a.port}/")
     print(f"  POST /ask    formato: {' | '.join(CONVERSORES)}   (+ \"comparar\": true)")
+    print(f"  POST /documento   sube un fichero y devuelve su texto")
     print(f"  GET  /docs   Swagger: la documentacion y las pruebas de la API")
-    print(f"  GET  /health   GET /catalog")
-    print(f"  catalogo: {a.catalog}")
+    print(f"  GET  /health")
     # access_log=False: sin una linea por peticion, como en la version anterior.
     uvicorn.run(app, host="127.0.0.1", port=a.port, log_level="warning",
                 access_log=False)
