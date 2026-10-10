@@ -9,7 +9,7 @@ Lo que hace falta, y para qué:
 |---|---|
 | **Python 3.10+** | el cliente. La consola, el tipado y el motor: **solo biblioteca estándar**. |
 | **Una GPU con Vulkan** | el servidor. Sin GPU funciona, pero en CPU tarda mucho más. |
-| **El fork de llama.cpp** | el endpoint `/v1/decision`. **Es el requisito duro**: sin él no hay modo decisión. |
+| **El fork de llama.cpp** | el endpoint `/v1/decision`. **Es el requisito duro**: sin él no hay vía de decisión. |
 | **El modelo** | 4,1 GB en disco, ~9 GB en VRAM con `-ngl 99`. |
 
 ## Paso 1 — El modelo

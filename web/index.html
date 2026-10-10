@@ -953,7 +953,7 @@ function pintarComparativa(d) {
 
 function pintarSolo(d) {
   const r = d.resultados || [];
-  if (r[0] && r[0].modo === "chat") {
+  if (r[0] && r[0].via === "chat") {
     return tarjeta("Chat", "prosa", "et-chat",
       `<span><b>${d.tiempo_ms.toFixed(0)}</b> ms</span><span><b>${d.tokens}</b> tok</span>`,
       pintarChat(r));

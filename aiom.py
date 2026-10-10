@@ -3,7 +3,7 @@
 """
 AIOM — all in one mode.
 
-Un solo modelo local, dos modos:
+Un solo modelo local, dos vías:
 
     chat      lenguaje natural -> prosa            (/v1/chat/completions)
     decision  esquema finito   -> valores          (/v1/decision)
@@ -14,7 +14,7 @@ valores, y no genera ni un token.
 
 El esquema NO vive aqui: lo trae cada peticion. El formato `natural` lo arma a partir de
 las cabeceras del texto, y el `tipado` lo lee del JSON de TypeSafe. Este modulo solo tiene
-lo que comparten: hablar con llama-server, el vocabulario del proyecto y el modo chat.
+lo que comparten: hablar con llama-server, el vocabulario del proyecto y la via de chat.
 
 Sin dependencias: solo la biblioteca estandar de Python.
 """
@@ -66,7 +66,7 @@ AL_PROYECTO["integer"] = "score"
 
 
 # --------------------------------------------------------------------------- #
-# modo chat  (el mismo modelo, respuesta en prosa)
+# via de chat  (el mismo modelo, respuesta en prosa)
 # --------------------------------------------------------------------------- #
 def chat(question: str, cfg: dict) -> dict:
     """La via de chat: un asistente GENERICO.

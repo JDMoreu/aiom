@@ -89,6 +89,16 @@ def _documento(cuerpo):
 # --------------------------------------------------------------------------- #
 # los tres formatos -> una lista uniforme de resultados
 # --------------------------------------------------------------------------- #
+def _red(x):
+    """Redondea un numero para publicarlo.
+
+    El motor devuelve las probabilidades con toda la precision del float, y asi salen
+    cosas como 0.9999997615814209. Cuatro decimales es mas de lo que nadie necesita, y
+    un documento con diecisiete digitos no dice nada a quien lo lee.
+    """
+    return round(x, 4) if isinstance(x, (int, float)) else x
+
+
 def _de_campos(campos, preguntas):
     """Respuesta del servidor -> lista de resultados, uno por pregunta.
 
@@ -100,14 +110,15 @@ def _de_campos(campos, preguntas):
         f = campos.get(nombre)
         if not f:
             continue
+        probs = f.get("probabilities")
         r = {
             "campo": nombre,
             "tipo": aiom.AL_PROYECTO.get(spec.get("type"), spec.get("type")),
             "pregunta": spec.get("pregunta") or spec.get("description", "")[:80],
             "value": f.get("value"),
-            "probability": f.get("probability"),
-            "probabilities": f.get("probabilities"),
-            "confidence": f.get("confidence"),
+            "probability": _red(f.get("probability")),
+            "probabilities": ({k: _red(v) for k, v in probs.items()} if probs else probs),
+            "confidence": _red(f.get("confidence")),
         }
         # En un score, las etiquetas de los niveles: sin ellas el numero no significa
         # nada para quien lee.
@@ -131,7 +142,7 @@ def por_chat(cuerpo, cfg):
     # Con documento, el caso es el documento y la pregunta va detras.
     pregunta = f"{doc}\n\n{q.strip()}" if doc else q
     r = aiom.chat(pregunta, cfg)
-    return {"resultados": [{"modo": "chat", "texto": r["text"]}],
+    return {"resultados": [{"via": "chat", "texto": r["text"]}],
             "tiempo_ms": r["timings"]["wall_ms"],
             "tokens": r["usage"].get("tokens_generated") or 0}
 
@@ -188,7 +199,7 @@ CONVERSORES = {"natural": por_natural, "tipado": por_tipado, "chat": por_chat}
 def _chat(texto, cfg):
     """Una pregunta por la via de chat (prosa)."""
     r = aiom.chat(texto, cfg)
-    return {"modo": "chat", "texto": r["text"],
+    return {"via": "chat", "texto": r["text"],
             "tiempo_ms": r["timings"]["wall_ms"],
             "tokens": r["usage"].get("tokens_generated") or 0}
 

@@ -81,7 +81,7 @@ de equivalencias está en su cabecera.
 
 Los dos formatos son **vías de decisión**: traen su propio esquema y devuelven valores, sin
 generar un token. Una pregunta sin tipo (ni `choice:`, ni `score:`, ni `noul:`) se trata
-como un verdadero o falso —el modo decisión necesita un conjunto finito—. Para texto libre
+como un verdadero o falso —la vía de decisión necesita un conjunto finito—. Para texto libre
 está el formato **`chat`**, que es la otra vía del servidor: una pregunta suelta y el modelo
 escribe la respuesta.
 

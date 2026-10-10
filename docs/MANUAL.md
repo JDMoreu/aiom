@@ -360,13 +360,13 @@ sale con confianza baja, se revisa.**
 Se puede comprobar a mano, con dos comandos. El caso es
 `ejemplos/5_correo_soporte.txt` (una queja con cortes de conexión y un cobro duplicado).
 
-**1. En modo decisión** — las tres preguntas de una vez:
+**1. En la vía de decisión** — las tres preguntas de una vez:
 
 ```bash
 python preguntar.py ejemplos/5_correo_soporte.txt
 ```
 
-**2. En modo chat** — la misma pregunta, en prosa. Con `--comparar` salen las dos vías en
+**2. En la vía de chat** — la misma pregunta, en prosa. Con `--comparar` salen las dos vías en
 la **misma corrida**, que es lo que hace que los dos tiempos se puedan comparar:
 
 ```bash
@@ -497,7 +497,7 @@ caso en que el tipo no se declara.)*
 
 Se puede preguntar algo que no sea ni una lista, ni una escala, ni un verdadero o falso — por
 ejemplo «redáctame un resumen». Sin tipo, la pregunta se trata como un **verdadero o falso**:
-el modo decisión necesita un conjunto finito y no puede devolver texto libre.
+la vía de decisión necesita un conjunto finito y no puede devolver texto libre.
 
 Para eso está el formato **`chat`**: una pregunta suelta y el modelo escribe la respuesta.
 No es una decisión, es prosa, y por eso es el otro camino.

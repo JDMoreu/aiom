@@ -67,12 +67,26 @@ print(respuesta["tiempo_ms"], "ms,", respuesta["tokens"], "tokens")
 print(respuesta["resultados"][0]["texto"])
 ```
 
-Lo que devuelve no es una lista de campos, es la prosa entera:
+Lo que devuelve no es una lista de campos, es la prosa entera. Esta es la respuesta de
+verdad, tal cual llegó:
 
 ```json
-{"formato": "chat", "n_preguntas": 1, "tiempo_ms": 770.0, "tokens": 63,
- "resultados": [{"modo": "chat", "texto": "Una red de sensores es un sistema..."}]}
+{
+  "resultados": [
+    {
+      "via": "chat",
+      "texto": "Una red de sensores es un sistema tecnológico que conecta varios dispositivos para recopilar, transmitir y procesar datos de forma automática.\n\nSu función principal es detectar y reportar información en tiempo real, lo que permite tomar decisiones más eficientes y precisas en cualquier entorno."
+    }
+  ],
+  "tiempo_ms": 808.0,
+  "tokens": 74,
+  "formato": "chat",
+  "n_preguntas": 1
+}
 ```
+
+Fíjate en lo que **no** hay: ni `campo`, ni `tipo`, ni `probability`, ni `confidence`. Esos
+campos son de la decisión, y aquí no existen porque no hay nada que elegir.
 
 Y si le pasas un `documento`, el texto del fichero va delante de la pregunta, igual que en
 los otros formatos (ver el apartado 5).
@@ -165,6 +179,51 @@ for r_ in respuesta["resultados"]:
         print(f"   niveles: {r_['niveles']}")
 ```
 
+La respuesta de verdad, con las tres preguntas resueltas en la misma petición. Está
+recortada solo en la prosa del primer resultado, que es larga:
+
+```json
+{
+  "resultados": [
+    {
+      "campo": "q1", "tipo": "choice",
+      "pregunta": "¿A qué área hay que enviar este correo?",
+      "value": "soporte",
+      "probability": 1.0,
+      "probabilities": {"soporte": 1.0, "facturacion": 0.0, "comercial": 0.0, "otros": 0.0},
+      "confidence": 1.0
+    },
+    {
+      "campo": "q2", "tipo": "score",
+      "pregunta": "¿Qué urgencia tiene?",
+      "value": 2.0,
+      "probability": 0.7025,
+      "probabilities": {"0.0": 0.1575, "1.0": 0.1401, "2.0": 0.7025},
+      "confidence": 0.2586,
+      "niveles": ["Baja: puede esperar",
+                  "Media: conviene atenderlo esta semana",
+                  "Alta: hay una fecha límite encima"]
+    },
+    {
+      "campo": "q3", "tipo": "noul",
+      "pregunta": "¿El cliente ya pagó el plan anual?",
+      "value": false,
+      "probability": 0.9825,
+      "probabilities": {"true": 0.0175, "false": 0.9825},
+      "confidence": 0.8726
+    }
+  ],
+  "tiempo_ms": 117.7,
+  "tokens": 0,
+  "n_preguntas": 3,
+  "formato": "natural"
+}
+```
+
+**`tokens: 0`** es lo que distingue esta vía de la de chat: el modelo no escribió nada,
+eligió. Y en el `score`, `value: 2.0` solo significa algo porque `niveles` dice cuál es el
+2 — «Alta: hay una fecha límite encima»—.
+
 Los tres tipos, uno por uno, y qué devuelve cada uno:
 
 | cabecera | tipo | devuelve |
@@ -223,6 +282,38 @@ noul:
 print("noul:", r["value"], r["probability"])
 ```
 
+Y esto es lo que devuelve cada una, de verdad:
+
+```json
+{"campo": "decision", "tipo": "choice",
+ "pregunta": "¿A qué área hay que enviar este correo?",
+ "value": "soporte", "probability": 1.0,
+ "probabilities": {"soporte": 1.0, "facturacion": 0.0, "otros": 0.0},
+ "confidence": 1.0}
+```
+
+```json
+{"campo": "decision", "tipo": "score",
+ "pregunta": "¿Qué urgencia tiene?",
+ "value": 2.0, "probability": 0.7826,
+ "probabilities": {"0.0": 0.0018, "1.0": 0.2156, "2.0": 0.7826},
+ "confidence": 0.5142,
+ "niveles": ["Baja: puede esperar",
+             "Media: conviene atenderlo esta semana",
+             "Alta: hay una fecha límite encima"]}
+```
+
+```json
+{"campo": "decision", "tipo": "noul",
+ "pregunta": "¿Hay indicios de que la cuenta esté comprometida?",
+ "value": true, "probability": 0.8281,
+ "probabilities": {"true": 0.8281, "false": 0.1719},
+ "confidence": 0.338}
+```
+
+El `campo` se llama `decision` cuando no le has dado un nombre tú: en `natural` y `tipado`
+el nombre sale de lo que escribiste (`q1`, `area`...), y aquí no hay ninguno.
+
 ---
 
 ## 4. El formato tipado (`tipado`)
@@ -280,7 +371,13 @@ for r_ in respuesta["resultados"]:
 ```
 
 **Da exactamente lo mismo que el formato natural**: son dos vistas del mismo caso, no dos
-motores distintos. Si quieres comprobarlo, manda el mismo contenido por los dos y compara.
+motores distintos. Los tres resultados de este ejemplo salen **idénticos** a los del
+apartado 2 —mismo `soporte`, mismo `2.0`, mismo `false`, hasta la misma probabilidad—,
+porque el esquema que recibe el modelo es el mismo.
+
+Lo único que cambia es el nombre del campo, si tú lo cambias: aquí las preguntas se llaman
+`q1`, `q2`, `q3` porque así se llaman en el JSON de arriba. En `natural` salían igual
+porque allí también se llamaban así.
 
 ---
 
@@ -355,6 +452,53 @@ curl -s http://127.0.0.1:8100/ask -H "Content-Type: application/json" -d '{
 }'
 ```
 
+Lo que devuelve el paso 1, recortado (el texto entero son 3900 caracteres):
+
+```json
+{
+  "texto": "JOSE DAVID MOREU CEBALLOS\nIngeniero Electrónico\n\njdmoreudev@gmail.com...",
+  "nombre": "cv.pdf", "tipo": "pdf",
+  "caracteres": 3925, "palabras": 587, "lineas": 71,
+  "paginas": 1, "paginas_con_texto": 1,
+  "paginas_con_ocr": 0, "paginas_ilegibles": 0, "paginas_sin_texto": 0,
+  "aviso": "de 1 paginas: 1 con texto propio."
+}
+```
+
+Y lo que devuelve el paso 2, con ese texto dentro de `documento`:
+
+```json
+{
+  "resultados": [
+    {
+      "campo": "q1", "tipo": "choice",
+      "pregunta": "¿De qué trata el documento?",
+      "value": "otro",
+      "probability": 0.7585,
+      "probabilities": {"factura": 0.002, "contrato": 0.0488,
+                        "carta": 0.1907, "otro": 0.7585},
+      "confidence": 0.5056
+    },
+    {
+      "campo": "q2", "tipo": "noul",
+      "pregunta": "¿Aparece una fecha?",
+      "value": false,
+      "probability": 0.9381,
+      "probabilities": {"true": 0.0619, "false": 0.9381},
+      "confidence": 0.6651
+    }
+  ],
+  "tiempo_ms": 369.5,
+  "tokens": 0,
+  "n_preguntas": 2,
+  "formato": "natural"
+}
+```
+
+**El `aviso` no es decoración.** Dice de dónde salió el texto: si una página se leyó con
+OCR (una imagen, y por tanto con posibles errores) o si se quedó sin leer. Quien pregunte
+sobre el documento tiene que saberlo antes de fiarse de la respuesta.
+
 Los dos endpoints, en una tabla:
 
 | | |
@@ -406,6 +550,43 @@ print("lo que respondio el chat, entero:")
 print(d["chat"]["resultados"][0]["texto"])
 ```
 
+La respuesta de verdad. La decisión acierta y tarda 91 ms sin escribir nada; el chat
+escribe 400 tokens y de paso se pone a opinar:
+
+```json
+{
+  "formato": "natural",
+  "comparar": true,
+  "n_preguntas": 1,
+  "decision": {
+    "peticiones": 1,
+    "resultados": [
+      {"campo": "decision", "tipo": "choice",
+       "pregunta": "¿A qué área hay que enviar este correo?",
+       "value": "soporte", "probability": 1.0,
+       "probabilities": {"soporte": 1.0, "facturacion": 0.0, "otros": 0.0},
+       "confidence": 1.0}
+    ],
+    "tiempo_ms": 91.6,
+    "tokens": 0
+  },
+  "chat": {
+    "peticiones": 1,
+    "resultados": [
+      {"via": "chat",
+       "texto": "¡Buenos días! Entiendo tu frustración, y lamento mucho que estés sufriendo este problema. Un error 500 es un error de sistema que indica que algo falló en el servidor de nuestra plataforma, por lo que no podemos procesar tu iniciación de sesión.\n\nPara responder a tu pregunta:\n\n**1. ¿A qué área hay que enviar este correo?**\n\nDebes enviar el correo a la **Sección de Soporte Técnico / Atención al Cliente** (también a menudo llamada **Soporte Técnico y Soluciones de Incidencias**)."}
+    ],
+    "tiempo_ms": 3774.5,
+    "tokens": 410
+  }
+}
+```
+
+**Compáralas.** La decisión da `soporte` con un `1.0`: un valor, cerrado, que un programa
+puede leer y usar. El chat da la misma respuesta, pero dentro de un párrafo que empieza
+disculpándose, sigue explicando qué es un error 500 y acaba con dos nombres posibles para
+la misma área. Para un humano está bien; para un programa, no hay por dónde cogerlo.
+
 Los dos tiempos se miden **con el mismo reloj** —la ida y vuelta completa—, así que la
 comparación es honesta. La decisión contesta por preguntas; el chat contesta todo de una
 vez, porque así se le pregunta a un asistente.
@@ -448,11 +629,12 @@ página servida desde otro sitio puede llamarla.
 
 ## 8. Qué devuelve cada cosa
 
-Lo que hay dentro de cada `resultado` de `/ask`:
+Lo que hay dentro de cada `resultado` de `/ask` cuando el formato es de decisión
+(`natural` o `tipado`):
 
 | campo | qué es |
 |---|---|
-| `campo` | el nombre del campo (`q1`, `q2`...) |
+| `campo` | el nombre del campo (`q1`, `q2`...; `decision` si no le pusiste nombre) |
 | `tipo` | `choice`, `score` o `noul` |
 | `pregunta` | el enunciado, para no tener que recordarlo |
 | `value` | **la respuesta.** Es el dato |
@@ -460,6 +642,17 @@ Lo que hay dentro de cada `resultado` de `/ask`:
 | `probabilities` | la de **todas** las opciones: aquí se ve si dudó entre dos |
 | `confidence` | la confianza de la lectura entera |
 | `niveles` | solo en un `score`: la etiqueta de cada nivel |
+
+Las probabilidades van **redondeadas a 4 decimales**. El motor las devuelve con toda la
+precisión del float —`0.9999997615814209`—, y eso no lo lee nadie.
+
+Y en el formato `chat` el resultado es otro, porque no hay nada que elegir: `via` dice de
+dónde viene y `texto` es la respuesta entera.
+
+| campo | qué es |
+|---|---|
+| `via` | siempre `chat` |
+| `texto` | la respuesta en prosa, con sus saltos de línea |
 
 Y lo que devuelve `/documento`:
 

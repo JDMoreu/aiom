@@ -17,7 +17,7 @@ tiene forma de pedirle una decisión.
 | **Licencia** | MIT — «Copyright (c) 2023-2026 The ggml authors» |
 
 **parallel-decision** es el añadido que trae el endpoint `/v1/decision`. **Sin él no hay
-modo decisión**: es el requisito duro del proyecto.
+vía de decisión**: es el requisito duro del proyecto.
 
 | | |
 |---|---|

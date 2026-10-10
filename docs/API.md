@@ -71,12 +71,14 @@ Y hay un **ejemplo completo y ejecutable**, que enseña las tres formas de darle
 python ejemplos/integrar.py                # el caso, escrito
 python ejemplos/integrar.py carta.pdf      # el caso, sacado de un documento
 python ejemplos/integrar.py --tipado       # el mismo caso, en JSON tipado
+python ejemplos/integrar.py --chat         # una pregunta suelta, en prosa
 python ejemplos/integrar.py --comparar     # y además, lo mismo al chat
 ```
 
-**Todos los ejemplos de consulta, completos y para copiar, están en
-[`EJEMPLOS.md`](EJEMPLOS.md)**: los tres formatos, los tres tipos de pregunta, con documento,
-la comparación y desde el navegador. Sin un solo `...`.
+**Todos los ejemplos de consulta están en [`EJEMPLOS.md`](EJEMPLOS.md)**: los tres
+formatos, los tres tipos de pregunta, con documento, la comparación y desde el
+navegador. Cada uno con la **entrada y la salida de verdad**, tal cual las devuelve el
+servidor. Sin un solo `...`.
 
 Son **dos endpoints**, y cada uno hace una cosa:
 
@@ -113,6 +115,14 @@ una decisión (redactar, explicar, resumir), y acepta `documento` igual que los 
 {"formato": "chat", "question": "Explícame en dos frases qué es una red de sensores"}
 ```
 
+Y devuelve:
+
+```json
+{"resultados": [{"via": "chat",
+                 "texto": "Una red de sensores es un sistema tecnológico que conecta varios dispositivos para recopilar, transmitir y procesar datos de forma automática..."}],
+ "tiempo_ms": 808.0, "tokens": 74, "n_preguntas": 1, "formato": "chat"}
+```
+
 ### 2. `natural` — el contenido de un `.txt`, entero
 
 ```json
@@ -121,6 +131,19 @@ una decisión (redactar, explicar, resumir), y acepta `documento` igual que los 
 
 Trae su propio esquema en el texto. Admite varias preguntas separadas por `---`, y las
 resuelve todas en **una sola petición**.
+
+Y devuelve un `resultado` por pregunta, con el valor y el reparto entero (la respuesta
+completa está en «Lo que devuelve», más abajo):
+
+```json
+{"resultados": [{"campo": "q1", "tipo": "choice",
+                 "pregunta": "¿A qué área hay que enviar este correo?",
+                 "value": "soporte", "probability": 1.0,
+                 "probabilities": {"soporte": 1.0, "facturacion": 0.0,
+                                   "comercial": 0.0, "otros": 0.0},
+                 "confidence": 1.0}],
+ "tiempo_ms": 117.7, "tokens": 0, "n_preguntas": 3, "formato": "natural"}
+```
 
 ### 3. `tipado` — el formato de TypeSafe, tal cual
 
@@ -136,9 +159,13 @@ resuelve todas en **una sola petición**.
 `questions` admite **varias**: cada una es un campo del esquema y todas se resuelven en
 la misma petición, igual que en el formato natural.
 
+Y devuelve **exactamente lo mismo** que el natural, porque el esquema que recibe el modelo
+es idéntico: mismos valores, mismas probabilidades. Solo cambia el nombre de cada campo, si
+tú lo cambias.
+
 ## El chat no lleva persona de dominio, y es a propósito
 
-Contesta como **asistente genérico**: el modo decisión es el que está diseñado para la
+Contesta como **asistente genérico**: la vía de decisión es la que está diseñada para la
 tarea, y el chat es el listón con el que se compara. Para que la comparación diga algo,
 tiene que ser un LLM corriente y no un agente ya especializado en el tema.
 
@@ -181,45 +208,76 @@ el enunciado por pantalla. Se comprobó que **no afecta** al resultado.)*
 
 ## Lo que devuelve
 
-Siempre la misma forma, sea cual sea el formato:
+Los dos formatos de decisión devuelven **la misma forma**. Esta es una respuesta de
+verdad, con tres preguntas de los tres tipos en una sola petición:
 
 ```json
 {
-  "formato": "natural",
-  "n_preguntas": 3,
-  "tiempo_ms": 158.0,
-  "tokens": 0,
   "resultados": [
-    {"campo": "q1", "tipo": "choice", "pregunta": "¿A qué área hay que enviar este correo?",
-     "value": "facturacion", "probability": 0.665, "confidence": 0.450,
-     "probabilities": {"soporte": 0.295, "facturacion": 0.665,
-                       "comercial": 0.040, "otros": 0.000}}
-  ]
+    {
+      "campo": "q1", "tipo": "choice",
+      "pregunta": "¿A qué área hay que enviar este correo?",
+      "value": "soporte",
+      "probability": 1.0,
+      "probabilities": {"soporte": 1.0, "facturacion": 0.0, "comercial": 0.0, "otros": 0.0},
+      "confidence": 1.0
+    },
+    {
+      "campo": "q2", "tipo": "score",
+      "pregunta": "¿Qué urgencia tiene?",
+      "value": 2.0,
+      "probability": 0.7025,
+      "probabilities": {"0.0": 0.1575, "1.0": 0.1401, "2.0": 0.7025},
+      "confidence": 0.2586,
+      "niveles": ["Baja: puede esperar",
+                  "Media: conviene atenderlo esta semana",
+                  "Alta: hay una fecha límite encima"]
+    },
+    {
+      "campo": "q3", "tipo": "noul",
+      "pregunta": "¿El cliente ya pagó el plan anual?",
+      "value": false,
+      "probability": 0.9825,
+      "probabilities": {"true": 0.0175, "false": 0.9825},
+      "confidence": 0.8726
+    }
+  ],
+  "tiempo_ms": 117.7,
+  "tokens": 0,
+  "n_preguntas": 3,
+  "formato": "natural"
 }
 ```
 
 En un `score` hay además **`niveles`**, con las etiquetas de la escala:
 
 ```json
-{"campo": "q2", "tipo": "score", "pregunta": "¿En qué idioma está el documento?",
- "value": 0.0, "probability": 0.960, "confidence": 0.329,
- "niveles": ["espanol: idioma español", "ingles: idioma ingles", "otro: otro idioma"],
- "probabilities": {"0.0": 0.960, "1.0": 0.025, "2.0": 0.015}}
+{"campo": "q2", "tipo": "score", "pregunta": "¿Qué urgencia tiene?",
+ "value": 2.0, "probability": 0.7025, "confidence": 0.2586,
+ "niveles": ["Baja: puede esperar",
+             "Media: conviene atenderlo esta semana",
+             "Alta: hay una fecha límite encima"],
+ "probabilities": {"0.0": 0.1575, "1.0": 0.1401, "2.0": 0.7025}}
 ```
 
-Hacen falta porque el motor devuelve un **número** (0, 1, 2…) y un `0` a secas no dice
-nada: no hay forma de saber que ese 0 es «espanol». Los niveles van **de menor a
-mayor y numerados desde 0**, así que el primero es `0`.
+Hacen falta porque el motor devuelve un **número** (0, 1, 2…) y un `2.0` a secas no dice
+nada: no hay forma de saber que ese 2 es «Alta». Los niveles van **de menor a mayor y
+numerados desde 0**, así que el primero es `0`.
+
+Las probabilidades van **redondeadas a 4 decimales**: el motor las devuelve con toda la
+precisión del float (`0.9999997615814209`), y eso no lo lee nadie.
 
 `tokens` es **0** en decisión: el valor sale de puntuar las opciones, no de escribir.
 `confidence` no es la probabilidad de acertar, es lo concentrada que está la
 distribución (ver el MANUAL, apartado 11).
 
 En el formato `chat` el resultado es distinto, porque no hay valores: la respuesta es la
-prosa, entera, en un solo campo.
+prosa, entera, en un solo campo, y `via` dice de dónde viene.
 
 ```json
-{"formato": "chat", "resultados": [{"modo": "chat", "texto": "..."}], "tokens": 136}
+{"formato": "chat", "tokens": 74, "n_preguntas": 1,
+ "resultados": [{"via": "chat",
+                 "texto": "Una red de sensores es un sistema tecnológico..."}]}
 ```
 
 ## Comparar las dos vías
