@@ -107,12 +107,16 @@ tres, la API contesta con un error y la lista de los que acepta.
 
 ### 1. `texto` — una pregunta suelta, contra el catálogo
 
+**`texto` no es «modo chat»**: dice cómo está escrita la pregunta (una frase suelta, sin
+esquema), y por eso se usa el del **catálogo** (`--catalog`). Quién contesta lo decide
+`mode`, que solo tiene este formato: `auto` (por defecto; la decisión, y el chat si el
+catálogo no cubre la pregunta), `decision` (la decisión, siempre) o `chat` (prosa, siempre).
+Se usa cuando los campos ya están fijos y son los mismos para todas las preguntas: así no
+hay que escribir ningún esquema. Los otros dos formatos **no usan el catálogo**.
+
 ```json
 {"formato": "texto", "question": "El sensor de humedad del predio 7 lleva dos días sin reportar.", "mode": "decision"}
 ```
-
-Responde contra los campos que declara el **catálogo** (`--catalog`). `mode` es
-`auto` (por defecto), `decision` o `chat`. Con `chat` la respuesta viene en prosa.
 
 ### 2. `natural` — el contenido de un `.txt`, entero
 

@@ -35,8 +35,39 @@ claro, y es lo que hacen todos los ejemplos de esta página.
 
 ## 1. Lo mínimo: una pregunta suelta (`texto`)
 
-El formato `texto` pregunta contra los campos del **catálogo** (`--catalog`, por defecto
-`catalogs/iot.json`). Es el más corto: no hay que escribir el esquema, porque ya está.
+**Ojo con el nombre: `texto` no es «modo chat».** Son dos cosas distintas y se confunden
+fácil, así que van separadas:
+
+- **`formato`** dice **cómo está escrita la pregunta**. `texto` es una frase suelta, sin
+  esquema. Y como no trae esquema, se usa el del **catálogo** (`--catalog`, por defecto
+  `catalogs/iot.json`).
+- **`mode`** dice **quién contesta**, y solo existe en este formato:
+
+| `mode` | quién contesta | qué devuelve |
+|---|---|---|
+| `auto` (por defecto) | la decisión; y si el catálogo no cubre la pregunta, el chat | valores, o prosa |
+| `decision` | la decisión, siempre | un valor por cada campo del catálogo |
+| `chat` | el chat, siempre | prosa |
+
+**Para qué se usa `texto`:** cuando los campos ya están fijos y son los mismos para todas
+las preguntas. El catálogo de ejemplo tiene cinco (`respondible`, `magnitud`, `predio`,
+`predio_valido`, `urgencia`), así que cualquier pregunta sobre esa red devuelve esos cinco
+valores y nada más. Es el camino más corto: **no hay que escribir ningún esquema**.
+
+La misma pregunta, en los tres modos, medida en esta máquina:
+
+| se manda | contesta | resultado | tiempo |
+|---|---|---|---|
+| `"mode": "decision"` | la decisión | los 5 valores del catálogo | 73 ms, 0 tokens |
+| `"mode": "chat"` | el chat | prosa | 8399 ms, 793 tokens |
+| sin `mode` (`auto`) | la decisión | los 5 valores del catálogo | 73 ms, 0 tokens |
+| sin `mode`, pregunta que el catálogo no cubre | el chat | prosa | 11446 ms, 1162 tokens |
+
+En las dos últimas filas se ve el `auto`: decide por su cuenta, y cuando la pregunta pide
+algo que el catálogo no puede dar (un informe, por ejemplo) se la pasa al chat.
+
+**Los otros dos formatos no usan el catálogo.** `natural` y `tipado` traen su propio
+esquema, pregunta a pregunta, y van siempre por la decisión.
 
 ```bash
 curl -s http://127.0.0.1:8100/ask -H "Content-Type: application/json" -d '{
