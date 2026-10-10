@@ -88,11 +88,11 @@ Y esto es lo que devuelve —la prosa, recortada—:
   "resultados": [
     {
       "via": "chat",
-      "texto": "Entiendo tu situación, y es muy frustrante no poder acceder a la aplicación cuando necesitas usarla. El error 500 es un problema técnico que indica que hay un fallo en el servidor o en el proceso de carga de la aplicación...\n\nA continuación, respondo a las preguntas que has planteado:\n\n**1. ¿A qué área hay que enviar este correo?**\nDeberías enviar el correo a la **sección de soporte técnico o atención al cliente**..."
+      "texto": "Buenos días. Entiendo perfectamente tu situación, y es muy frustrante no poder acceder a la aplicación cuando necesitas usarla. El error 500 es un problema técnico que indica que hay un fallo en el servidor o en el proceso de carga de la aplicación, por lo que el reinstalación no soluciona el problema, ya que el fallo no está en el archivo de la app.\n\nA continuación, respondo a las preguntas que has planteado:\n\n**1. ¿A qué área hay que enviar este correo?**\nDeberías enviar el correo a la **sección de soporte técnico o atención al cliente** de la plataforma o aplicación en la que utilizas..."
     }
   ],
-  "tiempo_ms": 4094.0,
-  "tokens": 421,
+  "tiempo_ms": 6519.5,
+  "tokens": 675,
   "formato": "chat",
   "n_preguntas": 1
 }
@@ -113,8 +113,12 @@ formato de la decisión —devolvió un `true` a secas en 2 tokens— y eso no e
 
 **La diferencia con los otros dos, en una línea:** `natural` y `tipado` **eligen** un valor
 de una lista que tú escribes; `chat` **escribe** lo que le parece. Los dos primeros gastan 0
-tokens; el tercero escribe, y por eso tarda mucho más. Con el mismo caso de arriba: 160 ms
-y 0 tokens la decisión, 4094 ms y 421 tokens el chat.
+tokens; el tercero escribe, y por eso tarda mucho más. Con el mismo caso de arriba: 85 ms y
+0 tokens la decisión, 6519 ms y 675 tokens el chat.
+
+*(La prosa del chat cambia de una corrida a otra —la de decisión es estable—, así que los
+tiempos y el texto de aquí son los de la corrida en la que se capturaron. Lo que no cambia
+es la diferencia: 0 tokens contra cientos.)*
 
 ---
 
@@ -546,8 +550,8 @@ print("lo que respondio el chat, entero:")
 print(d["chat"]["resultados"][0]["texto"])
 ```
 
-La respuesta de verdad. La decisión acierta y tarda 91 ms sin escribir nada; el chat
-escribe 400 tokens y de paso se pone a opinar:
+La respuesta de verdad. La decisión acierta y tarda 85 ms sin escribir nada; el chat escribe
+500 tokens y de paso se pone a opinar:
 
 ```json
 {
@@ -563,25 +567,25 @@ escribe 400 tokens y de paso se pone a opinar:
        "probabilities": {"soporte": 1.0, "facturacion": 0.0, "otros": 0.0},
        "confidence": 1.0}
     ],
-    "tiempo_ms": 91.6,
+    "tiempo_ms": 85.0,
     "tokens": 0
   },
   "chat": {
     "peticiones": 1,
     "resultados": [
       {"via": "chat",
-       "texto": "¡Buenos días! Entiendo tu frustración, y lamento mucho que estés sufriendo este problema. Un error 500 es un error de sistema que indica que algo falló en el servidor de nuestra plataforma, por lo que no podemos procesar tu iniciación de sesión.\n\nPara responder a tu pregunta:\n\n**1. ¿A qué área hay que enviar este correo?**\n\nDebes enviar el correo a la **Sección de Soporte Técnico / Atención al Cliente** (también a menudo llamada **Soporte Técnico y Soluciones de Incidencias**)."}
+       "texto": "¡Buenos días!\n\nEntiendo tu frustración, y es un problema común que ocurra cuando la aplicación tiene un fallo técnico (como el error 500) que impide el inicio de sesión.\n\n**1. ¿A qué área hay que enviar este correo?**\n\nPara que te pueda ayudar a resolver el problema, lo primero es enviar el correo a la **sección de soporte técnico o atención al cliente**..."}
     ],
-    "tiempo_ms": 3774.5,
-    "tokens": 410
+    "tiempo_ms": 4896.1,
+    "tokens": 513
   }
 }
 ```
 
 **Compáralas.** La decisión da `soporte` con un `1.0`: un valor, cerrado, que un programa
 puede leer y usar. El chat da la misma respuesta, pero dentro de un párrafo que empieza
-disculpándose, sigue explicando qué es un error 500 y acaba con dos nombres posibles para
-la misma área. Para un humano está bien; para un programa, no hay por dónde cogerlo.
+saludando, sigue explicando qué es un error 500 y acaba mandándote a buscar un formulario de
+contacto. Para un humano está bien; para un programa, no hay por dónde cogerlo.
 
 Los dos tiempos se miden **con el mismo reloj** —la ida y vuelta completa—, así que la
 comparación es honesta. La decisión contesta por preguntas; el chat contesta todo de una

@@ -127,8 +127,8 @@ Con cualquiera de las dos devuelve lo mismo: la prosa, entera.
 
 ```json
 {"resultados": [{"via": "chat",
-                 "texto": "Entiendo tu situación, y es muy frustrante no poder acceder a la aplicación..."}],
- "tiempo_ms": 4094.0, "tokens": 421, "n_preguntas": 1, "formato": "chat"}
+                 "texto": "Buenos días. Entiendo perfectamente tu situación, y es muy frustrante no poder acceder a la aplicación cuando necesitas usarla..."}],
+ "tiempo_ms": 6519.5, "tokens": 675, "n_preguntas": 1, "formato": "chat"}
 ```
 
 ### 2. `natural` — el contenido de un `.txt`, entero
