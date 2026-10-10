@@ -449,6 +449,23 @@ async def subir_documento(request: Request):
         r["aviso"] = (f"{r['caracteres']} caracteres puede no caber en el contexto "
                       f"del modelo (32768 tokens). Recorta el documento o sube "
                       f"el contexto al arrancar llama-server")
+    # Y las paginas que no se pudieron leer se dicen, porque el texto que va arriba
+    # parece el documento entero y no lo es: quien pregunte sobre el tiene que saber
+    # que le falta trozo.
+    mudas = r.get("paginas_ilegibles", 0) + r.get("paginas_sin_texto", 0)
+    if mudas:
+        causas = []
+        if r.get("paginas_ilegibles"):
+            causas.append(f"{r['paginas_ilegibles']} con texto ilegible (glifos de una "
+                          f"fuente sin traducir)")
+        if r.get("paginas_sin_texto"):
+            causas.append(f"{r['paginas_sin_texto']} solo con imagenes (un escaneo, "
+                          f"sin capa de texto)")
+        n = r["paginas_con_texto"]
+        r["aviso"] = (f"de {r['paginas']} paginas, {mudas} no se pudieron leer: "
+                      + " y ".join(causas) + ". El texto de arriba es solo el de "
+                      + ("la pagina legible." if n == 1
+                         else f"las {n} paginas legibles."))
     return JsonBonito(r)
 
 

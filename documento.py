@@ -18,6 +18,10 @@ los graficos de un pdf): si no esta, se dice que falta en vez de fallar por dent
 
     pip install pymupdf
 
+Un PDF no siempre trae texto que se pueda leer, y de eso se encarga `_de_pdf`: los
+escaneos no tienen capa de texto, y algunas fuentes no dicen que letra es cada glifo.
+Esas paginas no se cuelan como si fueran el documento: se cuentan y se dicen.
+
 El `.doc` y el `.rtf` antiguos NO se leen: hay que convertirlos antes (a .docx, a
 .pdf o a texto). Se dice claramente en vez de devolver basura.
 """
@@ -95,9 +99,48 @@ def limpiar(texto):
         else:
             unidas.append(l)
     texto = "\n".join(unidas)
+    # Restos de control que se cuelan de un PDF: se van, menos el salto y el tabulador,
+    # que si significan algo. Un caracter de control suelto no aporta nada y ensucia.
+    texto = "".join(c for c in texto if c in "\n\t" or ord(c) >= 32 or c == " ")
     texto = re.sub(r"\n{3,}", "\n\n", texto)      # 3+ saltos -> uno en blanco
     texto = re.sub(r"[ \t]{2,}", " ", texto)      # espacios de mas
     return texto.strip()
+
+
+def legible(texto, minimo=8):
+    """Si un trozo de PDF es texto de verdad, o glifos sin traducir.
+
+    Un PDF puede traer una fuente Type3: los glifos estan DIBUJADOS y no hay tabla que
+    diga que letra es cada uno. Entonces pymupdf no puede devolver letras, y devuelve
+    los codigos internos de la fuente. No hay manera de traducirlos, porque la tabla que
+    haria falta no esta en el fichero. Se detectan y se tiran, en vez de colarselos al
+    modelo como si fueran el documento.
+
+    Dos rasgos, medidos sobre un PDF real que venia asi comparando sus paginas rotas con
+    las buenas:
+
+      1. Caracteres de control. La firma mas directa de una fuente sin traducir.
+      2. Ausencia de espacios. La prosa lleva un espacio cada seis o siete caracteres;
+         en los codigos, el espacio tambien sale cifrado, asi que no hay ninguno.
+
+    Se probaron dos mas y se descartaron, porque TIRABAN TEXTO BUENO: "todo mayusculas"
+    y "pocas vocales" tambien los incumple un curriculum con titulos en mayusculas
+    (EXPERIENCIA PROFESIONAL) y listas de siglas (STM32, GCP, LoRaWAN). Una regla que se
+    lleva por delante un CV no sirve, por mucho que acierte con el documento roto.
+    """
+    t = (texto or "").strip()
+    if len(t) < minimo:
+        return True                       # tan corto que no hay nada que juzgar
+
+    # 1. Caracteres de control.
+    control = sum(1 for c in t if ord(c) < 32 and c not in "\n\r\t")
+    if control / len(t) > 0.05:
+        return False
+
+    # 2. Sin un solo espacio de verdad en un texto largo. El umbral de longitud es
+    #    alto a proposito: un nombre de fichero con guiones bajos tampoco lleva
+    #    espacios, y es texto legitimo.
+    return not (len(t) > 150 and t.count(" ") / len(t) < 0.02)
 
 
 # --------------------------------------------------------------------------- #
@@ -148,6 +191,13 @@ def _de_pdf(datos):
     `fitz` es el nombre viejo del modulo y sigue funcionando, pero pymupdf avisa de
     que va a desaparecer. Se prefiere el nombre nuevo y se deja el viejo como respaldo
     para versiones antiguas, que es lo que hace el propio proyecto.
+
+    Se lee TROZO a TROZO, y solo los de texto. Por dos motivos:
+
+      - Una pagina puede traer texto bueno y glifos sin traducir a la vez. Tirar la
+        pagina entera por culpa de un trozo seria perder lo que si se puede leer.
+      - Los trozos de imagen (tipo 1) no se tocan. De un escaneo no sale texto por
+        mucho que se lea: la pagina se cuenta como que no tiene, y se dice.
     """
     try:
         import pymupdf
@@ -156,18 +206,35 @@ def _de_pdf(datos):
             import fitz as pymupdf                 # nombre antiguo
         except ImportError:
             raise ValueError("para leer PDF hace falta pymupdf: pip install pymupdf")
+    legibles, ilegibles, sin_texto = [], 0, 0
     with pymupdf.open(stream=datos, filetype="pdf") as doc:
-        paginas = []
+        total = doc.page_count
         for pagina in doc:
-            t = pagina.get_text()
-            if t.strip():
-                paginas.append(t)
-        if not paginas:
-            raise ValueError("el PDF no tiene capa de texto (sera un escaneo): "
-                             "habria que pasarle un OCR antes")
+            trozos = [b[4] for b in pagina.get_text("blocks")
+                      if b[6] == 0 and b[4].strip()]
+            if not trozos:
+                sin_texto += 1
+                continue
+            # Primero la pagina ENTERA: si su texto no se puede leer, no hay trozo bueno
+            # que rascarle. Y luego trozo a trozo, por si una pagina buena trae uno malo.
+            if not legible("\n".join(trozos)):
+                ilegibles += 1
+                continue
+            buenos = [t for t in trozos if legible(t)]
+            if buenos:
+                legibles.append("\n".join(buenos))
+            else:
+                ilegibles += 1
+        if not legibles:
+            raise ValueError(
+                "el PDF no tiene texto que se pueda leer: "
+                f"{ilegibles} paginas con glifos sin traducir y {sin_texto} solo con "
+                "imagenes. Un escaneo necesita un OCR antes de entrar aqui")
     # El numero de paginas solo es un dato REAL en un PDF. En un .txt o un .docx no
     # hay paginas hasta que alguien lo maqueta, asi que ahi no se inventa.
-    return "\n\n".join(paginas), {"paginas": len(paginas)}
+    return ("\n\n".join(legibles),
+            {"paginas": total, "paginas_con_texto": len(legibles),
+             "paginas_ilegibles": ilegibles, "paginas_sin_texto": sin_texto})
 
 
 # Cada lector devuelve (texto, extras). Los extras son los datos que SOLO ese formato

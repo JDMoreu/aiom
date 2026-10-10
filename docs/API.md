@@ -247,7 +247,9 @@ el texto que sale de él pasa a ser la `entrada`.
 ```
 POST /documento        (el cuerpo en crudo, el nombre en la cabecera X-Nombre)
   -> {"texto": "...", "nombre": "carta.pdf", "tipo": "pdf",
-      "caracteres": 3910, "palabras": 587, "lineas": 56}
+      "caracteres": 3925, "palabras": 587, "lineas": 71,
+      "paginas": 1, "paginas_con_texto": 1,
+      "paginas_ilegibles": 0, "paginas_sin_texto": 0}
 ```
 
 Y luego se pregunta con normalidad, mandando `"documento": "<ese texto>"` junto a la
@@ -264,6 +266,34 @@ Qué se puede leer:
 
 El `.doc` y el `.rtf` antiguos no se leen; hay que convertirlos antes. Se dice cuál es
 el problema en vez de devolver texto a medias.
+
+### Un PDF no siempre trae texto que se pueda leer
+
+Y eso no se puede tapar con un `try`. Hay dos casos, y en los dos el texto **no está**:
+
+- **Páginas que son un escaneo.** No tienen capa de texto: la página *es* una imagen.
+  Se cuentan en `paginas_sin_texto`.
+- **Páginas con fuentes sin traducir.** El PDF trae una fuente *Type3* —los glifos están
+  dibujados— y ninguna tabla que diga qué letra es cada uno. pymupdf no puede inventarlo
+  y devuelve los códigos internos de la fuente, que no son letras. Se cuentan en
+  `paginas_ilegibles`.
+
+Las dos se detectan y **se tiran**, en vez de colárselas al modelo como si fueran el
+documento. Y se avisa, porque el texto que devuelve `POST /documento` parece el
+documento entero y no lo es:
+
+```json
+"aviso": "de 17 paginas, 16 no se pudieron leer: 3 con texto ilegible (glifos de una
+          fuente sin traducir) y 13 solo con imagenes (un escaneo, sin capa de texto).
+          El texto de arriba es solo el de la pagina legible."
+```
+
+Los cuatro números cuadran con `paginas`: `paginas_con_texto + paginas_ilegibles +
+paginas_sin_texto == paginas`. Si una página no sale en ninguno de los tres, es un fallo
+de la cuenta y hay que mirarlo.
+
+Si **ninguna** página se puede leer, `POST /documento` contesta con un `400` y lo dice,
+en vez de devolver un texto vacío o a medias.
 
 ## Un aviso medido: preguntar «¿aparece X?» con `noul` falla
 
