@@ -37,7 +37,7 @@
 <line x1="225" y1="238.0" x2="264" y2="238.0" stroke="#4A4F49" stroke-opacity="1.0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#punta-4A4F49)"/>
 <path d="M 225 338.0 L 346 338.0 Q 356 338.0 356 328.0 L 356 276" fill="none" stroke="#4A4F49" stroke-opacity="1.0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#punta-4A4F49)"/>
 <path d="M 225 438.0 L 568 438.0 Q 578 438.0 578 428.0 L 578 376" fill="none" stroke="#4A4F49" stroke-opacity="1.0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#punta-4A4F49)"/>
-<path d="M 449 238.0 L 799.5 238.0 Q 809.5 238.0 809.5 248.0 L 809.5 300" fill="none" stroke="#1B4D3E" stroke-opacity="1.0" stroke-width="1.8" stroke-linecap="round" marker-end="url(#punta-1B4D3E)"/>
+<path d="M 449 238.0 L 478 238.0 Q 488 238.0 488 248.0 L 488 338.0" fill="none" stroke="#1B4D3E" stroke-opacity="1.0" stroke-width="1.8" stroke-linecap="round" marker-end="url(#punta-1B4D3E)"/>
 <line x1="678" y1="338.0" x2="717" y2="338.0" stroke="#B4321F" stroke-opacity="1.0" stroke-width="2.2" stroke-linecap="round" marker-end="url(#punta-B4321F)"/>
 <path d="M 809.5 500 L 819.5 500 Q 809.5 500 809.5 490 L 809.5 376" fill="none" stroke="#7A3E12" stroke-opacity="0.85" stroke-width="1.5" stroke-linecap="round" marker-end="url(#punta-7A3E12)"/>
 <path d="M 902 338.0 L 902 338.0 Q 912 338.0 912 348.0 L 912 610" fill="none" stroke="#1E3A6E" stroke-opacity="1.0" stroke-width="1.8" stroke-linecap="round" marker-end="url(#punta-1E3A6E)"/>
