@@ -88,22 +88,31 @@ Y esto es lo que devuelve —la prosa, recortada—:
   "resultados": [
     {
       "via": "chat",
-      "texto": "Buenos días. Entiendo perfectamente tu situación, y es muy frustrante no poder acceder a la aplicación cuando necesitas usarla. El error 500 es un problema técnico que indica que hay un fallo en el servidor o en el proceso de carga de la aplicación, por lo que el reinstalación no soluciona el problema, ya que el fallo no está en el archivo de la app.\n\nA continuación, respondo a las preguntas que has planteado:\n\n**1. ¿A qué área hay que enviar este correo?**\nDeberías enviar el correo a la **sección de soporte técnico o atención al cliente** de la plataforma o aplicación en la que utilizas..."
+      "texto": "Buenos días, comprendo tu frustración. Un error 500 al iniciar sesión es un problema crítico que impide tu acceso a la plataforma, por lo que te lo reporto con la mayor urgencia posible.\n\nAquí tienes la información solicitada:\n\n1. **Área:** 'soporte' (Fallos y errores del producto)\n2. **Urgencia:** 2 (Alta: hay una fecha límite encima, ya que no puedes acceder a tu cuenta y gestionar tus actividades)\n3. **Plan anual..."
     }
   ],
-  "tiempo_ms": 6519.5,
-  "tokens": 675,
+  "tiempo_ms": 1958.1,
+  "tokens": 187,
   "formato": "chat",
   "n_preguntas": 1
 }
 ```
 
 Fíjate en lo que **no** hay: ni `campo`, ni `tipo`, ni `probability`, ni `confidence`. Esos
-campos son de la decisión, y aquí no existen porque no hay nada que elegir.
+campos son de la decisión, y aquí no existen porque no hay nada que elegir. Pero fíjate
+también en lo que **sí** hay: `'soporte' (Fallos y errores del producto)` y `2 (Alta: ...)`,
+**tus nombres de opción**, porque el chat recibe las mismas reglas que la decisión.
 
-**Las cabeceras no llegan al modelo.** Con `entrada`, el `input:`, los `ask:` y los
-`choice:` se quitan antes de pasárselo: medido, con ellos delante el modelo contesta en el
-formato de la decisión —devolvió un `true` a secas en 2 tokens— y eso no es prosa.
+**Las reglas van en prosa, no en cabeceras.** Con `entrada` el chat recibe el caso, las
+preguntas, las opciones de cada una y los niveles de cada escala —lo mismo que la decisión—
+pero escrito en lenguaje llano, sin el `ask:` ni el `choice:`. Se probó de las tres maneras
+y esta es la que funciona:
+
+| qué recibe el chat | qué contesta |
+|---|---|
+| el `.txt` con las cabeceras | un `true` a secas, en 2 tokens. No es prosa |
+| el caso y los enunciados, sin las reglas | prosa, pero **se inventa los nombres**: «Sección de Soporte Técnico / Atención al Cliente». 506 tokens |
+| **las reglas, en prosa** | prosa **y con tus nombres**: `'soporte'`, `2 (Alta...)`. 187 tokens |
 
 **Y también acepta una pregunta suelta**, si lo que quieres es preguntar algo y ya está:
 
@@ -113,12 +122,8 @@ formato de la decisión —devolvió un `true` a secas en 2 tokens— y eso no e
 
 **La diferencia con los otros dos, en una línea:** `natural` y `tipado` **eligen** un valor
 de una lista que tú escribes; `chat` **escribe** lo que le parece. Los dos primeros gastan 0
-tokens; el tercero escribe, y por eso tarda mucho más. Con el mismo caso de arriba: 85 ms y
-0 tokens la decisión, 6519 ms y 675 tokens el chat.
-
-*(La prosa del chat cambia de una corrida a otra —la de decisión es estable—, así que los
-tiempos y el texto de aquí son los de la corrida en la que se capturaron. Lo que no cambia
-es la diferencia: 0 tokens contra cientos.)*
+tokens; el tercero escribe, y por eso tarda mucho más. Con el mismo caso de arriba: 122 ms y
+0 tokens la decisión, 1958 ms y 187 tokens el chat.
 
 ---
 
@@ -213,7 +218,7 @@ recortada solo en la prosa del primer resultado, que es larga:
       "confidence": 0.8726
     }
   ],
-  "tiempo_ms": 117.7,
+  "tiempo_ms": 122.3,
   "tokens": 0,
   "n_preguntas": 3,
   "formato": "natural"
@@ -513,6 +518,21 @@ la respuesta lo dice en `aviso`: ese texto puede traer errores.
 
 ## 6. La comparación: las dos vías a la vez
 
+**Antes de nada, para que no se confundan dos cosas que se parecen:**
+
+- **El formato `chat`** pregunta **solo al chat**: una petición, una respuesta en prosa.
+- **`"comparar": true`** corre **las dos vías en la misma petición** —la decisión y el
+  chat— y devuelve las dos juntas, para poder compararlas.
+
+El chat es **el mismo en los dos casos**: lo que cambia es que `comparar` además lanza la
+decisión. Por eso las dos salidas de chat de esta página no son dos mecanismos distintos,
+son el mismo con entradas distintas: la del apartado 1 lleva las tres preguntas y la de
+aquí una sola, y de ahí que tarden distinto.
+
+Y **las dos vías reciben las mismas reglas**: el caso, las preguntas, las opciones de cada
+una y los niveles de cada escala. Lo único que cambia entre ellas es **la forma de la
+respuesta** —valores o prosa—, que es justo lo que se quiere comparar.
+
 Con `"comparar": true`, la **misma** petición resuelve el caso por las dos vías —decisión y
 chat— y devuelve las dos, para que los tiempos sean del mismo momento.
 
@@ -550,8 +570,8 @@ print("lo que respondio el chat, entero:")
 print(d["chat"]["resultados"][0]["texto"])
 ```
 
-La respuesta de verdad. La decisión acierta y tarda 85 ms sin escribir nada; el chat escribe
-500 tokens y de paso se pone a opinar:
+La respuesta de verdad. La decisión acierta y tarda 130 ms sin escribir nada; el chat
+escribe 244 tokens y de paso se pone a opinar:
 
 ```json
 {
@@ -567,25 +587,29 @@ La respuesta de verdad. La decisión acierta y tarda 85 ms sin escribir nada; el
        "probabilities": {"soporte": 1.0, "facturacion": 0.0, "otros": 0.0},
        "confidence": 1.0}
     ],
-    "tiempo_ms": 85.0,
+    "tiempo_ms": 130.2,
     "tokens": 0
   },
   "chat": {
     "peticiones": 1,
     "resultados": [
       {"via": "chat",
-       "texto": "¡Buenos días!\n\nEntiendo tu frustración, y es un problema común que ocurra cuando la aplicación tiene un fallo técnico (como el error 500) que impide el inicio de sesión.\n\n**1. ¿A qué área hay que enviar este correo?**\n\nPara que te pueda ayudar a resolver el problema, lo primero es enviar el correo a la **sección de soporte técnico o atención al cliente**..."}
+       "texto": "Buenos días,\n\nLo siento mucho que estés sufriendo este problema, ¡es una situación muy frustrante! El error 500 al intentar iniciar sesión es un fallo del sistema que afecta a la funcionalidad básica de la aplicación.\n\nPara que podamos ayudarte a resolverlo, el correo debe enviarse a la sección de **'soporte' (Fallos y errores del producto)**..."}
     ],
-    "tiempo_ms": 4896.1,
-    "tokens": 513
+    "tiempo_ms": 2468.2,
+    "tokens": 244
   }
 }
 ```
 
 **Compáralas.** La decisión da `soporte` con un `1.0`: un valor, cerrado, que un programa
-puede leer y usar. El chat da la misma respuesta, pero dentro de un párrafo que empieza
-saludando, sigue explicando qué es un error 500 y acaba mandándote a buscar un formulario de
-contacto. Para un humano está bien; para un programa, no hay por dónde cogerlo.
+puede leer y usar. El chat da **el mismo nombre** —`'soporte' (Fallos y errores del
+producto)`— pero dentro de un párrafo que empieza compadeciéndose, sigue explicando qué es
+un error 500 y acaba diciéndote a qué sección mandarlo. Para un humano está bien; para un
+programa, no hay por dónde cogerlo.
+
+**Eso es exactamente lo que se compara**: las dos reciben el mismo caso y las mismas reglas,
+y las dos aciertan el área. La diferencia no es *qué* contestan, es *cómo*.
 
 Los dos tiempos se miden **con el mismo reloj** —la ida y vuelta completa—, así que la
 comparación es honesta. La decisión contesta por preguntas; el chat contesta todo de una

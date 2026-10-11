@@ -379,36 +379,35 @@ todas las preguntas de golpe y el chat contesta todo en una respuesta. Por la AP
 
 Lo que sale, medido aquí:
 
-**Decisión** — 1 petición, 211 ms, **0 tokens**:
+**Decisión** — 1 petición, 183 ms, **0 tokens**:
 
 ```
 CHOICE  ·  ¿A qué área hay que enviar este correo?
-  facturacion     0.683  <-
-  soporte         0.280
-  comercial       0.036
+  facturacion     0.665  <-
+  soporte         0.292
+  comercial       0.042
   otros           0.000
-  confianza = 0.467
+  confianza = 0.451
 ```
 
-**Chat** — 1 petición, 2423 ms, 146 tokens, y en prosa:
+**Chat** — 1 petición, 1502 ms, 140 tokens, y en prosa:
 
-> **soporte: Fallos y errores del producto**
+> Aquí tienes las respuestas a tus preguntas:
 >
-> **Explicación:** El cliente está quejándose principalmente de un problema técnico grave
-> con su servicio (cortes de conexión casi todas las noches) y de que no ha recibido
-> soluciones de su equipo. Aunque también menciona problemas de cobro (facturas dobles),
-> el núcleo de su queja es el fallo del servicio.
+> 1. **Área:** `facturacion` (porque el cliente menciona que ha sido cobrado dos veces la
+>    factura de este mes).
+> 2. **Urgencia:** `2` (Alta), ya que el cliente menciona que si la situación no se
+>    resuelve, se va a dar de baja.
+> 3. **Amenaza con darse de baja:** `true` (porque el cliente lo menciona explícitamente).
 
-**Y aquí está lo que merece la pena mirar: no coinciden.** La decisión dice `facturacion`
-(0.683) y el chat dice `soporte`. Los dos tienen su argumento —el correo habla de cortes
-**y** de un cobro duplicado—, pero solo uno de los dos da **un número con el que decidir**.
+**Y aquí está lo que merece la pena mirar: las dos aciertan lo mismo.** La decisión da
+`facturacion` y el chat también. Las dos reciben el mismo caso y las mismas reglas —las
+opciones y los niveles—, así que la diferencia no es *qué* contestan.
 
-**La diferencia no es el tiempo, es la forma.** Decisión da **un valor y el reparto
-entero**: se ve que dudaba (0.683 no es 1.000) y se le puede poner un umbral. El chat da
-una respuesta **y un párrafo justificándola** — hay que leerlo, decidir a mano si vale, y un
-programa no puede hacerlo.
-
-Esa es la diferencia de fondo: **las dos responden, pero solo una es comparable.**
+**La diferencia es la forma.** La decisión da **el valor y el reparto entero**, y eso un
+programa lo lee y decide con un umbral. El chat da **el valor con una justificación de tres
+líneas**, y para usarlo habría que leerlo y sacarle el dato con expresiones regulares. Esa
+es la diferencia de fondo: **las dos responden, pero solo una se puede consumir.**
 
 *(En el chat la redacción cambia de una corrida a otra; la de decisión es estable.)*
 

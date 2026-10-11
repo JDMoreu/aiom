@@ -32,7 +32,8 @@ LOS TRES FORMATOS DE ENTRADA
                 ejemplo, y el mas comodo de escribir a mano.
     tipado      el JSON de TypeSafe: `state.input` + `questions`. Para cuando el que
                 llama ya trabaja con esquemas.
-    chat        lo mismo que `natural`, pero en prosa. Aqui no hay esquema ni valores: el
+    chat        lo mismo que `natural`, pero en prosa: recibe EL MISMO caso y las MISMAS
+                reglas -las opciones y los niveles-, escritas en prosa y sin cabeceras. El
                 modelo escribe. Para lo que NO es una decision (redactar, explicar).
 
 `natural` y `tipado` son las vias de DECISION: devuelven valores y no generan un token.

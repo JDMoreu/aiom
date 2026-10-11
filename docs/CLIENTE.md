@@ -101,10 +101,11 @@ Por eso el resultado no va emparejado fila a fila: a la izquierda van **los valo
 decisión, uno por pregunta**, y a la derecha **la respuesta del chat, entera**. Es lo que
 hay: el chat no contesta por preguntas sueltas, contesta de una vez.
 
-Al chat **no se le pasan los criterios** —ni las cabeceras `ask:`/`choice:`—, solo el caso
-y los enunciados. Con los criterios delante contesta en el formato de la decisión: medido,
-devolvió un `true` a secas en 2 tokens. Los criterios son el mecanismo de la decisión; el
-chat contesta con lo que sabe.
+Al chat **se le pasan las mismas reglas que a la decisión** —el caso, las preguntas, las
+opciones y los niveles—, pero **en prosa y sin las cabeceras** `ask:`/`choice:`. Se probó
+de las tres maneras y esta es la que funciona: con las cabeceras delante contesta en el
+formato de la decisión (medido: un `true` a secas en 2 tokens), y sin las reglas se inventa
+los nombres de las opciones. Con ellas, contesta en prosa y usa tus nombres.
 
 Arriba de la lectura, **con ella**, una caja enseña los totales de las dos vías con su
 rótulo y el multiplicador. Antes de la primera medición esa caja no existe: la pantalla

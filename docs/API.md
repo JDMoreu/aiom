@@ -127,8 +127,8 @@ Con cualquiera de las dos devuelve lo mismo: la prosa, entera.
 
 ```json
 {"resultados": [{"via": "chat",
-                 "texto": "Buenos días. Entiendo perfectamente tu situación, y es muy frustrante no poder acceder a la aplicación cuando necesitas usarla..."}],
- "tiempo_ms": 6519.5, "tokens": 675, "n_preguntas": 1, "formato": "chat"}
+                 "texto": "Buenos días, comprendo tu frustración. Un error 500 al iniciar sesión es un problema crítico que impide tu acceso a la plataforma..."}],
+ "tiempo_ms": 1958.1, "tokens": 187, "n_preguntas": 1, "formato": "chat"}
 ```
 
 ### 2. `natural` — el contenido de un `.txt`, entero
@@ -150,7 +150,7 @@ completa está en «Lo que devuelve», más abajo):
                  "probabilities": {"soporte": 1.0, "facturacion": 0.0,
                                    "comercial": 0.0, "otros": 0.0},
                  "confidence": 1.0}],
- "tiempo_ms": 117.7, "tokens": 0, "n_preguntas": 3, "formato": "natural"}
+ "tiempo_ms": 122.3, "tokens": 0, "n_preguntas": 3, "formato": "natural"}
 ```
 
 ### 3. `tipado` — el formato de TypeSafe, tal cual
@@ -173,9 +173,10 @@ tú lo cambias.
 
 ## El chat no lleva persona de dominio, y es a propósito
 
-Contesta como **asistente genérico**: la vía de decisión es la que está diseñada para la
-tarea, y el chat es el listón con el que se compara. Para que la comparación diga algo,
-tiene que ser un LLM corriente y no un agente ya especializado en el tema.
+Contesta como **asistente genérico** —sin persona de dominio, a propósito—, pero con **las
+mismas reglas que la vía de decisión**: el caso, las preguntas, las opciones de cada una y
+los niveles de cada escala. Así la comparación dice algo: las dos reciben la misma
+información, y lo único que cambia es la **forma** de la respuesta.
 
 ### El formato de un campo
 
@@ -250,7 +251,7 @@ verdad, con tres preguntas de los tres tipos en una sola petición:
       "confidence": 0.8726
     }
   ],
-  "tiempo_ms": 117.7,
+  "tiempo_ms": 122.3,
   "tokens": 0,
   "n_preguntas": 3,
   "formato": "natural"
@@ -476,9 +477,8 @@ La **medida** —los números de las dos vías— vive **con la respuesta**, no 
 pegada arriba: son los números de esto que acabas de leer, y separarlos obligaba a mirar
 en dos sitios para juntar el dato con su tiempo.
 
-El **chat no lleva persona de dominio**: contesta como asistente genérico, para que la
-comparación con la decisión sea contra un LLM corriente y no contra un agente ya
-especializado en el tema.
+El **chat no lleva persona de dominio**: contesta como asistente genérico. Lo que sí lleva
+son **las mismas reglas** que la decisión, para que la comparación sea en igualdad.
 
 ## Los otros endpoints
 

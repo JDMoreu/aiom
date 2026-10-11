@@ -129,6 +129,27 @@ def _de_campos(campos, preguntas):
     return salida
 
 
+def _con_las_reglas(estado, preguntas):
+    """El caso y las preguntas CON sus reglas, en lenguaje llano.
+
+    Al chat se le dan las MISMAS reglas que a la via de decision -las opciones de cada
+    pregunta y los niveles de cada escala-, pero escritas en prosa y SIN las cabeceras
+    `ask:`/`choice:`. La diferencia importa, y esta medida:
+
+      - con las cabeceras delante, el modelo contesta en el formato de la decision
+        (un `true` a secas, 2 tokens), y eso no es prosa;
+      - sin las reglas, contesta en prosa pero se inventa los nombres (506 tokens, y
+        llamaba al area "Seccion de Soporte Tecnico / Atencion al Cliente");
+      - con las reglas en prosa, contesta en prosa Y con los nombres de las opciones
+        (63 tokens).
+
+    Asi las dos vias reciben la misma informacion, que es lo que hace que la comparacion
+    diga algo: la diferencia es la FORMA de la respuesta, no lo que se le conto.
+    """
+    lineas = [f"{i}. {c['description']}" for i, (_, c) in enumerate(preguntas, 1)]
+    return f"{estado}\n\nResponde a estas preguntas:\n" + "\n".join(lineas)
+
+
 def por_chat(cuerpo, cfg):
     """Una pregunta suelta, en prosa. Sin esquema y sin valores: el modelo escribe.
 
@@ -139,20 +160,14 @@ def por_chat(cuerpo, cfg):
 
       - `question`: una frase suelta. Lo mas corto.
       - `entrada`: el mismo texto que el formato natural, con sus cabeceras (`input:`,
-        `ask:`, `choice:`...). Asi se le puede pasar EL MISMO caso que a la decision y
-        comparar las dos respuestas sin reescribir nada.
-
-    Con `entrada` se le quitan las cabeceras antes de pasarselo al modelo, y no es un
-    capricho: medido, con los `ask:`/`choice:` delante el modelo contesta en el formato de
-    la decision -devolvio un `true` a secas en 2 tokens- y eso no es prosa.
+        `ask:`, `choice:`...). Asi se le puede pasar EL MISMO caso que a la decision, con
+        las mismas reglas, y comparar las dos respuestas sin reescribir nada.
     """
     doc = _documento(cuerpo)
     texto = cuerpo.get("entrada")
     if isinstance(texto, str) and texto.strip():
         estado, preguntas = preguntar.parsear(texto, entrada=doc)
-        lista = "\n".join(f"{i}. {c['pregunta']}"
-                          for i, (_, c) in enumerate(preguntas, 1))
-        pregunta = f"{estado}\n\nResponde a estas preguntas:\n{lista}"
+        pregunta = _con_las_reglas(estado, preguntas)
     else:
         q = cuerpo.get("question")
         if not isinstance(q, str) or not q.strip():
@@ -235,28 +250,29 @@ def prompts_natural(cuerpo, cfg):
     Una sola peticion, que es como se le pregunta a un asistente, y con la misma entrada
     que resuelve la decision, para que la comparacion sea en igualdad.
 
-    Se le pasan los ENUNCIADOS, no el .txt tal cual. El .txt lleva las cabeceras `ask:`,
-    `choice:`, `noul:` y los criterios, y con eso delante el modelo contesta en el formato
-    de la decision: medido, devolvio un `true` a secas en 2 tokens. Eso no es prosa y no
-    se puede comparar con nada. Los criterios son el mecanismo de la decision; el chat
-    contesta con lo que sabe.
+    Se le dan las MISMAS REGLAS que a la decision -las opciones y los niveles-, pero
+    escritas en prosa y sin las cabeceras `ask:`/`choice:`. Se probo de las tres maneras y
+    esta es la que funciona: con las cabeceras contesta en el formato de la decision (un
+    `true` a secas), y sin las reglas se inventa los nombres de las opciones.
     """
     estado, preguntas = preguntar.parsear(cuerpo["entrada"], entrada=_documento(cuerpo))
-    lista = "\n".join(f"{i}. {c['pregunta']}" for i, (_, c) in enumerate(preguntas, 1))
-    return [f"{estado}\n\nResponde a estas preguntas:\n{lista}"]
+    return [_con_las_reglas(estado, preguntas)]
 
 
 def prompts_tipado(cuerpo, cfg):
     """Lo mismo en el formato tipado: aqui no hay .txt, asi que el texto se arma.
 
-    El caso y los enunciados juntos, en UNA peticion, sin los `criteria`: son el
-    mecanismo de la decision, y el chat no los usa.
+    El caso y las preguntas con sus reglas, en UNA peticion. Las reglas salen del esquema
+    que ya trae el JSON, y se escriben en prosa: al chat no se le manda JSON.
     """
     doc = _documento(cuerpo)
     entrada = doc or cuerpo["state"].get("input", "")
-    lista = "\n".join(f"{i}. {c.get('instructions', '')}"
-                      for i, c in enumerate(cuerpo["questions"].values(), 1))
-    return [f"{entrada}\n\nResponde a estas preguntas:\n{lista}"]
+    _, esquema = tipado.traducir(cuerpo)
+    lineas = []
+    for i, (nombre, preg) in enumerate(cuerpo["questions"].items(), 1):
+        reglas = esquema.get(nombre, {}).get("description", "")
+        lineas.append(f"{i}. {reglas or preg.get('instructions', '')}")
+    return [f"{entrada}\n\nResponde a estas preguntas:\n" + "\n".join(lineas)]
 
 
 # Solo los dos formatos de DECISION tienen con que compararse: en `chat` las dos vias
