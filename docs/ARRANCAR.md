@@ -1,13 +1,13 @@
 # Arrancarlo tú mismo, de cero
 
 Todo se ejecuta **en tu equipo**, sin nube. Esta es la ruta completa: el modelo, el
-servidor, el cliente de consola, la API y la interfaz web.
+servidor, la API y el cliente web.
 
 Lo que hace falta, y para qué:
 
 | | para qué |
 |---|---|
-| **Python 3.10+** | el cliente. La consola, el tipado y el motor: **solo biblioteca estándar**. |
+| **Python 3.10+** | el cliente. La API usa **FastAPI**; el analizador del formato natural, el tipado y el motor: **solo biblioteca estándar**. |
 | **Una GPU con Vulkan** | el servidor. Sin GPU funciona, pero en CPU tarda mucho más. |
 | **El fork de llama.cpp** | el endpoint `/v1/decision`. **Es el requisito duro**: sin él no hay vía de decisión. |
 | **El modelo** | 4,1 GB en disco, ~9 GB en VRAM con `-ngl 99`. |
@@ -124,52 +124,34 @@ Tiene que contestar `{"status":"ok"}`. Si dice `"Loading model"`, espera un poco
 ## Paso 5 — Preguntar: las dos puertas
 
 Con el servidor arriba hay **dos formas de entrar**, y las dos acaban en el mismo sitio.
-Ninguna carga el modelo: se conectan al servidor del paso 3.
-
-### La puerta humana: por consola
-
-```bash
-cd <ruta>\aiom
-python preguntar.py ejemplos\5_correo_soporte.txt
-```
-
-```
-1 pregunta(s), una sola peticion  (135 ms, 0 tokens)
-
-CHOICE  ·  ¿A qué área hay que enviar este correo?
-  facturacion     0.665  ##############################  <-
-  soporte         0.295  ############.........
-  comercial       0.040  ##...................
-  otros           0.000  .....................
-```
-
-Hay un ejemplo por tipo, para probarlos todos:
+Ninguna carga el modelo: se conectan al servidor del paso 3. Y las sirve la misma `api.py`,
+que levanta la API **y** el cliente web en el mismo proceso:
 
 ```bash
-python preguntar.py ejemplos\1_opciones.txt        elegir de una lista
-python preguntar.py ejemplos\2_niveles.txt         poner algo en una escala
-python preguntar.py ejemplos\3_booleano.txt        verdadero o falso
-python preguntar.py ejemplos\4_tres_preguntas.txt  las tres de golpe
-python preguntar.py ejemplos\5_correo_soporte.txt  un correo real, con las tres
+pip install fastapi "uvicorn[standard]"
+python api.py        # abre http://127.0.0.1:8100/
+```
+
+### La puerta humana: el cliente web
+
+Se abre `http://127.0.0.1:8100/` y ahí está todo: se escribe el caso y las preguntas —por
+bloques, en lenguaje natural o en JSON— y se pregunta. Hay un ejemplo por tipo, para
+probarlos todos pegando su contenido:
+
+```
+ejemplos\1_opciones.txt        elegir de una lista
+ejemplos\2_niveles.txt         poner algo en una escala
+ejemplos\3_booleano.txt        verdadero o falso
+ejemplos\4_tres_preguntas.txt  las tres de golpe
+ejemplos\5_correo_soporte.txt  un correo real, con las tres
 ```
 
 Y no hace falta tocar código para escribir los tuyos: mira [`MANUAL.md`](MANUAL.md).
 
-### La puerta de programa: la API y la interfaz web
+### La puerta de programa: la API
 
-La API es FastAPI, así que ese paso va primero:
-
-```bash
-pip install fastapi "uvicorn[standard]"
-python api.py --ui        # abre http://127.0.0.1:8100/
-```
-
-`api.py` levanta la API **y sirve la interfaz web en el mismo proceso**, así que no hay un
-segundo servidor ni un paso de compilación. Desde ahí:
-
-- **La interfaz**, en el navegador, con los tres modos (bloques, lenguaje natural, JSON
-  tipado) y la comparación de las dos vías. Está explicada en [`CLIENTE.md`](CLIENTE.md).
-- **La API**, para cualquier programa que hable HTTP. Está en [`API.md`](API.md).
+Para cualquier programa que hable HTTP. Está en [`API.md`](API.md); el cliente web, la otra
+puerta, está explicado en [`CLIENTE.md`](CLIENTE.md).
 
 Lo mismo desde la línea de comandos, sin navegador:
 
@@ -219,8 +201,9 @@ winget install Python.Python.3.13
 
 Y comprueba con `python --version` en una terminal **nueva**.
 
-**Lo que se instala.** La consola, el tipado y el motor —los tres ficheros que hacen las
-preguntas— usan **solo la biblioteca estándar**. Se instalan dos cosas más:
+**Lo que se instala.** El analizador del formato natural, el tipado y el motor —los
+ficheros que hacen las preguntas— usan **solo la biblioteca estándar**. Se instalan dos
+cosas más:
 
 ```bash
 pip install fastapi "uvicorn[standard]"   # la API: es un framework web
@@ -234,6 +217,6 @@ Un `.docx`, un `.txt` o un `.md` se leen sin instalar nada.
 
 ## Y ya está
 
-Con eso tienes el montaje entero: **el servidor arriba, el cliente de consola, la API y la
-interfaz**. Lo único que queda por medir es la comparación de las dos vías, y esa se mide
-en vivo con tus propias preguntas —desde la interfaz, o con `comparar:true` en la API—.
+Con eso tienes el montaje entero: **el servidor arriba, la API y el cliente web**. Lo único
+que queda por medir es la comparación de las dos vías, y esa se mide en vivo con tus
+propias preguntas —desde el cliente web, o con `comparar:true` en la API—.

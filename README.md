@@ -22,12 +22,11 @@ sabe generar texto; el backend
 añade uno que **puntúa las opciones en lugar de redactar**. Por eso el modo de decisión
 no gasta tokens: no es que escriba poco, es que **no pasa por el bucle de generación**.
 
-**El cliente tiene dos puertas y las dos acaban en el mismo sitio.** Por consola
-(`preguntar.py`, que habla con el servidor el solo) o por HTTP, contra `api.py` —la API,
-que además sirve la interfaz web en el mismo proceso—. Y a la API también se la puede
-llamar **sin cliente ninguno**: con `curl` o Postman. El modo —decisión o chat— no es del
-sistema: es **una propiedad de la petición**, y por eso se pueden pedir los dos a la vez y
-compararlos.
+**El cliente tiene dos puertas y las dos acaban en el mismo sitio.** La **API**, que habla
+con el servidor, y el **cliente web**, que `api.py` sirve en el mismo proceso. Y a la API
+también se la puede llamar **sin cliente ninguno**: con `curl` o Postman. El modo —decisión
+o chat— no es del sistema: es **una propiedad de la petición**, y por eso se pueden pedir
+los dos a la vez y compararlos.
 
 ## Empezar
 
@@ -38,17 +37,17 @@ el backend de decisión; el resto es este repositorio.
 # 1. el servidor (una terminal aparte; tarda en cargar el modelo)
 llama-server -m modelo.gguf -ngl 99 -fa on -c 32768 --decision-seqs 64 --port 8096
 
-# 2. preguntar (desde la carpeta del repositorio)
-python preguntar.py ejemplos/1_opciones.txt
+# 2. la API y el cliente web (desde la carpeta del repositorio; abre http://127.0.0.1:8100/)
+python api.py
 ```
 
 `--decision-seqs` **no es opcional**: sin él el endpoint de decisión no existe.
 
 **[→ Cómo montarlo todo paso a paso, de cero, y qué hacer si falla](docs/ARRANCAR.md)**
 
-Para preguntar por consola **no hace falta instalar nada**: la consola, el tipado y el
-motor son solo biblioteca estándar. La API usa **FastAPI**, y con ella trae su propia
-página de pruebas en `http://127.0.0.1:8100/docs`. De dónde sale cada pieza está en
+Para preguntar hace falta **FastAPI** (`pip install fastapi "uvicorn[standard]"`), que es
+lo que levanta la API y sirve el cliente web. La API trae su propia página de pruebas en
+`http://127.0.0.1:8100/docs`. De dónde sale cada pieza está en
 [`CREDITOS.md`](docs/CREDITOS.md).
 
 ## Las dos formas de preguntar
@@ -85,13 +84,18 @@ como un verdadero o falso —la vía de decisión necesita un conjunto finito—
 está el formato **`chat`**, que es la otra vía del servidor: una pregunta suelta y el modelo
 escribe la respuesta.
 
+Se pega el contenido de cada uno en el cliente web, o se manda a la API en el campo
+`entrada`:
+
 ```bash
-python preguntar.py ejemplos/1_opciones.txt        # elegir de una lista
-python preguntar.py ejemplos/2_niveles.txt         # poner algo en una escala
-python preguntar.py ejemplos/3_booleano.txt        # verdadero o falso
-python preguntar.py ejemplos/4_tres_preguntas.txt  # las tres de golpe
-python preguntar.py ejemplos/5_correo_soporte.txt  # un correo real, con las tres
+# el contenido del fichero, en el campo "entrada" (con --data-binary, que respeta el UTF-8)
+python -c "import json;print(json.dumps({'formato':'natural','entrada':open('ejemplos/5_correo_soporte.txt',encoding='utf-8').read()}))" > p.json
+curl -s http://127.0.0.1:8100/ask -H "Content-Type: application/json" --data-binary @p.json
 ```
+
+Hay un ejemplo por tipo: `1_opciones.txt` (elegir de una lista), `2_niveles.txt` (poner
+algo en una escala), `3_booleano.txt` (verdadero o falso), `4_tres_preguntas.txt` (las tres
+de golpe) y `5_correo_soporte.txt` (un correo real).
 
 Los cinco están explicados paso a paso, con su salida real, en
 [`docs/MANUAL.md`](docs/MANUAL.md).
@@ -160,11 +164,9 @@ vistas de lo mismo: se cambia de pestaña y lo escrito aparece en la otra forma.
 
 **Y el caso no hace falta escribirlo**: se carga un documento (pdf, docx, txt, md, csv) y
 las preguntas van sobre él. Un `.docx` se lee sin instalar nada; un `.pdf` pide
-`pip install pymupdf`. Lo mismo desde la línea de comandos:
-
-```bash
-python preguntar.py mis_preguntas.txt --documento carta.pdf
-```
+`pip install pymupdf`. El cliente web lo sube y enseña el texto extraído; con la API son
+**dos llamadas** —`POST /documento` y luego `POST /ask`—, y están completas en
+[`docs/EJEMPLOS.md`](docs/EJEMPLOS.md).
 
 `formato` es `natural`, `tipado` o `chat` —se declara, no se adivina—. Los dos primeros son
 vías de decisión (valores, 0 tokens); el tercero es prosa. Detalles en
@@ -203,9 +205,9 @@ comparación y desde el navegador.
 Esto es todo el proyecto. No hay nada más:
 
 ```
-preguntar.py         LA PUERTA DE ENTRADA: escribes en lenguaje natural y deduce el
-                     tipo por la cabecera; una o varias preguntas en una petición
-                     (--documento hace que el caso salga de un pdf, docx, txt...)
+preguntar.py         el analizador del formato natural: lee las cabeceras (input:, ask:,
+                     choice:, score:, noul:) y deduce el tipo de cada pregunta; una o
+                     varias en una petición. Lo usa la API, no se ejecuta por consola
 aiom.py              el núcleo: hablar con llama-server, el vocabulario del proyecto y la
                      vía de chat. El esquema no vive aquí: lo trae cada petición
 tipado.py            el traductor del formato tipado (el de TypeSafe, tal cual)
@@ -236,8 +238,8 @@ README.md            este fichero
 
 ## Requisitos
 
-- Python 3.10+ — la consola, el tipado y el motor **no tienen dependencias**: solo la
-  biblioteca estándar.
+- Python 3.10+ — el analizador del formato natural, el tipado y el motor **no tienen
+  dependencias**: solo la biblioteca estándar. (Los usa la API.)
 - Para la **API**: `pip install fastapi "uvicorn[standard]"`.
 - Un `llama-server` con el endpoint `/v1/decision`, del backend
   [`parallel-decision`](https://github.com/thecodacus/llama.cpp/tree/parallel-decision).

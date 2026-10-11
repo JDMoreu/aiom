@@ -75,31 +75,37 @@ choice:
   otros: Todo lo demás
 ```
 
-Guardado eso como `caso.txt` y ejecutado, sale **esto de verdad**:
+Ese texto se pega en el cliente web, o se manda a la API en el campo `entrada`. Preguntado
+de verdad, `POST /ask` devuelve **esto**:
 
-```
-$ python preguntar.py caso.txt
-
-1 pregunta(s), una sola peticion  (135 ms, 0 tokens)
-
---------------------------------------------------------------
-CHOICE  ·  ¿A qué área hay que enviar este correo?
---------------------------------------------------------------
-  soporte         1.000  ##############################  <-
-  otros           0.000  ..............................
-  facturacion     0.000  ..............................
-  comercial       0.000  ..............................
-
-  confianza = 1.000
+```json
+{
+  "resultados": [
+    {
+      "campo": "decision",
+      "tipo": "choice",
+      "pregunta": "¿A qué área hay que enviar este correo?",
+      "value": "soporte",
+      "probability": 1.0,
+      "probabilities": {"soporte": 1.0, "facturacion": 0.0, "comercial": 0.0, "otros": 0.0},
+      "confidence": 1.0
+    }
+  ],
+  "tiempo_ms": 133.8,
+  "tokens": 0,
+  "n_preguntas": 1,
+  "formato": "natural"
+}
 ```
 
 Qué leer:
 
-- **La flecha `<‑` marca lo que eligió.** Aquí `soporte`.
-- Los números son **probabilidad**, y suman 1. `soporte` 1.000 significa que no dudó.
-- **`confianza`** es otra cosa: mide **lo concentrada** que está la probabilidad, no la
-  probabilidad de acertar. 1.000 = una sola barra llena. Cerca de 0 = empate.
-- **`0 tokens`**: aquí no se escribió texto. Por eso es rápido.
+- **`value` marca lo que eligió.** Aquí `soporte`.
+- **`probabilities`** es la probabilidad de **cada** opción, y suman 1. `soporte` 1.0
+  significa que no dudó; **`probability`** es la de la opción elegida.
+- **`confidence`** es otra cosa: mide **lo concentrada** que está la probabilidad, no la
+  probabilidad de acertar. 1.0 = todo en una opción. Cerca de 0 = empate.
+- **`tokens: 0`**: aquí no se escribió texto. Por eso es rápido.
 - La cabecera dice **solo la pregunta**. Las opciones van debajo, en su lista, para que
   no se confunda una opción con la respuesta.
 
@@ -125,31 +131,47 @@ score:
   Crítico: el servicio está caído del todo
 ```
 
-Salida real:
+Salida real (el JSON de `POST /ask`):
 
+```json
+{
+  "resultados": [
+    {
+      "campo": "decision",
+      "tipo": "score",
+      "pregunta": "¿Qué gravedad tiene el incidente?",
+      "value": 3.0,
+      "probability": 0.8291,
+      "probabilities": {"0.0": 0.0088, "1.0": 0.008, "2.0": 0.1541, "3.0": 0.8291},
+      "confidence": 0.6221,
+      "niveles": ["Aviso: no afecta al servicio",
+                  "Menor: afecta a unos pocos usuarios",
+                  "Grave: afecta a la mayoría",
+                  "Crítico: el servicio está caído del todo"]
+    }
+  ],
+  "tiempo_ms": 124.4,
+  "tokens": 0,
+  "n_preguntas": 1,
+  "formato": "natural"
+}
 ```
-SCORE  ·  ¿Qué gravedad tiene el incidente?
---------------------------------------------------------------
-  Aviso: no afecta al servicio             0.009  ..........
-  Menor: afecta a unos pocos usuarios      0.009  ..........
-  Grave: afecta a la mayoría               0.165  #####.....
-  Crítico: el servicio está caído del todo 0.817  ##########  <-
 
-  puntuacion = 2.79
-  confianza = 0.605
-```
+**Fíjate en `value: 3.0`.** Con cuatro niveles, «Crítico» es el 3, y ahí está la decisión.
+Debajo tienes el reparto entero: 0.8291 en el nivel 3, 0.1541 en el 2 y un poco en los
+otros dos.
 
-**Fíjate en `puntuacion = 2.79`.** Con cuatro niveles, «Crítico» es el 3. Devuelve
-**2,79 y no 3,00** porque la puntuación es la **media ponderada**: reparte 0.817 en el
-nivel 3, 0.165 en el 2 y un poco en los otros dos, y
-`0×0.009 + 1×0.009 + 2×0.165 + 3×0.817 = 2,79`.
+**La API devuelve `value`, no una media.** Si quieres la **media ponderada** —que puede
+caer entre dos niveles— se calcula desde `probabilities`:
+`0×0.0088 + 1×0.008 + 2×0.1541 + 3×0.8291 = 2,80`. Sale 2,80 y no 3,00 porque reparte la
+probabilidad entre los cuatro niveles.
 
 **Pero para decidir, eso no hace falta.** Hay dos números y son cosas distintas:
 
 | número | qué es | valor | ¿para qué? |
 |---|---|---|---|
-| `value` | **el nivel elegido** (el de mayor probabilidad) | `3.0` | **esto es la decisión** |
-| `puntuacion` | **la media ponderada**, que puede caer entre niveles | `2.79` | ordenar casos finamente |
+| `value` | **el nivel elegido** (el de mayor probabilidad), el que devuelve la API | `3.0` | **esto es la decisión** |
+| la media ponderada | **la media**, que puede caer entre niveles; se calcula desde `probabilities` | `2.80` | ordenar casos finamente |
 
 **Usa `value` por defecto.** Es el nivel y es lo que casi siempre quieres.
 
@@ -190,23 +212,33 @@ noul:
   true: Hay indicios de acceso no autorizado
 ```
 
-Salida real:
+Salida real (el JSON de `POST /ask`):
 
-```
-PROBABILITY  ·  ¿Hay indicios de que la cuenta esté comprometida?
---------------------------------------------------------------
-  sí              0.800  ########################......
-  no              0.200  ######........................
-
-  probabilidad de que sí = 0.800
-  confianza = 0.277
+```json
+{
+  "resultados": [
+    {
+      "campo": "decision",
+      "tipo": "noul",
+      "pregunta": "¿Hay indicios de que la cuenta esté comprometida?",
+      "value": true,
+      "probability": 0.8057,
+      "probabilities": {"true": 0.8057, "false": 0.1943},
+      "confidence": 0.2897
+    }
+  ],
+  "tiempo_ms": 91.3,
+  "tokens": 0,
+  "n_preguntas": 1,
+  "formato": "natural"
+}
 ```
 
 **Qué ha pasado aquí.** El caso sí da para decidir: hay un acceso desde otro país y dos
-compras que el cliente no reconoce, así que el modelo dice que **sí** (0.800) con una
-confianza razonable (0.277) — ni un empate ni un exceso de seguridad.
+compras que el cliente no reconoce, así que el modelo dice que **sí** (0.8057), con una
+confianza de 0.2897.
 
-**Y ahora compáralo con un caso que NO da para decidir.** El mismo tipo de pregunta,
+**Y ahora, un caso que en el papel no da para decidir.** El mismo tipo de pregunta,
 pero con la entrada sin la información que hace falta:
 
 ```
@@ -219,40 +251,53 @@ noul:
   true: Puede enviarse después sin perjudicar al usuario
 ```
 
+Salida real:
+
+```json
+{
+  "resultados": [
+    {
+      "campo": "decision",
+      "tipo": "noul",
+      "pregunta": "¿Debe esperar esta notificación hasta que termine el horario de descanso?",
+      "value": false,
+      "probability": 0.8202,
+      "probabilities": {"true": 0.1798, "false": 0.8202},
+      "confidence": 0.3203
+    }
+  ],
+  "tiempo_ms": 113.0,
+  "tokens": 0,
+  "n_preguntas": 1,
+  "formato": "natural"
+}
 ```
-PROBABILITY  ·  ¿Debe esperar esta notificación hasta que termine el horario de descanso?
---------------------------------------------------------------
-  no              0.486  ##############................
-  sí              0.514  ###############...............
 
-  probabilidad de que sí = 0.514
-  confianza = 0.001
-```
-
-**Ahí está el detalle que engancha.** Salió **0.514**, un empate técnico: el modelo no
-sabe qué hacer con esta. Pero lo revelador es la **confianza: 0.001**. No está «poco
-seguro» — está diciendo que las dos opciones son **indistinguibles** para él.
-
-Esa es la diferencia entre **probabilidad** y **confianza**, y es la razón de que valga
-la pena mirar las dos:
+**Qué ha pasado aquí.** El modelo también se decide —el «no», con 0.8202—, pero se lo
+cree poco: la **confianza es 0.3203**. Y esa es la diferencia entre **probabilidad** y
+**confianza**, la razón de que valga la pena mirar las dos:
 
 | caso | probabilidad | confianza | qué significa |
 |---|---|---|---|
-| el de la cuenta | 0.800 | 0.277 | lo tengo bastante claro |
-| el del calendario | 0.514 | **0.001** | **no tengo ni idea** |
+| el de la cuenta | 0.8057 | 0.2897 | una preferencia, no una certeza |
+| el del calendario | 0.8202 | 0.3203 | lo mismo: decide, pero sin aplomo |
 
-**Fíjate en que una probabilidad alta puede no significar nada sin la confianza.** Un
-0.514 con confianza 0.001 es una moneda al aire; un 0.514 con confianza 0.8 sería una
-preferencia débil pero real.
+**Fíjate en que una probabilidad alta no lo es todo.** Las dos pasan de 0.8 y las dos
+confianzas se quedan cerca de 0.3: el reparto no está concentrado. 1.0 de confianza es
+todo en una opción; cerca de 0 es un empate.
+
+> **Nota de medición.** Este caso se redactó para que el modelo dudara, y la versión
+> anterior de este manual traía un empate —0.514 con confianza 0.001—. En la corrida de
+> hoy no empata: se decide por el «no» con 0.8202. Aquí queda lo que devuelve la API hoy,
+> que es lo que se mide; el motor no da siempre el mismo reparto.
 
 **Si usas esto en un programa**, la receta es: actúa solo si la probabilidad pasa de tu
 umbral **y** la confianza pasa del suyo. Lo demás, a revisión humana.
 
 > **Y aquí hay una lección de escritura de preguntas.** La del calendario se redactó con
 > las dos opciones explicadas («el recordatorio es urgente» / «puede enviarse después»),
-> y el modelo sigue sin poder decidir: la entrada no dice si la comida de equipo es
-> mañana o el viernes que viene. **El empate es información**: a este caso le falta
-> contexto para contestarse. Es exactamente el tipo de sitio donde una recuperación de
+> y la entrada no dice si la comida de equipo es mañana o el viernes que viene: le falta
+> contexto para contestarse sin adivinar. Es el tipo de sitio donde una recuperación de
 > contexto (RAG) sí ayudaría — porque falta información, no sobra.
 
 > **Y una advertencia medida en este mismo repositorio:** en `noul`, el orden en que
@@ -304,112 +349,135 @@ noul:
   true: Sí, ya lo pagó
 ```
 
-Salida real:
+Salida real (el JSON de `POST /ask`):
 
+```json
+{
+  "resultados": [
+    {
+      "campo": "q1", "tipo": "choice",
+      "pregunta": "¿A qué área hay que enviar este correo?",
+      "value": "soporte", "probability": 0.9597,
+      "probabilities": {"soporte": 0.9597, "facturacion": 0.007, "comercial": 0.0115, "otros": 0.0218},
+      "confidence": 0.8493
+    },
+    {
+      "campo": "q2", "tipo": "score",
+      "pregunta": "¿Qué urgencia tiene?",
+      "value": 2.0, "probability": 0.8199,
+      "probabilities": {"0.0": 0.0342, "1.0": 0.1459, "2.0": 0.8199},
+      "confidence": 0.4911,
+      "niveles": ["Baja: puede esperar",
+                  "Media: conviene atenderlo esta semana",
+                  "Alta: hay una fecha límite encima"]
+    },
+    {
+      "campo": "q3", "tipo": "noul",
+      "pregunta": "¿El cliente ya pagó el plan anual?",
+      "value": true, "probability": 0.9495,
+      "probabilities": {"true": 0.9495, "false": 0.0505},
+      "confidence": 0.7114
+    }
+  ],
+  "tiempo_ms": 145.7,
+  "tokens": 0,
+  "n_preguntas": 3,
+  "formato": "natural"
+}
 ```
-3 pregunta(s), una sola peticion  (157 ms, 0 tokens)
 
---------------------------------------------------------------
-CHOICE  ·  ¿A qué área hay que enviar este correo?
---------------------------------------------------------------
-  soporte         0.439  #############.................  <-
-  comercial       0.351  ###########...................
-  facturacion     0.198  ######........................
-  otros           0.012  ..............................
-  confianza = 0.204
-
---------------------------------------------------------------
-SCORE  ·  ¿Qué urgencia tiene?
---------------------------------------------------------------
-  Baja: puede esperar                    0.051  ##............
-  Media: conviene atenderlo esta semana  0.321  ##########....
-  Alta: hay una fecha límite encima      0.628  ###################...  <-
-  puntuacion = 1.58
-  confianza = 0.264
-
---------------------------------------------------------------
-PROBABILITY  ·  ¿El cliente ya pagó el plan anual?
---------------------------------------------------------------
-  sí              0.999  ##############################
-  no              0.001  ..............................
-  confianza = 0.985
-```
-
-**Fíjate: 157 ms para tres preguntas, frente a 135 ms para una.** Tres preguntas
-costaron un **16% más**, no el triple. Porque el motor las puntúa **todas en la misma
+**Fíjate: 145.7 ms para tres preguntas, frente a 133.8 ms para una.** Tres preguntas
+costaron un **9% más**, no el triple. Porque el motor las puntúa **todas en la misma
 pasada**. Y siguen siendo **0 tokens**.
 
 **Y esto enseña lo más útil del manual: no todas las preguntas salen igual de bien.**
 
-- La tercera («¿ya pagó?») sale **limpia**: 0.999 con confianza 0.985. El dato está en
-  el texto y el modelo lo encuentra sin dudar. **Esta se usa tal cual.**
-- La primera («¿a qué área?») sale **floja**: `soporte` gana con 0.439 y la confianza es
-  **0.204**. El caso trae **dos** cosas —pagó **y** se le cierra la app—, así que el
-  modelo reparte y no se moja. Es **una respuesta legítima**, pero avisa de que la
-  pregunta es ambigua.
-
-**Si la entrada trae dos problemas, la pregunta tiene que decir cuál te importa.** Con
-«¿a qué área hay que enviar este correo?» el modelo elige uno y no avisa de que había
-otro. Con «¿qué área corresponde al **fallo**?» la respuesta se habría separado.
+- La primera («¿a qué área?») sale **limpia**: `soporte` gana con 0.9597 y la confianza
+  es 0.8493. **Esta se usa tal cual.**
+- La tercera («¿ya pagó?») también sale limpia: `true` con 0.9495 y confianza 0.7114. El
+  dato está en el texto y el modelo lo encuentra sin dudar.
+- La segunda («¿qué urgencia?»), que es un `score`, es la que sale **más floja**: `value`
+  2.0 con 0.8199 y confianza 0.4911. La escala tiene tres niveles y el modelo reparte más.
 
 Es el patrón que hay que interiorizar: **la respuesta que sale limpia se usa; la que
 sale con confianza baja, se revisa.**
 
+> **Y ojo con el caso, no solo con la pregunta.** Si la entrada trae dos problemas, la
+> pregunta tiene que decir cuál te importa. Con «¿a qué área hay que enviar este correo?»
+> el modelo elige uno y no avisa de que había otro. Con «¿qué área corresponde al
+> **fallo**?» la respuesta se habría separado.
+
 ### Y esto es lo que se gana frente al chat
 
-Se puede comprobar a mano, con dos comandos. El caso es
+Se puede comprobar a mano, con una sola petición. El caso es
 `ejemplos/5_correo_soporte.txt` (una queja con cortes de conexión y un cobro duplicado).
 
-**1. En la vía de decisión** — las tres preguntas de una vez:
+Se manda a la API con `"comparar": true`, que corre las dos vías en la **misma corrida** —
+que es lo que hace que los dos tiempos se puedan comparar—. Desde el cliente web se hace
+con la casilla «Comparar»; desde la línea de comandos, con el contenido del fichero en
+`entrada`:
 
 ```bash
-python preguntar.py ejemplos/5_correo_soporte.txt
-```
-
-**2. En la vía de chat** — la misma pregunta, en prosa. Con `--comparar` salen las dos vías en
-la **misma corrida**, que es lo que hace que los dos tiempos se puedan comparar:
-
-```bash
-python ejemplos/integrar.py --comparar
+python -c "import json;print(json.dumps({'formato':'natural','comparar':True,'entrada':open('ejemplos/5_correo_soporte.txt',encoding='utf-8').read()}))" > p.json
+curl -s http://127.0.0.1:8100/ask -H "Content-Type: application/json" --data-binary @p.json
 ```
 
 Las dos vías van sobre el mismo caso y con una sola petición cada una: la decisión resuelve
-todas las preguntas de golpe y el chat contesta todo en una respuesta. Por la API es
-`"comparar": true`, y está explicado en [`API.md`](API.md).
+todas las preguntas de golpe y el chat contesta todo en una respuesta. Está explicado en
+[`API.md`](API.md).
 
 Lo que sale, medido aquí:
 
-**Decisión** — 1 petición, 183 ms, **0 tokens**:
+**Decisión** — 1 petición, 148 ms, **0 tokens**:
 
-```
-CHOICE  ·  ¿A qué área hay que enviar este correo?
-  facturacion     0.665  <-
-  soporte         0.292
-  comercial       0.042
-  otros           0.000
-  confianza = 0.451
+```json
+{
+  "resultados": [
+    {"campo": "q1", "tipo": "choice", "pregunta": "¿A qué área hay que enviar este correo?",
+     "value": "facturacion", "probability": 0.6844,
+     "probabilities": {"soporte": 0.2664, "facturacion": 0.6844, "comercial": 0.0488, "otros": 0.0003},
+     "confidence": 0.4505},
+    {"campo": "q2", "tipo": "score", "pregunta": "¿Qué urgencia tiene?",
+     "value": 2.0, "probability": 0.893,
+     "probabilities": {"0.0": 0.0279, "1.0": 0.0791, "2.0": 0.893},
+     "confidence": 0.6345,
+     "niveles": ["Baja: puede esperar", "Media: conviene atenderlo esta semana", "Alta: hay una fecha límite encima"]},
+    {"campo": "q3", "tipo": "noul", "pregunta": "¿Amenaza el cliente con darse de baja?",
+     "value": true, "probability": 0.9513,
+     "probabilities": {"true": 0.9513, "false": 0.0487},
+     "confidence": 0.7194}
+  ],
+  "tiempo_ms": 148.0,
+  "tokens": 0,
+  "n_preguntas": 3
+}
 ```
 
-**Chat** — 1 petición, 1502 ms, 140 tokens, y en prosa:
+**Chat** — 1 petición, 1549 ms, 152 tokens, y en prosa:
 
 > Aquí tienes las respuestas a tus preguntas:
 >
-> 1. **Área:** `facturacion` (porque el cliente menciona que ha sido cobrado dos veces la
->    factura de este mes).
-> 2. **Urgencia:** `2` (Alta), ya que el cliente menciona que si la situación no se
->    resuelve, se va a dar de baja.
-> 3. **Amenaza con darse de baja:** `true` (porque el cliente lo menciona explícitamente).
+> 1. **Área:** `facturacion` (El cliente menciona cortes de conexión, cobro de facturas y
+>    la intención de darse de baja, lo que se enmarca principalmente en cobros y facturas).
+> 2. **Urgencia:** `1` (Media: conviene atenderlo esta semana, ya que el cliente ha pasado
+>    una semana sin solución y está a punto de cancelar el servicio).
+> 3. **Amenaza con darse de baja:** `true` (El cliente lo menciona explícitamente al final
+>    de su mensaje).
 
-**Y aquí está lo que merece la pena mirar: las dos aciertan lo mismo.** La decisión da
-`facturacion` y el chat también. Las dos reciben el mismo caso y las mismas reglas —las
-opciones y los niveles—, así que la diferencia no es *qué* contestan.
+**Y aquí está lo que merece la pena mirar.** Las dos reciben el mismo caso y las mismas
+reglas —las opciones y los niveles—, así que la diferencia no es *qué* contestan: coinciden
+en el área (`facturacion`) y en la amenaza de baja (`true`). En la urgencia discrepan —la
+decisión da `2` (Alta) y el chat `1` (Media)—, y eso también es información: el chat, al
+redactar, se apoya en matices del texto.
 
 **La diferencia es la forma.** La decisión da **el valor y el reparto entero**, y eso un
 programa lo lee y decide con un umbral. El chat da **el valor con una justificación de tres
 líneas**, y para usarlo habría que leerlo y sacarle el dato con expresiones regulares. Esa
 es la diferencia de fondo: **las dos responden, pero solo una se puede consumir.**
 
-*(En el chat la redacción cambia de una corrida a otra; la de decisión es estable.)*
+*(La redacción del chat cambia de una corrida a otra. En la decisión el **ganador** es
+estable —el mismo valor—, pero las probabilidades se mueven unas centésimas, así que los
+números de arriba son los de la corrida en la que se midieron.)*
 
 ---
 
@@ -505,24 +573,29 @@ No es una decisión, es prosa, y por eso es el otro camino.
 
 ## 9. Ejecutarlo
 
+Hay dos formas de preguntar, y ninguna es por consola: **el cliente web** (lo cómodo para
+una persona) y la **API** (para un programa).
+
 ```bash
-# desde un fichero (lo recomendado: el caso y las preguntas, con sus saltos de línea)
-python preguntar.py caso.txt
-
-# escribiéndolo en la línea de comandos. Los saltos de línea van con $'...': si no,
-# todo cae en la primera línea y no hay ningún 'ask:' que valga.
-python preguntar.py --texto $'input: Llevo desde ayer sin poder entrar: me sale un error 500.\n\nask: ¿A qué área hay que enviar este correo?\nchoice:\n  soporte: Fallos y errores del producto\n  facturacion: Cobros, facturas y reembolsos\n  otros: Todo lo demás'
-
-# con el caso sacado de un documento: el fichero trae solo las preguntas
-# (ejemplos/6_preguntas_sobre_un_documento.txt es uno de esos, listo para probar)
-python preguntar.py mis_preguntas.txt --documento carta.pdf
-
-# doce preguntas de golpe sobre un curriculum, para medir velocidad y acierto
-python preguntar.py ejemplos/7_preguntas_curriculum.txt --documento mi_cv.pdf
-
-# con el JSON crudo del servidor (probabilidades completas, tiempos)
-python preguntar.py --json
+# la API y el cliente web, en el mismo proceso. Abre http://127.0.0.1:8100/
+pip install fastapi "uvicorn[standard]"
+python api.py
 ```
+
+En el cliente web se escribe el caso y las preguntas —por bloques, en lenguaje natural o en
+JSON— y se pregunta. Para mandarlo por la API, con el contenido en el campo `entrada`:
+
+```bash
+# el contenido de un fichero, en JSON (con Python, que respeta los acentos)
+python -c "import json;print(json.dumps({'formato':'natural','entrada':open('ejemplos/1_opciones.txt',encoding='utf-8').read()}))" > p.json
+curl -s http://127.0.0.1:8100/ask -H "Content-Type: application/json" --data-binary @p.json
+```
+
+Con el caso sacado de un documento son **dos llamadas**: primero `POST /documento` y luego
+`POST /ask` con ese texto en el campo `documento`. Los ficheros
+`ejemplos/6_preguntas_sobre_un_documento.txt` y `ejemplos/7_preguntas_curriculum.txt` traen
+solo las preguntas, listos para eso; el ejemplo completo está en
+[`EJEMPLOS.md`](EJEMPLOS.md).
 
 Antes hace falta el servidor:
 
@@ -530,8 +603,9 @@ Antes hace falta el servidor:
 llama-server -m modelo.gguf -ngl 99 -fa on -c 32768 --decision-seqs 64 --port 8096
 ```
 
-Para probar tus propias preguntas **no hay que tocar código**: se escribe el texto, se
-guarda y se ejecuta. Los ejemplos de este manual están en `ejemplos/`.
+Para probar tus propias preguntas **no hay que tocar código**: se escribe el texto, se pega
+en el cliente web (o se manda a la API) y se pregunta. Los ejemplos de este manual están en
+`ejemplos/`.
 
 ---
 
@@ -554,44 +628,37 @@ error 500 cada vez que intento iniciar sesión.
 
 **choice** → da una **clave de tu lista**
 
-```
-CHOICE  ·  ¿A qué área hay que enviar este correo?
-  soporte         1.000  ##############################  <-
-  otros           0.000  ..............................
-  facturacion     0.000  ..............................
-  comercial       0.000  ..............................
-  confianza = 1.000
-```
-
-En JSON: `"value": "soporte"`, `"probabilities": {"soporte": 1.0, ...}`
-
-**score** → da un **número de nivel** y una puntuación ponderada
-
-```
-SCORE  ·  ¿Qué gravedad tiene el incidente?
-  Aviso: no afecta al servicio             0.009  ..........
-  Menor: afecta a unos pocos usuarios      0.009  ..........
-  Grave: afecta a la mayoría               0.165  #####.....
-  Crítico: el servicio está caído del todo 0.817  ##########  <-
-
-  puntuacion = 2.79
-  confianza = 0.605
+```json
+{"campo": "decision", "tipo": "choice",
+ "pregunta": "¿A qué área hay que enviar este correo?",
+ "value": "soporte", "probability": 1.0,
+ "probabilities": {"soporte": 1.0, "facturacion": 0.0, "comercial": 0.0, "otros": 0.0},
+ "confidence": 1.0}
 ```
 
-En JSON: `"value": 3.0`, `"probabilities": {"0.0": 0.0088, "1.0": 0.0089, "2.0": 0.1651, "3.0": 0.8172}`
+**score** → da un **número de nivel** (la media ponderada se calcula desde `probabilities`)
+
+```json
+{"campo": "decision", "tipo": "score",
+ "pregunta": "¿Qué gravedad tiene el incidente?",
+ "value": 3.0, "probability": 0.8291,
+ "probabilities": {"0.0": 0.0088, "1.0": 0.008, "2.0": 0.1541, "3.0": 0.8291},
+ "confidence": 0.6221,
+ "niveles": ["Aviso: no afecta al servicio",
+             "Menor: afecta a unos pocos usuarios",
+             "Grave: afecta a la mayoría",
+             "Crítico: el servicio está caído del todo"]}
+```
 
 **noul** → da un **`true` o `false`**, con su probabilidad
 
+```json
+{"campo": "decision", "tipo": "noul",
+ "pregunta": "¿Hay indicios de que la cuenta esté comprometida?",
+ "value": true, "probability": 0.8057,
+ "probabilities": {"true": 0.8057, "false": 0.1943},
+ "confidence": 0.2897}
 ```
-PROBABILITY  ·  ¿Hay indicios de que la cuenta esté comprometida?
-  sí              0.800  ########################......
-  no              0.200  ######........................
-
-  probabilidad de que sí = 0.800
-  confianza = 0.277
-```
-
-En JSON: `"value": true`, `"probabilities": {"true": 0.8002, "false": 0.1998}`
 
 **Las tres devuelven lo mismo por dentro**: un valor (`value`) y **la probabilidad de
 cada opción posible** (`probabilities`). Cambia el tipo del valor — texto, número o
@@ -632,18 +699,17 @@ n                          (número de opciones)
 ```
 
 Con el ejemplo de la gravedad del incidente, cuyas probabilidades son
-`0.0088, 0.0089, 0.1651, 0.8172`:
+`0.0088, 0.008, 0.1541, 0.8291`:
 
 ```
-H(p)      = −(0.0088·ln0.0088 + 0.0089·ln0.0089 + 0.1651·ln0.1651 + 0.8172·ln0.8172)
-          = 0.5460
+H(p)      = −(0.0088·ln0.0088 + 0.008·ln0.008 + 0.1541·ln0.1541 + 0.8291·ln0.8291)
+          = 0.5238
 ln(4)     = 1.3863
-H/ln(4)   = 0.3939          ← entropía normalizada: 0 = un pico, 1 = reparto plano
-confianza = 1 − 0.3939 = 0.6061
+H/ln(4)   = 0.3779          ← entropía normalizada: 0 = un pico, 1 = reparto plano
+confianza = 1 − 0.3779 = 0.6221
 ```
 
-*(El manual dice 0.605 y la cuenta da 0.606 porque el JSON publicado lleva las
-probabilidades redondeadas a 4 decimales; con las completas sale 0.605.)*
+*(La cuenta cuadra con la `confidence` que devuelve la API, 0.6221.)*
 
 Se ve mejor en los extremos, que es donde se entiende qué mide:
 
@@ -679,9 +745,9 @@ Aquí hay un caso que merece la pena porque **depende del tipo**:
 
 **La regla:** en noul, quédate con la probabilidad. En choice, mira las dos.
 
-Y esto deja en su sitio lo de `puntuacion` del apartado 3: **es una operación derivada,
-igual que `value`, `probability` y `interval_p10_p90`.** La diferencia no es que unas
-sean «de más» y otras no, sino cuál necesitas: `value` casi siempre, la media casi
+Y esto deja en su sitio lo de la media ponderada del apartado 3: **es una operación
+derivada, igual que `value`, `probability` y `interval_p10_p90`.** La diferencia no es que
+unas sean «de más» y otras no, sino cuál necesitas: `value` casi siempre, la media casi
 nunca.
 
 ---
