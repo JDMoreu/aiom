@@ -24,3 +24,9 @@ herramientas/
 
 # Estado de las herramientas de diseno (impeccable): es proceso, no producto.
 .impeccable/
+
+# Lo que instala el gestor de skills (npx skills add): la skill y su indice. Es una
+# herramienta de trabajo, no parte del programa, y son cientos de ficheros.
+.agents/
+.claude/
+skills-lock.json
