@@ -66,7 +66,7 @@ def _niveles(descripcion):
 
     El motor devuelve un `score` como un NUMERO (0, 1, 2...). Sin las etiquetas, un "0"
     a secas no dice nada: no hay forma de saber que ese 0 es "espanol". La descripcion
-    del campo las lleva, y es la misma fuente que ya usa preguntar.py por consola.
+    del campo las lleva, y es la misma fuente que usa el analizador del formato natural.
     """
     return NIVEL.findall(descripcion or "")
 
