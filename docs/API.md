@@ -178,6 +178,30 @@ mismas reglas que la vía de decisión**: el caso, las preguntas, las opciones d
 los niveles de cada escala. Así la comparación dice algo: las dos reciben la misma
 información, y lo único que cambia es la **forma** de la respuesta.
 
+### Dónde están las reglas de cada vía
+
+**Vía de decisión** (`natural` y `tipado`):
+
+- El **system prompt** es `"Respondes solo con los valores del esquema."`, en `preguntar.py`.
+- Las **reglas** van aparte, en el campo `schema` de la petición a `/v1/decision`: los
+  campos, sus opciones y sus niveles. El motor las lee de ahí, no del texto.
+
+**Vía de chat**:
+
+- El **system prompt** es `"Eres un asistente util."` — y nada más, a propósito: no lleva
+  persona de dominio. Está en `aiom.py`, en `chat()`.
+- Las **reglas** van en el **mensaje del usuario**, no en el de sistema: el caso, las
+  preguntas y las opciones de cada una. Las arma `_con_las_reglas()` en `api.py`, a partir
+  de la descripción que el analizador da a cada pregunta.
+
+O sea que **las dos vías reciben la misma información** —el caso y las reglas—, pero por
+caminos distintos: la decisión en un esquema aparte, el chat dentro del texto.
+
+**El chat no lleva instrucción de formato.** No se le dice «contesta en prosa» ni «usa una
+lista»: contesta como le parece. Es deliberado, porque lo que se compara es justo eso —una
+vía que devuelve el valor y otra que escribe—, y fijarle un formato escondería la
+diferencia.
+
 ### El formato de un campo
 
 Cada campo del esquema se declara así:
