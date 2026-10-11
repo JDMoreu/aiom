@@ -1,54 +1,29 @@
-"""Escribe la decision en lenguaje natural; el sistema lee el tipo y la ejecuta.
+"""El analizador del formato natural: texto con cabeceras -> esquema.
 
-No hay que escribir JSON. Se escribe el caso asi:
+Aqui NO hay linea de comandos: esta es la pieza que usa la API. El .txt se escribe asi:
 
-    input: Buenas tardes. Contraté el plan de 20 GB y llevo una semana con cortes de
-    conexión casi todas las noches. Además me han cobrado dos veces la factura.
+    input: Buenas tardes. Contrate el plan de 20 GB y llevo una semana con cortes.
 
-    ask: ¿A qué área hay que enviar este correo?
+    ask: A que area hay que enviar este correo?
     choice:
       soporte: Fallos y errores del producto
       facturacion: Cobros, facturas y reembolsos
-      comercial: Ventas, planes y bajas
-      otros: Todo lo demás
 
-El tipo se DECLARA con la cabecera: `choice` elige de una lista, `score` pone algo en
-una escala y `noul` es verdadero o falso.
+El tipo se DECLARA con la cabecera: `choice` elige de una lista, `score` pone algo en una
+escala y `noul` es verdadero o falso. `score` va de menor a mayor y se numera desde 0, y
+`noul` escribe primero el significado de false y luego el de true.
 
-    ask: ¿Qué urgencia tiene?
-    score:
-      Baja: puede esperar
-      Media: conviene atenderlo esta semana
-      Alta: hay una fecha límite encima
+Varias preguntas se separan con una linea de ---, y se mandan TODAS en una sola peticion.
 
-    ask: ¿Amenaza el cliente con darse de baja?
-    noul:
-      false: No lo menciona
-      true: Sí lo menciona
-
-`score` va de menor a mayor y se numera desde 0, asi que en el ejemplo Baja=0, Media=1
-y Alta=2. Y `noul` escribe primero el significado de false y luego el de true.
-
-Se pueden poner varias preguntas separadas por una linea con ---, y se mandan TODAS
-en una sola peticion: es la ventaja de tener un solo modelo sirviendo varios campos.
-
-    python preguntar.py caso.txt          # desde un fichero
-    python preguntar.py --texto "..."     # desde la linea de comandos
-    python preguntar.py --json            # la respuesta cruda del servidor
-
-Las cabeceras largas en espanol (Entrada / Pregunta / Opciones / Niveles de puntuación
-/ Qué significa no o sí) se siguen aceptando, pero el estandar es el corto.
+Dos puertas lo usan: `POST /ask` con formato `natural`, y la interfaz web. El manual del
+formato, con un ejemplo de cada tipo, esta en docs/MANUAL.md.
 """
 
-import argparse
 import json
 import os
 import re
-import sys
 import time
 import urllib.request
-
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 SERVIDOR = os.environ.get("AIOM_SERVER", "http://127.0.0.1:8096")
 
@@ -216,98 +191,3 @@ def ejecutar(estado, preguntas, timeout=120):
 ANCHO = 30
 
 
-def barra(p):
-    n = int(round(float(p) * ANCHO))
-    return "#" * n + "." * (ANCHO - n)
-
-
-def mostrar(estado, preguntas, cuerpo, ms):
-    tipos = {"enum": "CHOICE", "number": "SCORE", "boolean": "NOUL"}
-    campos = cuerpo["results"][0]["fields"]
-
-    print(f"input: {estado}")
-    print(f"\n{len(preguntas)} pregunta(s), una sola peticion  "
-          f"({ms:.0f} ms, 0 tokens)")
-
-    for nombre, spec in preguntas:
-        f = campos.get(nombre)
-        if not f:
-            continue
-        dist = f.get("probabilities") or {}
-        tipo = tipos.get(spec["type"], spec["type"])
-
-        print("\n" + "-" * 62)
-        # La cabecera muestra SOLO la pregunta. Antes imprimia la descripcion del
-        # campo cortada en el primer punto, y como la descripcion empieza por la
-        # lista de opciones, la primera opcion salia en la cabecera como si fuera
-        # la respuesta: ponia "'soporte' = Fallos y errores" mientras la flecha
-        # marcaba "facturacion".
-        print(f"{tipo}  ·  {spec.get('pregunta') or spec['description'].split('.')[0]}")
-        print("-" * 62)
-
-        if spec["type"] == "enum":
-            for k, p in sorted(dist.items(), key=lambda kv: -kv[1]):
-                print(f"  {k:<14} {p:6.3f}  {barra(p)}"
-                      f"{'  <-' if k == f['value'] else ''}")
-        elif spec["type"] == "number":
-            niveles = re.findall(r"\d+ = ([^.]+)\.", spec["description"])
-            for k, p in sorted(dist.items(), key=lambda kv: float(kv[0])):
-                j = int(float(k))
-                etiqueta = niveles[j].strip() if j < len(niveles) else f"nivel {j}"
-                print(f"  {etiqueta:<14} {p:6.3f}  {barra(p)}"
-                      f"{'  <-' if float(k) == float(f['value']) else ''}")
-            punt = sum(float(k) * float(p) for k, p in dist.items())
-            print(f"\n  puntuacion = {punt:.2f}")
-        else:
-            for k, p in sorted(dist.items(), key=lambda kv: -kv[1]):
-                print(f"  {'sí' if k == 'true' else 'no':<14} {p:6.3f}  {barra(p)}"
-                      f"{'  <-' if k == f['value'] else ''}")
-            print(f"\n  probabilidad de que sí = {dist.get('true', 1 - f['probability']):.3f}")
-
-        print(f"  confianza = {f.get('confidence', float('nan')):.3f}")
-
-
-def main():
-    ap = argparse.ArgumentParser(prog="preguntar")
-    ap.add_argument("fichero", nargs="?", help="fichero de texto con el caso")
-    ap.add_argument("--texto", help="el caso, escrito aqui mismo")
-    ap.add_argument("--documento",
-                    help="el caso sale de este documento (pdf, docx, txt, md...). "
-                         "Entonces el fichero de arriba trae solo las preguntas")
-    ap.add_argument("--json", action="store_true", help="respuesta cruda del servidor")
-    a = ap.parse_args()
-
-    if a.texto:
-        texto = a.texto
-    elif a.fichero:
-        with open(a.fichero, encoding="utf-8") as f:
-            texto = f.read()
-    else:
-        # sin fichero ni --texto: las preguntas llegan por la entrada estandar
-        texto = sys.stdin.read()
-
-    caso = None
-    if a.documento:
-        import documento as documento_mod
-        try:
-            d = documento_mod.extraer(a.documento)
-        except ValueError as e:
-            print(f"\n  no puedo leer el documento: {e}\n", file=sys.stderr)
-            return 2
-        caso = d["texto"]
-        print(f"\n  caso: {d['nombre']}  ({d['tipo']}, {d['caracteres']} caracteres, "
-              f"{d['palabras']} palabras)")
-
-    estado, preguntas = parsear(texto, entrada=caso)
-
-    print()
-    cuerpo, ms = ejecutar(estado, preguntas)
-    if a.json:
-        print(json.dumps(cuerpo, ensure_ascii=False, indent=2))
-    else:
-        mostrar(estado, preguntas, cuerpo, ms)
-    print()
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
