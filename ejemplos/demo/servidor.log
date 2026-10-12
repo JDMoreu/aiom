@@ -1,0 +1,336 @@
+2026-03-13 23:40:00.435 INFO  [http-1] GET /api/v1/carrito 200 95ms user=7960
+2026-03-13 23:40:46.832 INFO  [http-1] GET /api/v1/catalogo 200 86ms user=6921
+2026-03-13 23:41:32.918 INFO  [http-1] GET /api/v1/auth/login 200 131ms user=7554
+2026-03-13 23:42:19.456 INFO  [http-1] GET /api/v1/pedidos 200 45ms user=3244
+2026-03-13 23:43:05.998 INFO  [http-1] GET /api/v1/auth/login 200 43ms user=7470
+2026-03-13 23:43:51.788 INFO  [http-1] GET /api/v1/usuarios 200 39ms user=1010
+2026-03-13 23:44:38.736 INFO  [http-1] GET /api/v1/auth/login 200 40ms user=8316
+2026-03-13 23:45:24.851 INFO  [http-1] GET /api/v1/carrito 200 177ms user=2340
+2026-03-13 23:46:10.410 INFO  [http-1] GET /api/v1/auth/login 200 100ms user=6075
+2026-03-13 23:46:57.814 INFO  [http-1] GET /api/v1/reportes 200 139ms user=4906
+2026-03-13 23:47:43.376 INFO  [http-1] GET /api/v1/reportes 200 53ms user=2444
+2026-03-13 23:48:30.794 INFO  [http-1] GET /api/v1/catalogo 200 179ms user=2540
+2026-03-13 23:49:16.155 INFO  [http-1] GET /api/v1/reportes 200 123ms user=9038
+2026-03-13 23:50:02.026 INFO  [http-1] GET /api/v1/catalogo 200 54ms user=6901
+2026-03-13 23:50:49.433 INFO  [http-1] GET /api/v1/carrito 200 44ms user=6025
+2026-03-13 23:51:35.723 INFO  [http-1] GET /api/v1/pedidos 200 178ms user=2815
+2026-03-13 23:52:21.921 INFO  [http-1] GET /api/v1/carrito 200 169ms user=7379
+2026-03-13 23:53:08.763 INFO  [http-1] GET /api/v1/usuarios 200 65ms user=1579
+2026-03-13 23:53:54.609 INFO  [http-1] GET /api/v1/catalogo 200 96ms user=1639
+2026-03-13 23:54:40.294 INFO  [http-1] GET /api/v1/pedidos 200 33ms user=6026
+2026-03-13 23:55:27.055 INFO  [http-1] GET /api/v1/usuarios 200 130ms user=4486
+2026-03-13 23:56:13.996 INFO  [http-1] GET /api/v1/pedidos 200 181ms user=9533
+2026-03-13 23:58:02.118 INFO  [deploy] Iniciando despliegue de la version v2.14.0 (commit a1f9c3e)
+2026-03-13 23:58:10.055 INFO  [deploy] Deteniendo instancia app-1 del balanceador...
+2026-03-13 23:58:41.640 INFO  [deploy] Instancia app-1 detenida; drenando peticiones en curso
+2026-03-13 23:58:43.012 INFO  [deploy] Desplegando artefacto v2.14.0 en app-1
+2026-03-13 23:59:05.803 INFO  [deploy] v2.14.0 desplegada en app-1; arrancando proceso
+2026-03-13 23:59:22.041 INFO  [app-1] Aplicacion iniciada (v2.14.0): pool_max=50, workers=8, jvm=4G
+2026-03-14 00:00:04.902 INFO  [deploy] Desplegando artefacto v2.14.0 en app-2
+2026-03-14 00:00:37.611 INFO  [app-2] Aplicacion iniciada (v2.14.0): pool_max=50, workers=8, jvm=4G
+2026-03-14 00:00:38.190 INFO  [deploy] Despliegue v2.14.0 completado en 2 instancias en 02m36s
+2026-03-14 00:01:00.410 INFO  [http-1] GET /api/v1/carrito 200 126ms user=8540
+2026-03-14 00:01:26.056 INFO  [http-1] GET /api/v1/carrito 200 142ms user=5858
+2026-03-14 00:01:52.440 INFO  [http-1] GET /api/v1/pedidos 200 130ms user=2573
+2026-03-14 00:02:18.505 INFO  [http-1] GET /api/v1/catalogo 200 158ms user=8001
+2026-03-14 00:02:44.899 INFO  [http-1] GET /api/v1/auth/login 200 116ms user=1762
+2026-03-14 00:03:10.575 INFO  [http-1] GET /api/v1/catalogo 200 114ms user=3599
+2026-03-14 00:03:36.687 INFO  [http-1] GET /api/v1/carrito 200 39ms user=4323
+2026-03-14 00:04:02.005 INFO  [http-1] GET /api/v1/catalogo 200 172ms user=3617
+2026-03-14 00:04:28.562 INFO  [http-1] GET /api/v1/reportes 200 75ms user=5039
+2026-03-14 00:04:54.334 INFO  [http-1] GET /api/v1/reportes 200 36ms user=8203
+2026-03-14 00:05:20.089 INFO  [http-1] GET /api/v1/catalogo 200 159ms user=7261
+2026-03-14 00:05:46.785 INFO  [http-1] GET /api/v1/catalogo 200 81ms user=8757
+2026-03-14 00:06:12.960 INFO  [http-1] GET /api/v1/usuarios 200 25ms user=1338
+2026-03-14 00:06:38.478 INFO  [http-1] GET /api/v1/auth/login 200 56ms user=9832
+2026-03-14 00:07:04.996 INFO  [http-1] GET /api/v1/catalogo 200 103ms user=9191
+2026-03-14 00:07:30.458 INFO  [http-1] GET /api/v1/carrito 200 28ms user=6904
+2026-03-14 00:07:56.107 INFO  [http-1] GET /api/v1/carrito 200 138ms user=4299
+2026-03-14 00:08:22.483 INFO  [http-1] GET /api/v1/carrito 200 183ms user=7940
+2026-03-14 00:08:48.916 INFO  [http-1] GET /api/v1/auth/login 200 112ms user=8092
+2026-03-14 00:09:14.682 INFO  [http-1] GET /api/v1/carrito 200 112ms user=9304
+2026-03-14 00:09:40.386 INFO  [http-1] GET /api/v1/reportes 200 182ms user=1255
+2026-03-14 00:10:06.802 INFO  [http-1] GET /api/v1/catalogo 200 165ms user=9366
+2026-03-14 00:10:32.846 INFO  [http-1] GET /api/v1/carrito 200 156ms user=6691
+2026-03-14 00:10:58.903 INFO  [http-1] GET /api/v1/reportes 200 68ms user=5140
+2026-03-14 00:11:24.655 INFO  [http-1] GET /api/v1/usuarios 200 164ms user=3964
+2026-03-14 00:11:50.352 INFO  [http-1] GET /api/v1/usuarios 200 24ms user=4641
+2026-03-14 00:12:16.363 INFO  [http-1] GET /api/v1/carrito 200 27ms user=2673
+2026-03-14 00:12:42.163 INFO  [http-1] GET /api/v1/usuarios 200 171ms user=2658
+2026-03-14 00:13:08.033 INFO  [http-1] GET /api/v1/auth/login 200 158ms user=3779
+2026-03-14 00:13:34.974 INFO  [http-1] GET /api/v1/usuarios 200 59ms user=4969
+2026-03-14 00:14:22.731 WARN  [db] consulta lenta: SELECT * FROM pedidos WHERE estado = ? ORDER BY creado_en DESC -> 8213ms (umbral 1000ms)
+2026-03-14 00:15:03.040 WARN  [db] consulta lenta: SELECT * FROM pedidos WHERE estado = ? ORDER BY creado_en DESC -> 8740ms (umbral 1000ms)
+2026-03-14 00:16:55.512 WARN  [db] consulta lenta sobre tabla pedidos -> 9021ms; full scan sin indice (filas examinadas=4.180.233)
+2026-03-14 00:18:12.087 WARN  [db] pool activo=21/50, en espera=0; latencia media 1.4s
+2026-03-14 00:19:00.507 INFO  [http-1] GET /api/v1/carrito 200 154ms user=8804
+2026-03-14 00:19:30.874 INFO  [http-1] GET /api/v1/reportes 200 124ms user=6807
+2026-03-14 00:20:00.085 INFO  [http-1] GET /api/v1/usuarios 200 135ms user=8105
+2026-03-14 00:20:30.390 INFO  [http-1] GET /api/v1/usuarios 200 34ms user=5330
+2026-03-14 00:21:00.637 INFO  [http-1] GET /api/v1/usuarios 200 147ms user=1188
+2026-03-14 00:21:30.198 INFO  [http-1] GET /api/v1/carrito 200 131ms user=9874
+2026-03-14 00:22:00.059 INFO  [http-1] GET /api/v1/pedidos 200 70ms user=7190
+2026-03-14 00:22:30.828 INFO  [http-1] GET /api/v1/carrito 200 148ms user=7218
+2026-03-14 00:23:00.725 INFO  [http-1] GET /api/v1/auth/login 200 185ms user=9164
+2026-03-14 00:23:30.116 INFO  [http-1] GET /api/v1/usuarios 200 148ms user=4518
+2026-03-14 00:24:00.973 INFO  [http-1] GET /api/v1/pedidos 200 177ms user=9814
+2026-03-14 00:24:30.439 INFO  [http-1] GET /api/v1/auth/login 200 32ms user=5533
+2026-03-14 00:25:00.891 INFO  [http-1] GET /api/v1/catalogo 200 182ms user=7614
+2026-03-14 00:25:30.399 INFO  [http-1] GET /api/v1/pedidos 200 163ms user=5273
+2026-03-14 00:26:00.339 INFO  [http-1] GET /api/v1/auth/login 200 128ms user=3743
+2026-03-14 00:26:30.507 INFO  [http-1] GET /api/v1/reportes 200 161ms user=3622
+2026-03-14 00:27:00.432 INFO  [http-1] GET /api/v1/usuarios 200 143ms user=4034
+2026-03-14 00:27:30.735 INFO  [http-1] GET /api/v1/auth/login 200 125ms user=5919
+2026-03-14 00:28:44.300 WARN  [db] consulta lenta sobre tabla pedidos -> 9130ms; full scan sin indice
+2026-03-14 00:29:09.091 WARN  [db] pool activo=34/50, en espera=3; latencia media 3.2s
+2026-03-14 00:31:51.640 WARN  [db] consulta lenta sobre tabla pedidos -> 9418ms
+2026-03-14 00:33:20.012 WARN  [db] pool activo=41/50, en espera=7; latencia media 5.6s
+2026-03-14 00:35:02.480 WARN  [http-3] GET /api/v1/pedidos 200 12040ms user=4471 (respuesta muy lenta)
+2026-03-14 00:37:44.055 WARN  [db] pool activo=47/50, en espera=11; latencia media 8.1s
+2026-03-14 00:39:18.733 WARN  [db] consulta lenta sobre tabla pedidos -> 9802ms
+2026-03-14 00:40:00.562 INFO  [http-1] GET /api/v1/catalogo 200 164ms user=9318
+2026-03-14 00:40:15.251 INFO  [http-1] GET /api/v1/catalogo 200 49ms user=8769
+2026-03-14 00:40:30.293 INFO  [http-1] GET /api/v1/reportes 200 60ms user=4814
+2026-03-14 00:40:45.490 INFO  [http-1] GET /api/v1/auth/login 200 67ms user=1690
+2026-03-14 00:41:07.118 ERROR [db] POOL DE CONEXIONES AGOTADO: activo=50/50, en espera=12, tiempo medio de espera 30.000ms
+2026-03-14 00:41:08.240 ERROR [http-3] GET /api/v1/pedidos 504 Gateway Timeout tras 30000ms user=4471
+2026-03-14 00:41:08.903 ERROR [http-3] Exception in thread worker-3:
+2026-03-14 00:41:08.905 ERROR [http-3] java.sql.SQLTransientConnectionException: HikariPool-1 - Connection is not available, request timed out after 30000ms.
+2026-03-14 00:41:08.906 ERROR [http-3]     at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:213)
+2026-03-14 00:41:08.907 ERROR [http-3]     at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:162)
+2026-03-14 00:41:08.908 ERROR [http-3]     at com.norte.app.dao.PedidoDAO.listar(PedidoDAO.java:88)
+2026-03-14 00:41:08.909 ERROR [http-3]     at com.norte.app.servicio.PedidoServicio.listar(PedidoServicio.java:41)
+2026-03-14 00:41:08.910 ERROR [http-3]     at com.norte.app.http.PedidoHandler.get(PedidoHandler.java:57)
+2026-03-14 00:41:08.911 ERROR [http-3]     ... 12 more
+2026-03-14 00:41:08.912 ERROR [http-3] Caused by: java.sql.SQLTimeoutException: Timeout after 30000ms of waiting for a connection.
+2026-03-14 00:41:12.004 WARN  [http-3] reintento 1/3 de GET /api/v1/pedidos en 500ms
+2026-03-14 00:41:43.088 ERROR [http-3] GET /api/v1/pedidos 504 Gateway Timeout tras 30000ms (reintento 1 agotado)
+2026-03-14 00:42:01.033 WARN  [http-3] reintento 2/3 de GET /api/v1/pedidos en 1000ms
+2026-03-14 00:42:32.051 ERROR [http-3] GET /api/v1/pedidos 504 Gateway Timeout (reintento 2 agotado); se devuelve 502 al cliente
+2026-03-14 00:43:00.726 ERROR [http-2] GET /api/v1/pedidos/resumen 504 25104ms user=1352
+2026-03-14 00:43:27.003 ERROR [http-2] GET /api/v1/pedidos/{id} 504 7022ms user=7893
+2026-03-14 00:43:55.939 ERROR [http-2] GET /api/v1/pedidos/{id} 504 28206ms user=8694
+2026-03-14 00:44:23.284 ERROR [http-2] GET /api/v1/pedidos/resumen 500 12386ms user=3211
+2026-03-14 00:44:50.848 ERROR [http-2] GET /api/v1/pedidos 504 21786ms user=3998
+2026-03-14 00:45:18.665 ERROR [http-2] GET /api/v1/pedidos/{id} 500 27060ms user=6048
+2026-03-14 00:45:46.342 ERROR [http-2] GET /api/v1/pedidos 502 15350ms user=5474
+2026-03-14 00:46:13.865 ERROR [http-2] GET /api/v1/pedidos/{id} 504 5397ms user=9495
+2026-03-14 00:46:41.865 ERROR [http-2] GET /api/v1/pedidos/{id} 504 6768ms user=4825
+2026-03-14 00:47:09.808 ERROR [http-2] GET /api/v1/pedidos/resumen 504 27261ms user=5860
+2026-03-14 00:47:36.595 ERROR [http-2] GET /api/v1/pedidos 500 8784ms user=9567
+2026-03-14 00:48:04.971 ERROR [http-2] GET /api/v1/pedidos 504 29827ms user=3485
+2026-03-14 00:48:32.757 ERROR [http-2] GET /api/v1/pedidos/{id} 502 11711ms user=6089
+2026-03-14 00:49:00.373 ERROR [http-2] GET /api/v1/pedidos 502 12811ms user=1825
+2026-03-14 00:49:27.410 ERROR [http-2] GET /api/v1/pedidos 504 24063ms user=7295
+2026-03-14 00:49:55.446 ERROR [http-2] GET /api/v1/pedidos 502 9592ms user=8958
+2026-03-14 00:50:23.405 ERROR [http-2] GET /api/v1/pedidos/{id} 502 24190ms user=1912
+2026-03-14 00:50:50.274 ERROR [http-2] GET /api/v1/pedidos/{id} 502 11157ms user=6765
+2026-03-14 00:51:18.761 ERROR [http-2] GET /api/v1/pedidos 500 20728ms user=3410
+2026-03-14 00:51:46.754 ERROR [http-2] GET /api/v1/pedidos 504 28514ms user=8871
+2026-03-14 00:52:13.594 ERROR [http-2] GET /api/v1/pedidos 500 26718ms user=2948
+2026-03-14 00:52:41.299 ERROR [http-2] GET /api/v1/pedidos 504 29192ms user=7773
+2026-03-14 00:53:09.151 ERROR [http-2] GET /api/v1/pedidos/{id} 504 5938ms user=9537
+2026-03-14 00:53:36.252 ERROR [http-2] GET /api/v1/pedidos 502 22071ms user=6904
+2026-03-14 00:54:04.554 ERROR [http-2] GET /api/v1/pedidos 500 11017ms user=1046
+2026-03-14 00:54:32.396 ERROR [http-2] GET /api/v1/pedidos 504 20960ms user=9473
+2026-03-14 00:55:12.900 ERROR [monitor] tasa de error 5xx = 41% en la ventana de 5 min (umbral 5%)
+2026-03-14 00:56:00.587 ERROR [http-2] GET /api/v1/pedidos/{id} 504 7695ms user=6843
+2026-03-14 00:56:18.678 ERROR [http-2] GET /api/v1/pedidos 504 16021ms user=5828
+2026-03-14 00:56:36.861 ERROR [http-2] GET /api/v1/pedidos 502 29818ms user=7001
+2026-03-14 00:56:54.097 ERROR [http-2] GET /api/v1/pedidos/resumen 502 14277ms user=4104
+2026-03-14 00:57:12.911 ERROR [http-2] GET /api/v1/pedidos/resumen 504 25904ms user=5165
+2026-03-14 00:57:30.984 ERROR [http-2] GET /api/v1/pedidos/{id} 504 4323ms user=4563
+2026-03-14 00:57:48.940 ERROR [http-2] GET /api/v1/pedidos/resumen 502 11605ms user=2577
+2026-03-14 00:58:06.901 ERROR [http-2] GET /api/v1/pedidos/{id} 502 11479ms user=7037
+2026-03-14 00:58:24.389 ERROR [http-2] GET /api/v1/pedidos/{id} 504 4397ms user=3446
+2026-03-14 00:58:42.696 ERROR [http-2] GET /api/v1/pedidos/resumen 504 24021ms user=6458
+2026-03-14 00:59:00.512 ERROR [http-2] GET /api/v1/pedidos 504 12573ms user=2822
+2026-03-14 00:59:18.767 ERROR [http-2] GET /api/v1/pedidos/resumen 504 17586ms user=7742
+2026-03-14 00:59:36.104 ERROR [http-2] GET /api/v1/pedidos/{id} 502 20326ms user=6665
+2026-03-14 00:59:54.744 ERROR [http-2] GET /api/v1/pedidos 504 29056ms user=5376
+2026-03-14 01:00:12.177 ERROR [http-2] GET /api/v1/pedidos 502 22579ms user=1088
+2026-03-14 01:00:30.398 ERROR [http-2] GET /api/v1/pedidos/resumen 504 24699ms user=8539
+2026-03-14 01:00:48.790 ERROR [http-2] GET /api/v1/pedidos/{id} 504 4716ms user=7066
+2026-03-14 01:01:06.533 ERROR [http-2] GET /api/v1/pedidos/resumen 504 17003ms user=9424
+2026-03-14 01:01:24.423 ERROR [http-2] GET /api/v1/pedidos/resumen 504 29210ms user=4372
+2026-03-14 01:01:42.922 ERROR [http-2] GET /api/v1/pedidos/{id} 502 17503ms user=2177
+2026-03-14 01:02:00.673 ERROR [http-2] GET /api/v1/pedidos 504 4519ms user=5915
+2026-03-14 01:02:18.269 ERROR [http-2] GET /api/v1/pedidos 502 21498ms user=5187
+2026-03-14 01:02:36.113 ERROR [http-2] GET /api/v1/pedidos/resumen 504 28783ms user=9727
+2026-03-14 01:02:54.789 ERROR [http-2] GET /api/v1/pedidos/{id} 504 20570ms user=5497
+2026-03-14 01:03:12.496 ERROR [http-2] GET /api/v1/pedidos/resumen 504 8222ms user=6385
+2026-03-14 01:03:30.283 ERROR [http-2] GET /api/v1/pedidos/resumen 504 20755ms user=3499
+2026-03-14 01:03:48.240 ERROR [http-2] GET /api/v1/pedidos 502 4671ms user=3141
+2026-03-14 01:04:06.720 ERROR [http-2] GET /api/v1/pedidos 504 25570ms user=1302
+2026-03-14 01:04:24.545 ERROR [http-2] GET /api/v1/pedidos 504 2609ms user=6794
+2026-03-14 01:04:42.681 ERROR [http-2] GET /api/v1/pedidos/resumen 504 6053ms user=5674
+2026-03-14 01:05:40.210 WARN  [ops] uso de disco en /var/log: 84% (umbral 80%)
+2026-03-14 01:06:00.521 ERROR [http-2] GET /api/v1/pedidos 500 9172ms user=4148
+2026-03-14 01:06:24.063 ERROR [http-2] GET /api/v1/pedidos/{id} 504 18754ms user=5329
+2026-03-14 01:06:49.327 ERROR [http-2] GET /api/v1/pedidos 504 18809ms user=6721
+2026-03-14 01:07:14.152 ERROR [http-2] GET /api/v1/pedidos/{id} 500 24131ms user=3546
+2026-03-14 01:07:38.925 ERROR [http-2] GET /api/v1/pedidos/{id} 502 6722ms user=6867
+2026-03-14 01:08:03.016 ERROR [http-2] GET /api/v1/pedidos 502 25534ms user=5982
+2026-03-14 01:08:28.363 ERROR [http-2] GET /api/v1/pedidos/resumen 502 13778ms user=2643
+2026-03-14 01:08:52.619 ERROR [http-2] GET /api/v1/pedidos/{id} 504 2781ms user=6122
+2026-03-14 01:09:17.435 ERROR [http-2] GET /api/v1/pedidos 502 7170ms user=9871
+2026-03-14 01:09:42.647 ERROR [http-2] GET /api/v1/pedidos 504 18918ms user=5219
+2026-03-14 01:10:07.312 ERROR [http-2] GET /api/v1/pedidos 502 22684ms user=2760
+2026-03-14 01:10:31.476 ERROR [http-2] GET /api/v1/pedidos/resumen 504 27912ms user=1557
+2026-03-14 01:10:56.009 ERROR [http-2] GET /api/v1/pedidos 502 20357ms user=3462
+2026-03-14 01:11:21.119 ERROR [http-2] GET /api/v1/pedidos/{id} 502 17791ms user=8481
+2026-03-14 01:11:45.507 ERROR [http-2] GET /api/v1/pedidos 500 17500ms user=2960
+2026-03-14 01:12:10.627 ERROR [http-2] GET /api/v1/pedidos 500 28319ms user=6595
+2026-03-14 01:12:35.864 ERROR [http-2] GET /api/v1/pedidos 502 27639ms user=3345
+2026-03-14 01:13:00.187 ERROR [http-2] GET /api/v1/pedidos/{id} 504 20198ms user=1009
+2026-03-14 01:13:24.842 ERROR [http-2] GET /api/v1/pedidos/{id} 502 25514ms user=3597
+2026-03-14 01:13:49.927 ERROR [http-2] GET /api/v1/pedidos/resumen 502 6144ms user=5630
+2026-03-14 01:14:14.736 ERROR [http-2] GET /api/v1/pedidos 500 20601ms user=8130
+2026-03-14 01:14:38.690 ERROR [http-2] GET /api/v1/pedidos 500 1252ms user=1928
+2026-03-14 01:15:03.506 ERROR [http-2] GET /api/v1/pedidos/{id} 504 24481ms user=6980
+2026-03-14 01:15:28.931 ERROR [http-2] GET /api/v1/pedidos/resumen 504 14329ms user=4172
+2026-03-14 01:15:52.581 ERROR [http-2] GET /api/v1/pedidos/resumen 500 18013ms user=6451
+2026-03-14 01:16:17.423 ERROR [http-2] GET /api/v1/pedidos 500 12583ms user=1731
+2026-03-14 01:16:42.343 ERROR [http-2] GET /api/v1/pedidos/resumen 500 11551ms user=7758
+2026-03-14 01:17:07.562 ERROR [http-2] GET /api/v1/pedidos/resumen 504 3703ms user=6643
+2026-03-14 01:17:31.134 ERROR [http-2] GET /api/v1/pedidos/resumen 504 10441ms user=9934
+2026-03-14 01:17:56.383 ERROR [http-2] GET /api/v1/pedidos/{id} 502 24614ms user=2293
+2026-03-14 01:18:21.097 ERROR [http-2] GET /api/v1/pedidos/resumen 502 10775ms user=7009
+2026-03-14 01:18:45.448 ERROR [http-2] GET /api/v1/pedidos 504 7791ms user=6652
+2026-03-14 01:19:10.275 ERROR [http-2] GET /api/v1/pedidos/{id} 504 10244ms user=7829
+2026-03-14 01:19:35.794 ERROR [http-2] GET /api/v1/pedidos 504 23255ms user=2982
+2026-03-14 01:20:33.700 ERROR [ops] uso de disco en /var/log: 93%; la escritura de logs puede bloquearse
+2026-03-14 01:21:00.576 ERROR [http-2] GET /api/v1/pedidos 504 27526ms user=3212
+2026-03-14 01:21:19.364 ERROR [http-2] GET /api/v1/pedidos 504 2294ms user=2686
+2026-03-14 01:21:38.137 ERROR [http-2] GET /api/v1/pedidos/{id} 500 29953ms user=5358
+2026-03-14 01:21:57.950 ERROR [http-2] GET /api/v1/pedidos 502 17821ms user=8805
+2026-03-14 01:22:17.902 ERROR [http-2] GET /api/v1/pedidos/resumen 504 17552ms user=6643
+2026-03-14 01:22:36.959 ERROR [http-2] GET /api/v1/pedidos 500 24683ms user=7553
+2026-03-14 01:22:55.314 ERROR [http-2] GET /api/v1/pedidos/{id} 504 4682ms user=7335
+2026-03-14 01:23:15.974 ERROR [http-2] GET /api/v1/pedidos/resumen 504 27473ms user=7944
+2026-03-14 01:23:34.868 ERROR [http-2] GET /api/v1/pedidos 504 29496ms user=2534
+2026-03-14 01:23:53.216 ERROR [http-2] GET /api/v1/pedidos/resumen 502 27205ms user=5850
+2026-03-14 01:24:12.790 ERROR [http-2] GET /api/v1/pedidos 500 6963ms user=2110
+2026-03-14 01:24:32.321 ERROR [http-2] GET /api/v1/pedidos/{id} 500 23062ms user=2509
+2026-03-14 01:24:51.824 ERROR [http-2] GET /api/v1/pedidos/resumen 504 20508ms user=3448
+2026-03-14 01:25:10.163 ERROR [http-2] GET /api/v1/pedidos/{id} 504 5429ms user=5723
+2026-03-14 01:25:30.260 ERROR [http-2] GET /api/v1/pedidos/{id} 502 18129ms user=2909
+2026-03-14 01:25:49.744 ERROR [http-2] GET /api/v1/pedidos 504 28510ms user=2219
+2026-03-14 01:26:08.716 ERROR [http-2] GET /api/v1/pedidos/{id} 504 13568ms user=9237
+2026-03-14 01:26:27.211 ERROR [http-2] GET /api/v1/pedidos/resumen 502 9957ms user=1677
+2026-03-14 01:26:47.757 ERROR [http-2] GET /api/v1/pedidos/resumen 504 7048ms user=8527
+2026-03-14 01:27:06.604 ERROR [http-2] GET /api/v1/pedidos/resumen 502 13987ms user=2831
+2026-03-14 01:27:25.867 ERROR [http-2] GET /api/v1/pedidos/{id} 504 20335ms user=3914
+2026-03-14 01:27:45.473 ERROR [http-2] GET /api/v1/pedidos 504 23450ms user=9597
+2026-03-14 01:28:04.988 ERROR [http-2] GET /api/v1/pedidos 504 9417ms user=5415
+2026-03-14 01:28:23.318 ERROR [http-2] GET /api/v1/pedidos/resumen 504 23659ms user=4859
+2026-03-14 01:28:42.983 ERROR [http-2] GET /api/v1/pedidos/{id} 504 29005ms user=3416
+2026-03-14 01:29:02.467 ERROR [http-2] GET /api/v1/pedidos/{id} 504 21565ms user=6067
+2026-03-14 01:29:21.788 ERROR [http-2] GET /api/v1/pedidos/resumen 502 22761ms user=3241
+2026-03-14 01:29:40.266 ERROR [http-2] GET /api/v1/pedidos/{id} 504 26384ms user=4384
+2026-03-14 01:30:02.012 WARN  [monitor] pico de trafico: 480 req/s (media habitual 120 req/s), coincide con la campana de la 1 a.m.
+2026-03-14 01:31:00.413 ERROR [http-2] GET /api/v1/pedidos 504 15213ms user=1352
+2026-03-14 01:31:26.186 ERROR [http-2] GET /api/v1/pedidos 504 9567ms user=9050
+2026-03-14 01:31:52.508 ERROR [http-2] GET /api/v1/pedidos/resumen 502 18351ms user=5843
+2026-03-14 01:32:18.372 ERROR [http-2] GET /api/v1/pedidos/resumen 504 18693ms user=9848
+2026-03-14 01:32:45.987 ERROR [http-2] GET /api/v1/pedidos/{id} 504 1976ms user=5908
+2026-03-14 01:33:11.801 ERROR [http-2] GET /api/v1/pedidos 502 16375ms user=1487
+2026-03-14 01:33:37.986 ERROR [http-2] GET /api/v1/pedidos 504 6217ms user=2723
+2026-03-14 01:34:03.961 ERROR [http-2] GET /api/v1/pedidos/{id} 504 4801ms user=5625
+2026-03-14 01:34:30.248 ERROR [http-2] GET /api/v1/pedidos/resumen 502 18772ms user=4233
+2026-03-14 01:34:56.251 ERROR [http-2] GET /api/v1/pedidos/resumen 502 11938ms user=1485
+2026-03-14 01:35:22.196 ERROR [http-2] GET /api/v1/pedidos 504 15289ms user=1690
+2026-03-14 01:35:48.459 ERROR [http-2] GET /api/v1/pedidos/{id} 504 14362ms user=3072
+2026-03-14 01:36:15.538 ERROR [http-2] GET /api/v1/pedidos 504 12370ms user=3116
+2026-03-14 01:36:41.287 ERROR [http-2] GET /api/v1/pedidos/{id} 504 27550ms user=4352
+2026-03-14 01:37:07.030 ERROR [http-2] GET /api/v1/pedidos/{id} 504 5644ms user=3255
+2026-03-14 01:37:33.521 ERROR [http-2] GET /api/v1/pedidos 504 6550ms user=7197
+2026-03-14 01:38:00.598 ERROR [http-2] GET /api/v1/pedidos/{id} 504 21321ms user=4372
+2026-03-14 01:38:26.680 ERROR [http-2] GET /api/v1/pedidos 504 25576ms user=1830
+2026-03-14 01:38:52.645 ERROR [http-2] GET /api/v1/pedidos/{id} 504 2986ms user=8266
+2026-03-14 01:39:18.285 ERROR [http-2] GET /api/v1/pedidos/{id} 504 6011ms user=7257
+2026-03-14 01:39:45.279 ERROR [http-2] GET /api/v1/pedidos/{id} 504 27475ms user=5631
+2026-03-14 01:40:11.341 ERROR [http-2] GET /api/v1/pedidos/{id} 502 5525ms user=9737
+2026-03-14 01:40:37.434 ERROR [http-2] GET /api/v1/pedidos/resumen 502 14051ms user=2855
+2026-03-14 01:41:03.300 ERROR [http-2] GET /api/v1/pedidos 504 18046ms user=3834
+2026-03-14 01:41:30.480 ERROR [http-2] GET /api/v1/pedidos/resumen 504 20525ms user=6509
+2026-03-14 01:41:56.098 ERROR [http-2] GET /api/v1/pedidos 504 2180ms user=3015
+2026-03-14 01:42:22.327 ERROR [http-2] GET /api/v1/pedidos/resumen 502 18105ms user=1755
+2026-03-14 01:42:48.874 ERROR [http-2] GET /api/v1/pedidos/{id} 504 23349ms user=7991
+2026-03-14 01:43:15.915 ERROR [http-2] GET /api/v1/pedidos/{id} 504 2569ms user=6836
+2026-03-14 01:43:41.438 ERROR [http-2] GET /api/v1/pedidos/{id} 504 5011ms user=3763
+2026-03-14 01:44:07.211 ERROR [http-2] GET /api/v1/pedidos/resumen 504 7012ms user=9518
+2026-03-14 01:44:33.576 ERROR [http-2] GET /api/v1/pedidos/resumen 504 24478ms user=8831
+2026-03-14 01:45:18.044 ERROR [http-1] GET /api/v1/auth/login 200 210ms user=1188 (autenticacion NO afectada)
+2026-03-14 01:46:00.545 ERROR [http-2] GET /api/v1/pedidos 504 21845ms user=9635
+2026-03-14 01:46:31.330 ERROR [http-2] GET /api/v1/pedidos/{id} 504 20527ms user=9405
+2026-03-14 01:47:03.333 ERROR [http-2] GET /api/v1/pedidos/resumen 504 20626ms user=9751
+2026-03-14 01:47:35.800 ERROR [http-2] GET /api/v1/pedidos 502 20011ms user=8040
+2026-03-14 01:48:07.257 ERROR [http-2] GET /api/v1/pedidos/{id} 504 5334ms user=3557
+2026-03-14 01:48:38.765 ERROR [http-2] GET /api/v1/pedidos/resumen 502 29880ms user=1381
+2026-03-14 01:49:10.224 ERROR [http-2] GET /api/v1/pedidos 504 28972ms user=1689
+2026-03-14 01:49:42.799 ERROR [http-2] GET /api/v1/pedidos/{id} 504 26239ms user=7243
+2026-03-14 01:50:14.706 ERROR [http-2] GET /api/v1/pedidos/{id} 504 19292ms user=6410
+2026-03-14 01:50:45.961 ERROR [http-2] GET /api/v1/pedidos 504 22388ms user=2925
+2026-03-14 01:51:17.225 ERROR [http-2] GET /api/v1/pedidos/resumen 504 21829ms user=6831
+2026-03-14 01:51:49.962 ERROR [http-2] GET /api/v1/pedidos 504 25460ms user=1589
+2026-03-14 01:52:21.399 ERROR [http-2] GET /api/v1/pedidos 504 25346ms user=3685
+2026-03-14 01:52:52.684 ERROR [http-2] GET /api/v1/pedidos/resumen 502 27505ms user=2248
+2026-03-14 01:53:24.641 ERROR [http-2] GET /api/v1/pedidos/resumen 504 4028ms user=6725
+2026-03-14 01:53:56.050 ERROR [http-2] GET /api/v1/pedidos/resumen 504 15417ms user=2459
+2026-03-14 01:54:28.898 ERROR [http-2] GET /api/v1/pedidos/resumen 504 5874ms user=2752
+2026-03-14 01:55:00.010 ERROR [http-2] GET /api/v1/pedidos/resumen 504 6826ms user=8077
+2026-03-14 01:55:31.617 ERROR [http-2] GET /api/v1/pedidos/{id} 504 6984ms user=9230
+2026-03-14 01:56:03.142 ERROR [http-2] GET /api/v1/pedidos 504 18661ms user=8396
+2026-03-14 01:56:35.227 ERROR [http-2] GET /api/v1/pedidos/{id} 504 4159ms user=1356
+2026-03-14 01:57:07.928 ERROR [http-2] GET /api/v1/pedidos/{id} 504 10196ms user=2804
+2026-03-14 01:57:38.978 ERROR [http-2] GET /api/v1/pedidos/{id} 502 27147ms user=4534
+2026-03-14 01:58:10.437 ERROR [http-2] GET /api/v1/pedidos/resumen 504 12861ms user=8656
+2026-03-14 01:58:42.461 ERROR [http-2] GET /api/v1/pedidos/{id} 502 3560ms user=3863
+2026-03-14 01:59:14.271 ERROR [http-2] GET /api/v1/pedidos/resumen 502 12062ms user=3906
+2026-03-14 01:59:45.332 ERROR [http-2] GET /api/v1/pedidos 502 24276ms user=3391
+2026-03-14 02:00:17.872 ERROR [http-2] GET /api/v1/pedidos 502 28524ms user=5783
+2026-03-14 02:00:49.231 ERROR [http-2] GET /api/v1/pedidos/{id} 504 28203ms user=8891
+2026-03-14 02:01:21.172 ERROR [http-2] GET /api/v1/pedidos/resumen 504 5120ms user=1652
+2026-03-14 02:01:52.970 ERROR [http-2] GET /api/v1/pedidos 504 2965ms user=8609
+2026-03-14 02:02:24.087 ERROR [http-2] GET /api/v1/pedidos/{id} 504 21653ms user=1095
+2026-03-14 02:02:56.952 ERROR [http-2] GET /api/v1/pedidos/resumen 504 13822ms user=2504
+2026-03-14 02:03:28.540 ERROR [http-2] GET /api/v1/pedidos/{id} 504 2439ms user=2243
+2026-03-14 02:04:50.008 FATAL [ops] disco casi lleno: 98% en /var/log; activando rotacion de emergencia
+2026-03-14 02:05:03.512 INFO  [ops] rotacion de emergencia: servidor.log.1 comprimido (1.2 GB -> 180 MB)
+2026-03-14 02:06:12.091 INFO  [ops] uso de disco en /var/log: 61% tras la rotacion
+2026-03-14 02:11:07.482 FATAL [monitor] umbral critico superado: 62% de peticiones con 5xx en la ventana de 5 min; incidente declarado
+2026-03-14 02:11:08.012 FATAL [app-1] worker-3 y worker-7 bloqueados esperando conexion a base de datos; saturacion del pool
+2026-03-14 02:11:09.300 FATAL [app-2] worker-2 bloqueado esperando conexion a base de datos; saturacion del pool
+2026-03-14 02:12:00.682 ERROR [http-2] GET /api/v1/pedidos/{id} 504 17636ms user=5253
+2026-03-14 02:13:10.907 ERROR [http-2] GET /api/v1/pedidos/{id} 504 18634ms user=2530
+2026-03-14 02:14:21.567 ERROR [http-2] GET /api/v1/pedidos/resumen 502 5186ms user=8739
+2026-03-14 02:15:32.683 ERROR [http-2] GET /api/v1/pedidos/{id} 502 29745ms user=1075
+2026-03-14 02:16:43.717 ERROR [http-2] GET /api/v1/pedidos/{id} 504 6434ms user=9276
+2026-03-14 02:17:54.277 ERROR [http-2] GET /api/v1/pedidos/resumen 504 12333ms user=1299
+2026-03-14 02:19:05.911 ERROR [http-2] GET /api/v1/pedidos/resumen 504 16685ms user=5255
+2026-03-14 02:20:16.774 ERROR [http-2] GET /api/v1/pedidos/resumen 504 6579ms user=4449
+2026-03-14 02:21:27.244 ERROR [http-2] GET /api/v1/pedidos/{id} 504 14104ms user=6743
+2026-03-14 02:22:38.571 ERROR [http-2] GET /api/v1/pedidos/resumen 502 24775ms user=6315
+2026-03-14 02:23:49.546 ERROR [http-2] GET /api/v1/pedidos/resumen 504 18638ms user=2393
+2026-03-14 02:25:00.095 ERROR [http-2] GET /api/v1/pedidos/{id} 502 7884ms user=9456
+2026-03-14 02:26:10.421 ERROR [http-2] GET /api/v1/pedidos/resumen 504 21205ms user=7424
+2026-03-14 02:27:21.263 ERROR [http-2] GET /api/v1/pedidos/{id} 504 8822ms user=3663
+2026-03-14 02:28:32.836 ERROR [http-2] GET /api/v1/pedidos/{id} 504 19381ms user=1490
+2026-03-14 02:29:43.377 ERROR [http-2] GET /api/v1/pedidos/{id} 504 28499ms user=6935
+2026-03-14 02:30:54.862 ERROR [http-2] GET /api/v1/pedidos/resumen 504 2676ms user=5175
+2026-03-14 02:32:05.212 ERROR [http-2] GET /api/v1/pedidos 504 12023ms user=2778
+2026-03-14 02:33:16.548 ERROR [http-2] GET /api/v1/pedidos 504 23650ms user=3726
+2026-03-14 02:34:27.213 ERROR [http-2] GET /api/v1/pedidos/resumen 504 20836ms user=5246
+2026-03-14 02:35:38.472 ERROR [http-2] GET /api/v1/pedidos 502 26980ms user=3593
+2026-03-14 02:36:49.708 ERROR [http-2] GET /api/v1/pedidos/{id} 504 16703ms user=9719
+2026-03-14 02:40:15.640 INFO  [dba] revisando las consultas lentas registradas sobre la tabla pedidos...
+2026-03-14 02:47:02.033 WARN  [dba] la consulta de la v2.14.0 filtra por pedidos.estado SIN indice -> full scan de 4.1M filas
+2026-03-14 02:50:11.088 INFO  [dba] creando indice idx_pedidos_estado sobre pedidos(estado, creado_en)...
+2026-03-14 03:01:06.402 INFO  [dba] indice idx_pedidos_estado creado; tiempo de la consulta baja de 9.1s a 24ms
+2026-03-14 03:02:30.015 INFO  [ops] reiniciando el pool de conexiones en app-1 y app-2...
+2026-03-14 03:05:00.900 INFO  [ops] pool reiniciado: activo=6/50, en espera=0; latencia media normalizada
+2026-03-14 03:05:30.044 INFO  [monitor] 0 respuestas 504 en los ultimos 30s
+2026-03-14 03:06:11.900 INFO  [monitor] resumen del incidente: 12.480 peticiones atendidas, 3.216 fallidas (504=2.104, 502=812, 500=300)
+2026-03-14 03:06:12.010 INFO  [monitor] ventana del incidente: 00:41 a 03:05 (2h24m); pool_max=50; causa raiz: consulta lenta sobre la tabla pedidos sin indice tras el despliegue v2.14.0
+2026-03-14 03:07:00.001 INFO  [monitor] incidente CERRADO; se programa revision de pruebas de rendimiento para el despliegue
