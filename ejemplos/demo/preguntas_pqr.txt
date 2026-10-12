@@ -1,6 +1,6 @@
 ask: ¿Cuánto dinero reclama en total el peticionario?
 choice:
-  206310: $206.310 (los $98.700 de la reconexión más los $107.610 del descuento)
+  206310: $206.310
   98700: $98.700
   107610: $107.610
   288600: $288.600

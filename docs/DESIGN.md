@@ -260,12 +260,13 @@ medidas. Un rótulo en mono para que parezca técnico es un disfraz.
 
 ## Layout
 
-Una sola columna, y el orden lo manda el trabajo: el armazón, el caso —el documento, o el
-texto que se pega cuando no hay documento; es la entrada y la misma en los tres modos—, **las pestañas de
-los tres modos** (debajo de la entrada: primero se dice sobre qué se pregunta, y luego
-cómo), las preguntas, **la barra de añadir pregunta al final de la lista** —se añade
-donde aparece la nueva—, la acción de preguntar, y al final la lectura, con su medida
-encima.
+Una sola columna, y el orden lo manda el trabajo: el armazón, el documento —el caso
+cuando se carga uno—, **las pestañas de los tres modos**, y dentro de la vista de
+bloques, al principio, **la entrada** —el texto que se pega cuando no hay documento: vive
+justo debajo de las pestañas, antes que las preguntas, y se desactiva cuando hay un
+documento cargado, porque entonces el caso es el documento—, las preguntas, **la barra de
+añadir pregunta al final de la lista** —se añade donde aparece la nueva—, la acción de
+preguntar, y al final la lectura, con su medida encima.
 
 - **Ancho de contenido:** 1180px, centrado, con relleno lateral fluido
   (`clamp(14px, 3vw, 26px)`).

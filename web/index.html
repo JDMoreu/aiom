@@ -119,6 +119,13 @@ main{max-width:var(--ancho);margin:0 auto;padding:clamp(16px,3vw,26px)
         color:var(--tenue);margin:0 0 10px;display:flex;align-items:center;gap:10px}
 .rotulo .raya{flex:1;height:1px;background:var(--hairline)}
 .ayuda{font-size:12px;color:var(--tenue);line-height:1.45}
+/* La entrada abre la vista de bloques: el caso escrito va antes que las
+   preguntas. Lleva su propio margen inferior porque dentro de la vista ya no
+   existe el ritmo de `main`. Con un documento cargado se queda a la vista pero
+   desactivada -el caso es el documento-, apagada como el boton principal cuando
+   no se puede pulsar. */
+#caja-entrada{margin-bottom:14px}
+#caja-entrada textarea:disabled{opacity:.55;cursor:default}
 
 /* ---------------------------------------------------------------- documento */
 .doc{border:1px dashed var(--hairline-fuerte);border-radius:3px;padding:12px 14px;
@@ -351,16 +358,6 @@ textarea.mono{font-family:var(--mono);font-size:13.5px;line-height:1.65;
     <p class="nota" id="doc-nota">Sin documento, el caso es lo que escribas abajo.</p>
   </section>
 
-  <!-- El caso escrito a mano vive AQUI, con el otro caso y fuera de las vistas: es el
-       mismo en los tres modos -es la entrada-, asi que no tiene sentido que sea parte de
-       la vista de bloques. De ahi que las pestanas vayan debajo: primero la entrada, y
-       luego como se escriben las preguntas. -->
-  <section class="caja" id="caja-entrada">
-    <p class="rotulo">El caso <span class="raya"></span></p>
-    <textarea id="caso-texto" rows="4"
-      placeholder="Pega aquí el texto sobre el que vas a preguntar."></textarea>
-  </section>
-
   <nav class="modos" role="tablist">
     <button role="tab" id="tab-bloques" aria-selected="true" aria-controls="vista-bloques">Bloques</button>
     <button role="tab" id="tab-natural" aria-selected="false" aria-controls="vista-natural">Lenguaje natural</button>
@@ -369,6 +366,14 @@ textarea.mono{font-family:var(--mono);font-size:13.5px;line-height:1.65;
   </nav>
 
   <section id="vista-bloques">
+    <!-- La entrada -el caso escrito- abre la vista de bloques, justo debajo de las
+         pestanas: es sobre lo que se pregunta, y va antes que las preguntas. Con un
+         documento cargado se queda a la vista pero desactivada: el caso es el documento. -->
+    <section class="caja" id="caja-entrada">
+      <p class="rotulo">Entrada <span class="raya"></span></p>
+      <textarea id="caso-texto" rows="4"
+        placeholder="Pega aquí el texto sobre el que vas a preguntar."></textarea>
+    </section>
     <p class="rotulo">Las preguntas <span class="raya"></span>
       <span class="ayuda" id="cuenta-preguntas"></span></p>
     <div class="bloques" id="bloques"></div>
@@ -729,19 +734,19 @@ function pintarDoc() {
     $("doc").className = "doc";
     $("doc-icono").textContent = "txt";
     $("doc-quien").innerHTML = "<b>Ninguno.</b> <span class=\"medida\">" +
-      "el caso es lo que escribas a mano</span>";
+      "el caso es lo que escribas en la entrada</span>";
     $("doc-elegir").textContent = "Cargar documento";
     $("doc-quitar").hidden = true;
     $("doc-extraido").hidden = true;
     $("doc-nota").textContent = "txt · md · csv · json · log · docx · pdf";
-    // Sin documento, el caso hay que escribirlo: el campo vuelve.
-    $("caja-entrada").hidden = false;
+    // Sin documento, el caso hay que escribirlo: la entrada vuelve a estar activa.
+    $("caso-texto").disabled = false;
     return;
   }
-  // Con un documento cargado, el campo de escribir el caso SOBRA: el caso es el
-  // documento, y tenerlo ahi visible invita a escribir en un sitio que se ignora. Se
-  // oculta, y vuelve en cuanto se quita el documento.
-  $("caja-entrada").hidden = true;
+  // Con un documento cargado, la entrada se queda a la vista -es el sitio del caso-,
+  // pero DESACTIVADA: el caso es el documento, y escribir ahi no serviria de nada. Su
+  // texto no se pierde: vuelve tal cual en cuanto se quita el documento.
+  $("caso-texto").disabled = true;
   $("doc").className = "doc cargado";
   $("doc-icono").textContent = documento.tipo;
   const cifras = [documento.tipo, documento.caracteres + " caracteres",
@@ -751,7 +756,7 @@ function pintarDoc() {
     `<span class="medida">${cifras.join(" · ")}</span>`;
   $("doc-elegir").textContent = "Cambiar documento";
   $("doc-quitar").hidden = false;
-  $("doc-nota").textContent = "El documento es el caso: las preguntas van sobre él.";
+  $("doc-nota").textContent = "Hay un documento cargado: el caso es el documento.";
   // la vista previa: el texto que se extrajo, que es lo que recibe el modelo
   $("doc-extraido").hidden = false;
   $("doc-extraido").innerHTML =
