@@ -48,7 +48,7 @@ escriben una sola vez**, y hay tres formas de hacerlo.
   hagan falta.
 - **Lenguaje natural** — el formato de cabeceras: `input:`, `ask:`, `choice:`, `score:`,
   `noul:`.
-- **JSON** — el formato de TypeSafe: `state.input` más `questions`.
+- **TypeSafe** — el formato de TypeSafe: `state.input` más `questions`.
 
 No son tres sitios donde teclear por separado: **son tres vistas de lo mismo**. Se cambia
 de pestaña y lo escrito aparece en la otra forma, en los dos sentidos. Por eso el nombre

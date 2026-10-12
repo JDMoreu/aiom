@@ -121,11 +121,9 @@ main{max-width:var(--ancho);margin:0 auto;padding:clamp(16px,3vw,26px)
 .ayuda{font-size:12px;color:var(--tenue);line-height:1.45}
 /* La entrada abre la vista de bloques: el caso escrito va antes que las
    preguntas. Lleva su propio margen inferior porque dentro de la vista ya no
-   existe el ritmo de `main`. Con un documento cargado se queda a la vista pero
-   desactivada -el caso es el documento-, apagada como el boton principal cuando
-   no se puede pulsar. */
+   existe el ritmo de `main`. Con un documento cargado desaparece -el caso es el
+   documento-, y su texto se conserva para cuando se quite. */
 #caja-entrada{margin-bottom:14px}
-#caja-entrada textarea:disabled{opacity:.55;cursor:default}
 
 /* ---------------------------------------------------------------- documento */
 .doc{border:1px dashed var(--hairline-fuerte);border-radius:3px;padding:12px 14px;
@@ -361,7 +359,7 @@ textarea.mono{font-family:var(--mono);font-size:13.5px;line-height:1.65;
   <nav class="modos" role="tablist">
     <button role="tab" id="tab-bloques" aria-selected="true" aria-controls="vista-bloques">Bloques</button>
     <button role="tab" id="tab-natural" aria-selected="false" aria-controls="vista-natural">Lenguaje natural</button>
-    <button role="tab" id="tab-tipado" aria-selected="false" aria-controls="vista-tipado">JSON</button>
+    <button role="tab" id="tab-tipado" aria-selected="false" aria-controls="vista-tipado">TypeSafe</button>
     <span class="cinta" id="cinta"></span>
   </nav>
 
@@ -399,10 +397,10 @@ textarea.mono{font-family:var(--mono);font-size:13.5px;line-height:1.65;
 
   <section id="vista-tipado" hidden>
     <div class="caja">
-      <p class="rotulo">JSON <span class="raya"></span>
+      <p class="rotulo">TypeSafe <span class="raya"></span>
         <span class="ayuda">state.input + questions</span></p>
       <textarea id="tipado-texto" class="mono" spellcheck="false"></textarea>
-      <p class="nota">El mismo caso en el formato de TypeSafe. Las claves de los campos
+      <p class="nota">El formato de TypeSafe, que viaja como JSON. Las claves de los campos
         llegan al modelo, así que se numeran q1, q2, q3.</p>
       <div class="aviso-formato" id="tipado-aviso" hidden></div>
     </div>
@@ -707,7 +705,7 @@ $("anadir-tipos").querySelectorAll("[data-anadir]").forEach((b) => {
   };
 });
 
-// Escribir en natural o en JSON actualiza el modelo; si no se puede leer, se avisa y
+// Escribir en natural o en TypeSafe actualiza el modelo; si no se puede leer, se avisa y
 // se deja el modelo como estaba, en vez de perder lo que ya habia.
 $("natural-texto").oninput = () => {
   const a = $("natural-aviso");
@@ -739,14 +737,14 @@ function pintarDoc() {
     $("doc-quitar").hidden = true;
     $("doc-extraido").hidden = true;
     $("doc-nota").textContent = "txt · md · csv · json · log · docx · pdf";
-    // Sin documento, el caso hay que escribirlo: la entrada vuelve a estar activa.
-    $("caso-texto").disabled = false;
+    // Sin documento, el caso hay que escribirlo: la entrada vuelve.
+    $("caja-entrada").hidden = false;
     return;
   }
-  // Con un documento cargado, la entrada se queda a la vista -es el sitio del caso-,
-  // pero DESACTIVADA: el caso es el documento, y escribir ahi no serviria de nada. Su
+  // Con un documento cargado, la entrada SE OCULTA: el caso es el documento, y dejarla
+  // ahi -aunque fuera desactivada- invita a escribir en un sitio que se ignora. Su
   // texto no se pierde: vuelve tal cual en cuanto se quita el documento.
-  $("caso-texto").disabled = true;
+  $("caja-entrada").hidden = true;
   $("doc").className = "doc cargado";
   $("doc-icono").textContent = documento.tipo;
   const cifras = [documento.tipo, documento.caracteres + " caracteres",

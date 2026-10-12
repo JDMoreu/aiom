@@ -135,7 +135,7 @@ python api.py        # abre http://127.0.0.1:8100/
 ### La puerta humana: el cliente web
 
 Se abre `http://127.0.0.1:8100/` y ahí está todo: se escribe el caso y las preguntas —por
-bloques, en lenguaje natural o en JSON— y se pregunta. Hay un ejemplo por tipo, para
+bloques, en lenguaje natural o en TypeSafe— y se pregunta. Hay un ejemplo por tipo, para
 probarlos todos pegando su contenido:
 
 ```

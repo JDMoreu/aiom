@@ -71,7 +71,7 @@ vías a la vez para que la diferencia se vea, no se lea.
 Confirmado y en uso:
 
 - **Tres formas de escribir lo mismo**: lenguaje natural con cabeceras
-  (`input:` / `ask:` / `choice:` / `score:` / `noul:`), JSON al estilo TypeSafe
+  (`input:` / `ask:` / `choice:` / `score:` / `noul:`), el formato de TypeSafe
   (`state` + `questions`), y **por bloques** (nuevo: la interfaz se construye
   añadiendo caso, preguntas y opciones).
 - **Los tres tipos**: `choice`, `score`, `noul`.

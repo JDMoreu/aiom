@@ -64,13 +64,13 @@ for r_ in respuesta["resultados"]:
 ```
 
 Y hay un **ejemplo completo y ejecutable**, que enseña las tres formas de darle el caso
-—escrito, sacado de un documento, o en JSON— y los dos endpoints que hay que llamar. Lleva
+—escrito, sacado de un documento, o en TypeSafe— y los dos endpoints que hay que llamar. Lleva
 **seis preguntas, dos de cada tipo**, y las resuelve todas en una petición:
 
 ```bash
 python ejemplos/integrar.py                # el caso, escrito
 python ejemplos/integrar.py carta.pdf      # el caso, sacado de un documento
-python ejemplos/integrar.py --tipado       # el mismo caso, en JSON tipado
+python ejemplos/integrar.py --tipado       # el mismo caso, en TypeSafe
 python ejemplos/integrar.py --chat         # una pregunta suelta, en prosa
 python ejemplos/integrar.py --comparar     # y además, lo mismo al chat
 ```
@@ -488,7 +488,7 @@ que lo que se compara es lo que cada una tarda en resolverla.
 usa esta misma API.
 
 El caso y las preguntas se escriben **una sola vez**, y hay tres formas de hacerlo —
-**por bloques**, en **lenguaje natural** o en **JSON**— que son tres vistas del
+**por bloques**, en **lenguaje natural** o en **TypeSafe**— que son tres vistas del
 mismo contenido, no tres sitios donde teclear por separado. Se cambia de pestaña y lo
 escrito aparece en la otra forma. Con «Comparar» activado se pregunta lo mismo por las
 dos vías y se ven juntas.

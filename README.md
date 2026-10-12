@@ -159,7 +159,7 @@ python api.py          # y abre http://127.0.0.1:8100/
 ```
 
 La interfaz deja escribir el caso y las preguntas **una sola vez**, de tres formas
-distintas —**por bloques**, en **lenguaje natural** o en **JSON**— que son tres
+distintas —**por bloques**, en **lenguaje natural** o en **TypeSafe**— que son tres
 vistas de lo mismo: se cambia de pestaña y lo escrito aparece en la otra forma.
 
 **Y el caso no hace falta escribirlo**: se carga un documento (pdf, docx, txt, md, csv) y
@@ -179,7 +179,7 @@ endpoints, seis preguntas de los tres tipos, y cada campo de la respuesta explic
 ```bash
 python ejemplos/integrar.py                # el caso, escrito
 python ejemplos/integrar.py carta.pdf      # el caso, sacado de un documento
-python ejemplos/integrar.py --tipado       # el mismo caso, en JSON tipado
+python ejemplos/integrar.py --tipado       # el mismo caso, en TypeSafe
 python ejemplos/integrar.py --comparar     # y además, lo mismo al chat
 ```
 
