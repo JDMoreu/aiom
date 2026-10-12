@@ -1,7 +1,12 @@
 # AIOM — un modelo, dos formas de preguntar
 
-**[La demo, en vídeo](ejemplos/demo/Demo.mp4)** — la API, el cliente web y el modelo local
-en marcha, preguntando sobre un documento.
+<p align="center">
+  <img src="ejemplos/demo/demo.gif" width="900"
+       alt="La demo: se carga un documento, se pegan las preguntas y el modelo responde">
+</p>
+
+La demo, en movimiento: se carga un documento, se pegan las preguntas y el modelo responde.
+El vídeo completo, sin acelerar, está en [`ejemplos/demo/Demo.mp4`](ejemplos/demo/Demo.mp4).
 
 **La idea, en una frase:** un modelo de decisión como Jev no es un modelo distinto de un
 LLM. **Es el mismo.** Lo que cambia es **cómo le haces la pregunta** y **qué le pides de
@@ -223,7 +228,8 @@ ejemplos/            siete casos de ejemplo -cinco sobre correos de soporte, uno
                        integrar.py       como consultar la API desde Python, con el caso
                                          escrito o sacado de un documento
                        demo/             la demo en vivo, con dos casos completos:
-                         Demo.mp4        la demo grabada, en vídeo
+                         demo.gif        la demo, en GIF, la que se ve en el README
+                         Demo.mp4        la misma demo en video, completa y sin acelerar
                          pqr.pdf         una PQR de dos páginas (y pqr.txt, su texto)
                          servidor.log    un log de errores de un servidor, 336 líneas
                          preguntas_pqr.txt  las 10 preguntas sobre la PQR
