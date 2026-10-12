@@ -16,17 +16,19 @@ le lanzan preguntas al modelo, que responde usando **solo lo que dice el documen
 
 ## El formato de las preguntas (formato `natural`)
 
-Cada pregunta es un bloque; los bloques se separan con una línea de `---`:
+Los dos ficheros de preguntas se copian y se pegan **tal cual**: dentro solo hay preguntas,
+sin comentarios ni numeración. Cada pregunta es un bloque, y los bloques van separados por
+una línea de `---`:
 
-    input: {TEXTO_DEL_DOCUMENTO}
     ask: ¿la pregunta?
     choice:
       clave: descripción de la opción
 
-- `input:` lleva el caso. En estos ficheros va como marcador `{TEXTO_DEL_DOCUMENTO}`,
-  porque en la demo el caso lo pone `POST /documento` y se pasa en el campo `documento`.
 - Los tres tipos: `choice` (elegir una opción), `noul` (verdadero/falso) y `score`
   (un nivel de una escala, de 0 en adelante).
+- El caso **no** va dentro del texto de las preguntas: se carga aparte. En el cliente web,
+  con el botón **Cargar documento**; por API, en el campo `documento` de `POST /ask`.
+  Por eso los ficheros empiezan directamente en `ask:`.
 
 > **El caso va en el campo `documento`, y las preguntas separadas por `---`.** Las dos
 > cosas son obligatorias cuando se lanzan varias de una vez:

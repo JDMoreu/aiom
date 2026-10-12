@@ -1,15 +1,3 @@
-# ============================================================================
-# Preguntas sobre el log  (servidor.log)  -  demo AIOM
-# Formato `natural`. 30 preguntas: 15 choice, 8 noul, 7 score.
-# `input:` lleva el marcador {TEXTO_DEL_DOCUMENTO}: en la demo el caso llega de
-# POST /documento y se pasa en el campo "documento". Si mandas una pregunta suelta,
-# sustituye el marcador por el texto del log (o pasa "documento").
-# Las preguntas se separan con una linea de --- y se pueden mandar todas de una vez.
-# ============================================================================
-
-# 1  (choice)
-input: {TEXTO_DEL_DOCUMENTO}
-
 ask: ¿Qué código de error HTTP predomina en las peticiones fallidas del incidente?
 choice:
   504: 504 Gateway Timeout
@@ -18,9 +6,6 @@ choice:
   503: 503 Service Unavailable
 
 ---
-
-# 2  (choice)
-input: {TEXTO_DEL_DOCUMENTO}
 
 ask: ¿Cuál es la causa raíz del incidente?
 choice:
@@ -31,9 +16,6 @@ choice:
 
 ---
 
-# 3  (choice)
-input: {TEXTO_DEL_DOCUMENTO}
-
 ask: ¿A qué hora se agotó por primera vez el pool de conexiones?
 choice:
   0041: a las 00:41
@@ -42,9 +24,6 @@ choice:
   0211: a las 02:11
 
 ---
-
-# 4  (choice)
-input: {TEXTO_DEL_DOCUMENTO}
 
 ask: Según el resumen final del incidente, ¿cuántas peticiones terminaron en error (5xx)?
 choice:
@@ -55,9 +34,6 @@ choice:
 
 ---
 
-# 5  (choice)
-input: {TEXTO_DEL_DOCUMENTO}
-
 ask: ¿Qué componente del servidor se quedó sin recursos?
 choice:
   pool_de_conexiones: el pool de conexiones a la base de datos
@@ -66,9 +42,6 @@ choice:
   disco: el disco
 
 ---
-
-# 6  (choice)
-input: {TEXTO_DEL_DOCUMENTO}
 
 ask: ¿Qué versión de la aplicación se desplegó la noche del incidente?
 choice:
@@ -79,9 +52,6 @@ choice:
 
 ---
 
-# 7  (choice)
-input: {TEXTO_DEL_DOCUMENTO}
-
 ask: ¿A qué hora se inició el despliegue de la aplicación?
 choice:
   2358: a las 23:58
@@ -90,9 +60,6 @@ choice:
   0211: a las 02:11
 
 ---
-
-# 8  (choice)
-input: {TEXTO_DEL_DOCUMENTO}
 
 ask: ¿Qué tabla de la base de datos provocó las consultas lentas?
 choice:
@@ -103,9 +70,6 @@ choice:
 
 ---
 
-# 9  (choice)
-input: {TEXTO_DEL_DOCUMENTO}
-
 ask: ¿Cuál fue la acción que resolvió el incidente?
 choice:
   crear_un_indice: crear el índice idx_pedidos_estado
@@ -114,9 +78,6 @@ choice:
   bloquear_el_trafico: bloquear el tráfico de entrada
 
 ---
-
-# 10  (choice)
-input: {TEXTO_DEL_DOCUMENTO}
 
 ask: ¿Qué recurso del sistema se llenó durante el incidente?
 choice:
@@ -127,9 +88,6 @@ choice:
 
 ---
 
-# 11  (choice)
-input: {TEXTO_DEL_DOCUMENTO}
-
 ask: ¿Qué endpoint concentró los errores del incidente?
 choice:
   pedidos: /api/v1/pedidos
@@ -138,9 +96,6 @@ choice:
   usuarios: /api/v1/usuarios
 
 ---
-
-# 12  (choice)
-input: {TEXTO_DEL_DOCUMENTO}
 
 ask: ¿Cuánto duró el incidente, desde el agotamiento del pool hasta su resolución?
 choice:
@@ -151,9 +106,6 @@ choice:
 
 ---
 
-# 13  (choice)
-input: {TEXTO_DEL_DOCUMENTO}
-
 ask: ¿A qué hora se creó el índice que resolvió el problema?
 choice:
   0301: a las 03:01
@@ -162,9 +114,6 @@ choice:
   0305: a las 03:05
 
 ---
-
-# 14  (choice)
-input: {TEXTO_DEL_DOCUMENTO}
 
 ask: ¿Hasta qué porcentaje de uso llegó el disco de /var/log?
 choice:
@@ -175,9 +124,6 @@ choice:
 
 ---
 
-# 15  (choice)
-input: {TEXTO_DEL_DOCUMENTO}
-
 ask: ¿Qué tipo de consulta a la base de datos provocó el problema?
 choice:
   full_scan_sin_indice: un full scan de la tabla sin índice
@@ -187,18 +133,12 @@ choice:
 
 ---
 
-# 16  (noul)
-input: {TEXTO_DEL_DOCUMENTO}
-
 ask: ¿Hubo un despliegue de la aplicación la noche del incidente?
 noul:
   false: No, no hubo ningún despliegue esa noche
   true: Sí, se desplegó la versión v2.14.0 a las 23:58
 
 ---
-
-# 17  (noul)
-input: {TEXTO_DEL_DOCUMENTO}
 
 ask: ¿El incidente afectó a todos los usuarios del sistema por igual?
 noul:
@@ -207,18 +147,12 @@ noul:
 
 ---
 
-# 18  (noul)
-input: {TEXTO_DEL_DOCUMENTO}
-
 ask: ¿El disco del servidor se llenó durante el incidente?
 noul:
   false: No, el disco se mantuvo con espacio de sobra
   true: Sí, /var/log llegó al 98% y obligó a una rotación de emergencia
 
 ---
-
-# 19  (noul)
-input: {TEXTO_DEL_DOCUMENTO}
 
 ask: ¿Se agotó el pool de conexiones a la base de datos?
 noul:
@@ -227,18 +161,12 @@ noul:
 
 ---
 
-# 20  (noul)
-input: {TEXTO_DEL_DOCUMENTO}
-
 ask: ¿El pool de conexiones estaba configurado con un máximo de 50 conexiones?
 noul:
   false: No, el máximo de conexiones era otro
   true: Sí, el pool tenía un máximo de 50 conexiones (pool_max=50)
 
 ---
-
-# 21  (noul)
-input: {TEXTO_DEL_DOCUMENTO}
 
 ask: ¿La causa raíz del incidente fue un fallo de hardware?
 noul:
@@ -247,9 +175,6 @@ noul:
 
 ---
 
-# 22  (noul)
-input: {TEXTO_DEL_DOCUMENTO}
-
 ask: ¿Hubo reintentos automáticos de las peticiones que fallaban?
 noul:
   false: No, las peticiones fallidas no se reintentaron
@@ -257,18 +182,12 @@ noul:
 
 ---
 
-# 23  (noul)
-input: {TEXTO_DEL_DOCUMENTO}
-
 ask: ¿El pool de conexiones se agotó antes de que el disco de /var/log llegara al 98%?
 noul:
   false: No, el disco llegó al 98% antes de que el pool se agotara
   true: Sí, el pool se agotó a las 00:41 y el disco llegó al 98% a las 02:04
 
 ---
-
-# 24  (score)
-input: {TEXTO_DEL_DOCUMENTO}
 
 ask: ¿Qué gravedad tiene este incidente?
 score:
@@ -279,9 +198,6 @@ score:
 
 ---
 
-# 25  (score)
-input: {TEXTO_DEL_DOCUMENTO}
-
 ask: ¿Qué tan urgente era mitigar el incidente?
 score:
   value: 0 = no corría prisa
@@ -290,9 +206,6 @@ score:
   value: 3 = máxima urgencia
 
 ---
-
-# 26  (score)
-input: {TEXTO_DEL_DOCUMENTO}
 
 ask: ¿Qué nivel de afectación tuvo el pico de tráfico de la 1 a.m.?
 score:
@@ -303,9 +216,6 @@ score:
 
 ---
 
-# 27  (score)
-input: {TEXTO_DEL_DOCUMENTO}
-
 ask: ¿Qué tan crítico fue el agotamiento del pool de conexiones?
 score:
   value: 0 = nada crítico
@@ -314,9 +224,6 @@ score:
   value: 3 = totalmente crítico
 
 ---
-
-# 28  (score)
-input: {TEXTO_DEL_DOCUMENTO}
 
 ask: ¿Qué prioridad tiene corregir la consulta que causó el problema?
 score:
@@ -327,9 +234,6 @@ score:
 
 ---
 
-# 29  (score)
-input: {TEXTO_DEL_DOCUMENTO}
-
 ask: ¿Qué tan grave fue que el disco de /var/log se llenara?
 score:
   value: 0 = sin importancia
@@ -338,9 +242,6 @@ score:
   value: 3 = muy grave
 
 ---
-
-# 30  (score)
-input: {TEXTO_DEL_DOCUMENTO}
 
 ask: ¿Qué riesgo tiene desplegar a medianoche sin pruebas de rendimiento?
 score:
