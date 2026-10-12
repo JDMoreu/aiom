@@ -222,8 +222,8 @@ ejemplos/            siete casos de ejemplo -cinco sobre correos de soporte, uno
                        demo/             la demo en vivo, con dos casos completos:
                          pqr.pdf         una PQR de dos páginas (y pqr.txt, su texto)
                          servidor.log    un log de errores de un servidor, 336 líneas
-                         preguntas_pqr.txt  las 30 preguntas sobre la PQR
-                         preguntas_log.txt  las 30 preguntas sobre el log
+                         preguntas_pqr.txt  las 10 preguntas sobre la PQR
+                         preguntas_log.txt  las 10 preguntas sobre el log
                          LEEME.md        qué es cada fichero y cómo se usa
                          _gen_pqr.py     los generadores, por si hay que rehacerlos
                          _gen_log.py

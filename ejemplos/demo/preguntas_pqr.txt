@@ -1,54 +1,9 @@
-ask: ¿Cuánto dinero reclama en total el peticionario?
-choice:
-  206310: $206.310
-  98700: $98.700
-  107610: $107.610
-  288600: $288.600
-
----
-
-ask: ¿Cuántas llamadas al soporte registró el cliente antes de radicar esta PQR?
-choice:
-  4: cuatro llamadas
-  5: cinco llamadas
-  6: seis llamadas
-  7: siete llamadas
-
----
-
 ask: ¿Cuál es el número de radicado de esta PQR?
 choice:
   PQR-2026-0048217: PQR-2026-0048217
   PQR-2026-0048211: PQR-2026-0048211
   PQR-2025-0048217: PQR-2025-0048217
   PQR-2026-0048271: PQR-2026-0048271
-
----
-
-ask: ¿Cuál es el motivo principal de esta PQR?
-choice:
-  cobro_indebido: un cobro indebido por reconexión de línea
-  falla_del_servicio: la falla del servicio de internet
-  atencion_deficiente: la mala atención al cliente
-  cambio_de_plan: un cambio de plan solicitado
-
----
-
-ask: El cobro indebido por reconexión de línea, ¿a qué área de la empresa debe dirigirse?
-choice:
-  facturacion: Facturación y cobros
-  soporte_tecnico: Soporte técnico
-  comercial: Ventas y planes
-  juridica: Oficina jurídica
-
----
-
-ask: ¿Qué valor se cobró indebidamente por "reconexión de línea"?
-choice:
-  98700: $98.700
-  107610: $107.610
-  189900: $189.900
-  288600: $288.600
 
 ---
 
@@ -61,57 +16,21 @@ choice:
 
 ---
 
-ask: ¿Cuántos días estuvo el cliente sin servicio, del 2 al 18 de febrero de 2026?
+ask: ¿Cuál es el valor total de la factura FE-2026-02-4471?
 choice:
-  10: diez días
-  15: quince días
-  17: diecisiete días
-  20: veinte días
+  288600: $288.600
+  206310: $206.310
+  189900: $189.900
+  98700: $98.700
 
 ---
 
-ask: ¿Cuál es el número de contrato del peticionario?
+ask: ¿Cuál es el motivo principal de esta PQR?
 choice:
-  4-2019-778541: 4-2019-778541
-  4-2018-778541: 4-2018-778541
-  4-2019-785541: 4-2019-785541
-  5-2019-778541: 5-2019-778541
-
----
-
-ask: ¿Qué pide el cliente respecto al servicio de internet?
-choice:
-  reparacion: que reparen la falla y el servicio funcione
-  cancelacion: que le cancelen el contrato
-  cambio_de_plan: que le cambien el plan contratado
-  traslado: que le trasladen el servicio a otra dirección
-
----
-
-ask: ¿En qué ciudad está la oficina donde se radicó la PQR?
-choice:
-  barranquilla: Barranquilla
-  bogota: Bogotá
-  medellin: Medellín
-  cali: Cali
-
----
-
-ask: ¿Qué cobro registró la empresa sin que el cliente lo solicitara?
-choice:
-  reconexion: reconexión de línea
-  roaming: servicio de roaming internacional
-  seguro_movil: seguro para el teléfono móvil
-  television: paquete de televisión
-
----
-
-ask: ¿Cuál es el valor total de la factura FE-2026-02-4471 que la empresa expidió el 28 de febrero de 2026?
-choice:
-  288600: $288.600, el valor total de esa factura
-  206310: $206.310, lo que el cliente reclama
-  189900: $189.900, el plan mensual
-  98700: $98.700, la reconexión
+  cobro_indebido: un cobro indebido por reconexión de línea
+  falla_del_servicio: la falla del servicio de internet
+  atencion_deficiente: la mala atención al cliente
+  cambio_de_plan: un cambio de plan solicitado
 
 ---
 
@@ -124,22 +43,6 @@ choice:
 
 ---
 
-ask: ¿Qué plan tiene contratado el cliente?
-choice:
-  internet_300_mas_movil_40: Internet Hogar 300 Mbps + Telefonía Móvil 40 GB
-  internet_100_mas_movil: Internet 100 Mbps + Telefonía Móvil
-  solo_movil: solo Telefonía Móvil
-  internet_mas_television: Internet + Televisión
-
----
-
-ask: ¿Existe un cobro indebido por reconexión de línea en la factura?
-noul:
-  false: No, no hay ningún cobro por reconexión
-  true: Sí, la factura cobra $98.700 por reconexión de línea
-
----
-
 ask: ¿El cliente autorizó el cobro de $98.700 por reconexión de línea?
 noul:
   false: No, el cliente nunca solicitó ni autorizó ese cobro
@@ -147,38 +50,10 @@ noul:
 
 ---
 
-ask: ¿El técnico acudió a la cita programada para el 15 de febrero de 2026?
-noul:
-  false: No, el técnico no acudió a la cita
-  true: Sí, el técnico acudió a la cita
-
----
-
 ask: ¿El cliente solicita la cancelación del contrato?
 noul:
   false: No, desea conservar el servicio una vez reparado
   true: Sí, pide que le cancelen el contrato
-
----
-
-ask: ¿El cliente pide la devolución del dinero cobrado indebidamente?
-noul:
-  false: No, no pide devolución de dinero
-  true: Sí, pide la devolución de los $98.700 cobrados indebidamente
-
----
-
-ask: ¿La falla del servicio fue un hecho puntual de un solo día?
-noul:
-  false: No, la falla es reiterada e intermitente desde el 2 de febrero
-  true: Sí, fue un solo día y no volvió a ocurrir
-
----
-
-ask: ¿El cliente recibió una solución efectiva a sus llamadas de soporte?
-noul:
-  false: No, tras seis llamadas la falla sigue sin resolverse
-  true: Sí, el soporte resolvió el problema
 
 ---
 
@@ -204,48 +79,3 @@ score:
   value: 1 = falla leve
   value: 2 = falla grave
   value: 3 = falla total y prolongada
-
----
-
-ask: ¿Qué tan recurrente fue la falla del servicio?
-score:
-  value: 0 = nunca ocurrió
-  value: 1 = ocurrió una sola vez
-  value: 2 = ocurrió varias veces
-  value: 3 = ocurre de forma permanente
-
----
-
-ask: ¿Qué tan insatisfecho está el cliente con la atención recibida?
-score:
-  value: 0 = muy satisfecho
-  value: 1 = algo satisfecho
-  value: 2 = insatisfecho
-  value: 3 = muy insatisfecho
-
----
-
-ask: ¿Qué urgencia tiene la devolución del dinero que reclama el cliente?
-score:
-  value: 0 = no corre prisa
-  value: 1 = puede esperar
-  value: 2 = urgente
-  value: 3 = muy urgente
-
----
-
-ask: ¿Qué riesgo hay de que el cliente cancele el contrato si no se le responde?
-score:
-  value: 0 = ningún riesgo
-  value: 1 = riesgo bajo
-  value: 2 = riesgo medio
-  value: 3 = riesgo alto
-
----
-
-ask: ¿Qué impacto tiene esta PQR en la relación con el cliente?
-score:
-  value: 0 = no afecta la relación
-  value: 1 = afecta poco
-  value: 2 = afecta bastante
-  value: 3 = daña seriamente la relación

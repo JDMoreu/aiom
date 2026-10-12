@@ -10,8 +10,8 @@ le lanzan preguntas al modelo, que responde usando **solo lo que dice el documen
 | `pqr.pdf` | PQR (Petición, Queja o Reclamo) de un cliente, 2 páginas, con datos **ficticios** |
 | `pqr.txt` | El mismo texto de la PQR, en UTF-8 (3.475 caracteres) |
 | `servidor.log` | Log de errores de un servidor de aplicación, 336 líneas |
-| `preguntas_pqr.txt` | 30 preguntas sobre la PQR — 15 `choice`, 8 `noul`, 7 `score` |
-| `preguntas_log.txt` | 30 preguntas sobre el log — 15 `choice`, 8 `noul`, 7 `score` |
+| `preguntas_pqr.txt` | 10 preguntas sobre la PQR — 5 `choice`, 3 `noul`, 2 `score` |
+| `preguntas_log.txt` | 10 preguntas sobre el log — 5 `choice`, 3 `noul`, 2 `score` |
 | `_gen_pqr.py`, `_gen_log.py` | Los generadores: vuelven a crear el PDF, el `.txt` y el log |
 
 ## El formato de las preguntas (formato `natural`)
@@ -41,19 +41,33 @@ una línea de `---`:
 >   separadores, las diez se leen como **una sola** pregunta con diez campos del mismo
 >   nombre, y el motor contesta `400: field "decision" has duplicate allowed values`.
 >
-> Con eso, las 30 se resuelven en **una sola petición y ~1 segundo** (medido: 30 preguntas
-> en 1025 ms, 0 tokens).
+> Con eso, las 10 se resuelven en **una sola petición y menos de un segundo** (medido: 10
+> preguntas en ~580 ms, 0 tokens).
 >
 > **Pero hay un tope.** La caché del motor son **32.768 tokens**, y si el texto que se manda
 > se acerca a esa cifra el motor contesta
 >
 >     no free KV cache space for the decision prompt
 >
-> porque no le queda sitio para el bloque que procesa. Medido: el caso más pesado de la demo
-> —el log más sus 30 preguntas— son **~11.000 tokens** y pasa dos veces seguidas sin
-> problema. Lo que hay que evitar es mandar el documento **dos veces**: si lo cargas con el
-> botón *y además* lo pegas dentro del texto, el tamaño se dobla y es eso lo que llena la
-> caché. Un documento a la vez, y nada más que eso.
+porque no le queda sitio para el bloque que procesa.
+
+Los números, medidos con `POST /tokenize` (que es como se cuentan de verdad, no estimando a
+caracteres por token):
+
+| qué se manda | tokens |
+|---|---|
+| la PQR y sus 10 preguntas | **2.302** |
+| el log y sus 10 preguntas | **19.456** |
+
+La PQR es ligerísima. El log se lleva **más de la mitad** de la caché, porque está lleno de
+fechas, horas y códigos, y eso gasta mucho token: 29.288 caracteres son 18.697 tokens, más
+del doble de lo que parece por el tamaño. Los dos documentos juntos suman ~21.800 y con el
+hueco que el motor necesita para procesar se pasa del tope — que es exactamente el error que
+aparece si se cargan los dos a la vez.
+
+Para la demo: **un documento a la vez**, y si vas a pasar de uno a otro, quita el que tengas
+cargado antes de cargar el siguiente. Cada uno por separado pasa sin problema (probado dos
+veces seguidas con el log, que es el caso pesado).
 
 ## Cómo se usa en la demo
 
@@ -109,7 +123,7 @@ r = preguntar(doc["texto"], q)
 for x in r["resultados"]:
     print(x["campo"], "->", x["value"], x["probabilities"])
 
-# o el fichero entero, con las 30 preguntas de golpe
+# o el fichero entero, con las 10 preguntas de golpe
 entrada = open("preguntas_pqr.txt", encoding="utf-8").read()
 r = preguntar(doc["texto"], entrada)
 ```
@@ -120,8 +134,8 @@ Lo mismo con el log: se sube `servidor.log` con `POST /documento` y se pregunta 
 ## Consejo para la demo
 
 El motor de decisión resuelve todas las preguntas de una petición en una sola pasada. Con
-las 30 a la vez la precisión baja un poco; va mejor por grupos de unos 10. Las 30 preguntas
-de cada bloque están verificadas contra la API en grupos de 10 y responden todas bien.
+muchas preguntas a la vez la precisión baja un poco; con diez va bien. Las 10 preguntas de
+cada bloque están verificadas contra la API y responden todas bien.
 
 Si `POST /ask` devuelve un 502, es que el modelo (8096) se ha caído: espera unos segundos
 y reintenta.
