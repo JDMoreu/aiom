@@ -132,6 +132,30 @@ pip install fastapi "uvicorn[standard]"
 python api.py        # abre http://127.0.0.1:8100/
 ```
 
+### Los mismos pasos con git-bash, de un tirón
+
+En Windows, `llama-server` se lanza desde su carpeta (necesita las DLLs de al lado) y
+conviene dejarlo en su propia terminal, porque se queda ocupada:
+
+```bash
+# Terminal 1 — el modelo (tarda medio minuto en cargar los 4,1 GB)
+cd ~/Documents/aiom && bash herramientas/arrancar_modelo.sh
+
+# Terminal 2 — la API y el cliente web
+cd ~/Documents/aiom && python api.py
+
+# Y cuando diga {"status":"ok"}:
+curl http://127.0.0.1:8096/health    # el modelo
+curl http://127.0.0.1:8100/health    # la API
+```
+
+Después se abre <http://127.0.0.1:8100/> en el navegador. Para pararlos:
+
+```bash
+taskkill /F /IM llama-server.exe
+taskkill /F /IM python.exe
+```
+
 ### La puerta humana: el cliente web
 
 Se abre `http://127.0.0.1:8100/` y ahí está todo: se escribe el caso y las preguntas —por
