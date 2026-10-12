@@ -42,7 +42,18 @@ una línea de `---`:
 >   nombre, y el motor contesta `400: field "decision" has duplicate allowed values`.
 >
 > Con eso, las 30 se resuelven en **una sola petición y ~1 segundo** (medido: 30 preguntas
-> en 1025 ms, 0 tokens), no hace falta partirlas en grupos.
+> en 1025 ms, 0 tokens).
+>
+> **Pero hay un tope.** La caché del motor son **32.768 tokens**, y si el texto que se manda
+> se acerca a esa cifra el motor contesta
+>
+>     no free KV cache space for the decision prompt
+>
+> porque no le queda sitio para el bloque que procesa. Medido: el caso más pesado de la demo
+> —el log más sus 30 preguntas— son **~11.000 tokens** y pasa dos veces seguidas sin
+> problema. Lo que hay que evitar es mandar el documento **dos veces**: si lo cargas con el
+> botón *y además* lo pegas dentro del texto, el tamaño se dobla y es eso lo que llena la
+> caché. Un documento a la vez, y nada más que eso.
 
 ## Cómo se usa en la demo
 
