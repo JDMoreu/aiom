@@ -1,81 +1,79 @@
-ask: ¿Cuál es la causa raíz del incidente?
+ask: ¿Qué tipo de incidente es, por su causa raíz?
 choice:
-  consulta_lenta_sin_indice: una consulta lenta sobre la tabla pedidos por falta de índice, tras el despliegue
-  ataque_ddos: un ataque de denegación de servicio
-  fallo_de_red: un fallo del enrutador de red
-  disco_lleno: el disco lleno desde el principio
+  base_de_datos: un problema de rendimiento de la base de datos, por una consulta sobre la tabla pedidos que se ejecuta sin índice
+  infraestructura: un problema de infraestructura, por falta de CPU o de memoria en los servidores
+  red: un problema de red, por caídas de conectividad en el balanceador
+  seguridad: un problema de seguridad, por un acceso no autorizado a los datos
 
 ---
 
-ask: ¿A qué hora se agotó por primera vez el pool de conexiones?
+ask: ¿A qué equipo le corresponde corregir la causa raíz?
 choice:
-  0041: a las 00:41
-  0014: a las 00:14
-  0130: a las 01:30
-  0211: a las 02:11
+  dba: al equipo de base de datos
+  ops: al equipo de operaciones
+  desarrollo: al equipo de desarrollo
+  red: al equipo de red
 
 ---
 
-ask: ¿Cuántas peticiones terminaron en error (5xx) durante el incidente?
+ask: ¿A quién afectó el incidente?
 choice:
-  3216: 3.216
-  2104: 2.104
-  812: 812
-  12480: 12.480
+  usuarios_pedidos: a los usuarios que consultaban sus pedidos
+  todos: a todos los usuarios por igual, incluido el inicio de sesión
+  ninguno: a ningún usuario; fue un problema interno que no llegó a producción
 
 ---
 
-ask: ¿Hasta qué porcentaje de uso llegó el disco de /var/log?
+ask: ¿El incidente fue un problema puntual o recurrente?
 choice:
-  98: al 98%
-  80: al 80%
-  61: al 61%
-  45: al 45%
+  recurrente: un problema recurrente, que se mantuvo durante más de dos horas
+  puntual: un hecho puntual, resuelto solo en unos minutos
+  previsto: un problema previsto y asumido por el pico de tráfico de la campaña
 
 ---
 
-ask: ¿Qué endpoint concentró los errores del incidente?
+ask: ¿Qué revisión queda pendiente para evitar que se repita?
 choice:
-  pedidos: /api/v1/pedidos
-  login: /api/v1/auth/login
-  catalogo: /api/v1/catalogo
-  usuarios: /api/v1/usuarios
+  pruebas_rendimiento: revisar las pruebas de rendimiento del despliegue
+  disco: ampliar el disco de /var/log antes del próximo despliegue
+  workers: aumentar el número de workers de las aplicaciones
+  red: revisar la configuración de red del balanceador
 
 ---
 
-ask: ¿La causa raíz del incidente fue un fallo de hardware?
+ask: ¿La empresa revirtió el despliegue v2.14.0 durante el incidente?
 noul:
-  false: No, fue una consulta lenta sin índice, no un fallo de hardware
-  true: Sí, se debió a un fallo del hardware del servidor
+  no: No, el despliegue se mantuvo y el incidente se cerró con un índice
+  si: Si, se volvió a la versión anterior del despliegue
 
 ---
 
-ask: ¿El incidente afectó a todos los usuarios del sistema por igual?
+ask: ¿La falta de espacio en disco fue la causa del incidente?
 noul:
-  false: No, la autenticación siguió respondiendo; afectó sobre todo a los pedidos
-  true: Sí, absolutamente todos los usuarios quedaron sin servicio
+  no: No, la causa fue una consulta que se ejecuta sin índice
+  si: Si, el disco se llenó y dejó sin servicio a la aplicación
 
 ---
 
-ask: ¿Hubo reintentos automáticos de las peticiones que fallaban?
+ask: ¿La monitorización avisó del problema antes de declarar el incidente?
 noul:
-  false: No, las peticiones fallidas no se reintentaron
-  true: Sí, el log muestra reintentos 1/3 y 2/3 de las peticiones
+  no: No, el primer aviso llegó cuando el incidente ya estaba declarado
+  si: Si, hubo avisos de la monitorización antes de declararlo
 
 ---
 
-ask: ¿Qué gravedad tiene este incidente?
+ask: ¿Qué gravedad tiene el incidente?
 score:
   value: 0 = sin impacto
-  value: 1 = gravedad leve
-  value: 2 = gravedad media
+  value: 1 = gravedad baja
+  value: 2 = gravedad alta
   value: 3 = gravedad crítica
 
 ---
 
-ask: ¿Qué tan crítico fue el agotamiento del pool de conexiones?
+ask: ¿Qué prioridad tiene este incidente para el equipo que debe resolverlo?
 score:
-  value: 0 = nada crítico
-  value: 1 = poco crítico
-  value: 2 = bastante crítico
-  value: 3 = totalmente crítico
+  value: 0 = sin prioridad
+  value: 1 = prioridad baja
+  value: 2 = prioridad alta
+  value: 3 = prioridad crítica

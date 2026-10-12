@@ -1,81 +1,77 @@
-ask: ¿Cuál es el número de radicado de esta PQR?
+ask: ¿Qué tipo de solicitud es esta, por su objeto principal?
 choice:
-  PQR-2026-0048217: PQR-2026-0048217
-  PQR-2026-0048211: PQR-2026-0048211
-  PQR-2025-0048217: PQR-2025-0048217
-  PQR-2026-0048271: PQR-2026-0048271
+  reclamo: un reclamo por un cobro que el usuario considera indebido
+  queja: una queja por el trato recibido en la atención
+  peticion: una petición de información sobre el contrato
+  recurso: un recurso contra una decisión que la empresa ya notificó
 
 ---
 
-ask: ¿En qué fecha inició la falla del servicio de internet?
+ask: ¿A qué área corresponde atender la devolución del dinero que pide el usuario?
 choice:
-  2026-02-02: el 2 de febrero de 2026
-  2026-02-05: el 5 de febrero de 2026
-  2026-02-15: el 15 de febrero de 2026
-  2026-03-02: el 2 de marzo de 2026
+  facturacion: el área que revisa los cobros y las devoluciones
+  soporte_tecnico: el área que repara las fallas del servicio
+  comercial: el área que vende los planes
 
 ---
 
-ask: ¿Cuál es el valor total de la factura FE-2026-02-4471?
+ask: ¿Puede un asesor de primer nivel resolver esta PQR por sí solo?
 choice:
-  288600: $288.600
-  206310: $206.310
-  189900: $189.900
-  98700: $98.700
+  si: Si, basta con que explique al usuario el cobro
+  no: No, hace falta un nivel con facultad para ajustar el cobro y ordenar la visita técnica
 
 ---
 
-ask: ¿Cuál es el motivo principal de esta PQR?
+ask: ¿Procede devolver el cobro por reconexión de línea?
 choice:
-  cobro_indebido: un cobro indebido por reconexión de línea
-  falla_del_servicio: la falla del servicio de internet
-  atencion_deficiente: la mala atención al cliente
-  cambio_de_plan: un cambio de plan solicitado
+  procede_total: procede devolverlo entero
+  procede_parcial: procede devolver solo una parte
+  no_procede: no procede devolverlo
 
 ---
 
-ask: ¿Qué ocurrió con la visita técnica programada para el 15 de febrero de 2026?
+ask: ¿Qué gestión debe ordenar la empresa sobre el servicio de internet del usuario?
 choice:
-  no_acudio_el_tecnico: el técnico no acudió y nadie avisó
-  se_reparo_el_servicio: el técnico reparó la falla ese día
-  la_cancelo_el_cliente: el cliente canceló la visita
-  se_reagendo: la visita se reagendó y se cumplió
+  reprogramar: reprogramar la visita técnica que no se cumplió
+  baja: dar de baja el contrato, como pide el usuario
+  plan: cambiarle el plan contratado por uno menor
+  esperar: no hacer nada, porque el servicio ya funciona
 
 ---
 
-ask: ¿El cliente autorizó el cobro de $98.700 por reconexión de línea?
+ask: ¿El usuario pide que le cancelen el contrato?
 noul:
-  false: No, el cliente nunca solicitó ni autorizó ese cobro
-  true: Sí, el cliente lo autorizó expresamente
+  no: No, desea conservar el servicio una vez reparado
+  si: Si, pide la cancelación del contrato
 
 ---
 
-ask: ¿El cliente solicita la cancelación del contrato?
+ask: ¿El servicio de internet seguía presentando fallas el día en que el usuario radicó la PQR?
 noul:
-  false: No, desea conservar el servicio una vez reparado
-  true: Sí, pide que le cancelen el contrato
+  no: No, el servicio ya funcionaba con normalidad
+  si: Si, ese día el servicio continuaba con cortes intermitentes
 
 ---
 
-ask: ¿El servicio de internet seguía fallando en la fecha de radicación de la PQR?
+ask: ¿El usuario aporta datos verificables para sustentar su reclamo?
 noul:
-  false: No, ya funcionaba con normalidad
-  true: Sí, a la fecha de la PQR el servicio continúa con cortes intermitentes
+  no: No, se limita a afirmar los hechos sin citar ningún dato
+  si: Si, cita los radicados de las llamadas y el número de la factura
 
 ---
 
-ask: ¿Qué prioridad tiene esta PQR para la empresa?
+ask: ¿Qué urgencia tiene esta PQR?
 score:
-  value: 0 = puede esperar sin problema
-  value: 1 = prioridad baja
-  value: 2 = prioridad alta
-  value: 3 = prioridad crítica
+  value: 0 = no corre prisa
+  value: 1 = puede esperar
+  value: 2 = hay que resolverla pronto
+  value: 3 = exige atención inmediata
 
 ---
 
-ask: ¿Qué tan grave es la falla del servicio de internet?
+ask: ¿Qué gravedad tiene el problema para el usuario?
 score:
-  value: 0 = no hay falla
-  value: 1 = falla leve
-  value: 2 = falla grave
-  value: 3 = falla total y prolongada
+  value: 0 = no le afecta
+  value: 1 = le afecta poco
+  value: 2 = le afecta bastante
+  value: 3 = le afecta gravemente
