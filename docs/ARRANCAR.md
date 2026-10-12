@@ -135,19 +135,34 @@ python api.py        # abre http://127.0.0.1:8100/
 ### Los mismos pasos con git-bash, de un tirón
 
 En Windows, `llama-server` se lanza desde su carpeta (necesita las DLLs de al lado) y
-conviene dejarlo en su propia terminal, porque se queda ocupada:
+conviene dejarlo en su propia terminal, porque se queda ocupada.
+
+**Antes de nada, el entorno del proyecto.** En Windows puede no haber ningún Python
+instalado: el `python` del sistema es a veces solo el lanzador vacío de la Microsoft Store,
+y falla con «Python was not found». Por eso el proyecto trae el suyo en `.venv/`, que se
+crea una vez:
+
+```bash
+cd ~/Documents/aiom
+python -m venv .venv
+.venv/Scripts/python.exe -m pip install fastapi "uvicorn[standard]" pymupdf
+```
+
+Y a partir de ahí se usa **`.venv/Scripts/python.exe`**, no `python`:
 
 ```bash
 # Terminal 1 — el modelo (tarda medio minuto en cargar los 4,1 GB)
 cd ~/Documents/aiom && bash herramientas/arrancar_modelo.sh
 
 # Terminal 2 — la API y el cliente web
-cd ~/Documents/aiom && python api.py
+cd ~/Documents/aiom && .venv/Scripts/python.exe api.py
 
 # Y cuando diga {"status":"ok"}:
 curl http://127.0.0.1:8096/health    # el modelo
 curl http://127.0.0.1:8100/health    # la API
 ```
+
+En PowerShell, la ruta del intérprete se escribe `.\.venv\Scripts\python.exe api.py`.
 
 Después se abre <http://127.0.0.1:8100/> en el navegador. Para pararlos:
 
