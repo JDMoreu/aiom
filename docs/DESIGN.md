@@ -260,8 +260,8 @@ medidas. Un rótulo en mono para que parezca técnico es un disfraz.
 
 ## Layout
 
-Una sola columna, y el orden lo manda el trabajo: el armazón, el caso —el documento y el
-caso escrito a mano, que es la entrada y la misma en los tres modos—, **las pestañas de
+Una sola columna, y el orden lo manda el trabajo: el armazón, el caso —el documento, o el
+texto que se pega cuando no hay documento; es la entrada y la misma en los tres modos—, **las pestañas de
 los tres modos** (debajo de la entrada: primero se dice sobre qué se pregunta, y luego
 cómo), las preguntas, **la barra de añadir pregunta al final de la lista** —se añade
 donde aparece la nueva—, la acción de preguntar, y al final la lectura, con su medida
