@@ -237,13 +237,6 @@ def _chat(texto, cfg):
             "tokens": r["usage"].get("tokens_generated") or 0}
 
 
-def prompts_chat(cuerpo, cfg):
-    """El chat recibe la pregunta tal cual, con el documento delante si lo hay."""
-    doc = _documento(cuerpo)
-    q = cuerpo["question"].strip()
-    return [f"{doc}\n\n{q}" if doc else q]
-
-
 def prompts_natural(cuerpo, cfg):
     """El chat recibe el caso y TODAS las preguntas, de una vez y en lenguaje llano.
 
