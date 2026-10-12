@@ -263,7 +263,7 @@ medidas. Un rótulo en mono para que parezca técnico es un disfraz.
 Una sola columna, y el orden lo manda el trabajo: el armazón, el documento —el caso
 cuando se carga uno—, **las pestañas de los tres modos**, y dentro de la vista de
 bloques, al principio, **la entrada** —el texto que se pega cuando no hay documento: vive
-justo debajo de las pestañas, antes que las preguntas, y se desactiva cuando hay un
+justo debajo de las pestañas, antes que las preguntas, y desaparece cuando hay un
 documento cargado, porque entonces el caso es el documento—, las preguntas, **la barra de
 añadir pregunta al final de la lista** —se añade donde aparece la nueva—, la acción de
 preguntar, y al final la lectura, con su medida encima.
