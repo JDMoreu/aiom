@@ -219,6 +219,14 @@ ejemplos/            siete casos de ejemplo -cinco sobre correos de soporte, uno
                      preguntas, para usarlos con un documento- y el ejemplo de integracion:
                        integrar.py       como consultar la API desde Python, con el caso
                                          escrito o sacado de un documento
+                       demo/             la demo en vivo, con dos casos completos:
+                         pqr.pdf         una PQR de dos páginas (y pqr.txt, su texto)
+                         servidor.log    un log de errores de un servidor, 336 líneas
+                         preguntas_pqr.txt  las 30 preguntas sobre la PQR
+                         preguntas_log.txt  las 30 preguntas sobre el log
+                         LEEME.md        qué es cada fichero y cómo se usa
+                         _gen_pqr.py     los generadores, por si hay que rehacerlos
+                         _gen_log.py
 docs/                toda la documentación, junta:
                        API.md            la API: los tres formatos, el documento como caso
                        EJEMPLOS.md       todos los ejemplos de consulta, completos y para copiar
