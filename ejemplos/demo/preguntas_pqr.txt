@@ -1,0 +1,350 @@
+# ============================================================================
+# Preguntas sobre la PQR  (pqr.pdf / pqr.txt)  -  demo AIOM
+# Formato `natural`. 30 preguntas: 15 choice, 8 noul, 7 score.
+# `input:` lleva el marcador {TEXTO_DEL_DOCUMENTO}: en la demo el caso llega de
+# POST /documento y se pasa en el campo "documento". Si mandas una pregunta suelta,
+# sustituye el marcador por el texto de la PQR (o pasa "documento").
+# Las preguntas se separan con una linea de --- y se pueden mandar todas de una vez.
+# ============================================================================
+
+# 1  (choice)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿Cuánto dinero reclama en total el peticionario?
+choice:
+  206310: $206.310 (los $98.700 de la reconexión más los $107.610 del descuento)
+  98700: $98.700
+  107610: $107.610
+  288600: $288.600
+
+---
+
+# 2  (choice)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿Cuántas llamadas al soporte registró el cliente antes de radicar esta PQR?
+choice:
+  4: cuatro llamadas
+  5: cinco llamadas
+  6: seis llamadas
+  7: siete llamadas
+
+---
+
+# 3  (choice)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿Cuál es el número de radicado de esta PQR?
+choice:
+  PQR-2026-0048217: PQR-2026-0048217
+  PQR-2026-0048211: PQR-2026-0048211
+  PQR-2025-0048217: PQR-2025-0048217
+  PQR-2026-0048271: PQR-2026-0048271
+
+---
+
+# 4  (choice)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿Cuál es el motivo principal de esta PQR?
+choice:
+  cobro_indebido: un cobro indebido por reconexión de línea
+  falla_del_servicio: la falla del servicio de internet
+  atencion_deficiente: la mala atención al cliente
+  cambio_de_plan: un cambio de plan solicitado
+
+---
+
+# 5  (choice)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: El cobro indebido por reconexión de línea, ¿a qué área de la empresa debe dirigirse?
+choice:
+  facturacion: Facturación y cobros
+  soporte_tecnico: Soporte técnico
+  comercial: Ventas y planes
+  juridica: Oficina jurídica
+
+---
+
+# 6  (choice)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿Qué valor se cobró indebidamente por "reconexión de línea"?
+choice:
+  98700: $98.700
+  107610: $107.610
+  189900: $189.900
+  288600: $288.600
+
+---
+
+# 7  (choice)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿En qué fecha inició la falla del servicio de internet?
+choice:
+  2026-02-02: el 2 de febrero de 2026
+  2026-02-05: el 5 de febrero de 2026
+  2026-02-15: el 15 de febrero de 2026
+  2026-03-02: el 2 de marzo de 2026
+
+---
+
+# 8  (choice)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿Cuántos días estuvo el cliente sin servicio, del 2 al 18 de febrero de 2026?
+choice:
+  10: diez días
+  15: quince días
+  17: diecisiete días
+  20: veinte días
+
+---
+
+# 9  (choice)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿Cuál es el número de contrato del peticionario?
+choice:
+  4-2019-778541: 4-2019-778541
+  4-2018-778541: 4-2018-778541
+  4-2019-785541: 4-2019-785541
+  5-2019-778541: 5-2019-778541
+
+---
+
+# 10  (choice)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿Qué pide el cliente respecto al servicio de internet?
+choice:
+  reparacion: que reparen la falla y el servicio funcione
+  cancelacion: que le cancelen el contrato
+  cambio_de_plan: que le cambien el plan contratado
+  traslado: que le trasladen el servicio a otra dirección
+
+---
+
+# 11  (choice)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿En qué ciudad está la oficina donde se radicó la PQR?
+choice:
+  barranquilla: Barranquilla
+  bogota: Bogotá
+  medellin: Medellín
+  cali: Cali
+
+---
+
+# 12  (choice)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿Qué cobro registró la empresa sin que el cliente lo solicitara?
+choice:
+  reconexion: reconexión de línea
+  roaming: servicio de roaming internacional
+  seguro_movil: seguro para el teléfono móvil
+  television: paquete de televisión
+
+---
+
+# 13  (choice)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿Cuál es el valor total de la factura FE-2026-02-4471 que la empresa expidió el 28 de febrero de 2026?
+choice:
+  288600: $288.600, el valor total de esa factura
+  206310: $206.310, lo que el cliente reclama
+  189900: $189.900, el plan mensual
+  98700: $98.700, la reconexión
+
+---
+
+# 14  (choice)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿Qué ocurrió con la visita técnica programada para el 15 de febrero de 2026?
+choice:
+  no_acudio_el_tecnico: el técnico no acudió y nadie avisó
+  se_reparo_el_servicio: el técnico reparó la falla ese día
+  la_cancelo_el_cliente: el cliente canceló la visita
+  se_reagendo: la visita se reagendó y se cumplió
+
+---
+
+# 15  (choice)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿Qué plan tiene contratado el cliente?
+choice:
+  internet_300_mas_movil_40: Internet Hogar 300 Mbps + Telefonía Móvil 40 GB
+  internet_100_mas_movil: Internet 100 Mbps + Telefonía Móvil
+  solo_movil: solo Telefonía Móvil
+  internet_mas_television: Internet + Televisión
+
+---
+
+# 16  (noul)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿Existe un cobro indebido por reconexión de línea en la factura?
+noul:
+  false: No, no hay ningún cobro por reconexión
+  true: Sí, la factura cobra $98.700 por reconexión de línea
+
+---
+
+# 17  (noul)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿El cliente autorizó el cobro de $98.700 por reconexión de línea?
+noul:
+  false: No, el cliente nunca solicitó ni autorizó ese cobro
+  true: Sí, el cliente lo autorizó expresamente
+
+---
+
+# 18  (noul)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿El técnico acudió a la cita programada para el 15 de febrero de 2026?
+noul:
+  false: No, el técnico no acudió a la cita
+  true: Sí, el técnico acudió a la cita
+
+---
+
+# 19  (noul)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿El cliente solicita la cancelación del contrato?
+noul:
+  false: No, desea conservar el servicio una vez reparado
+  true: Sí, pide que le cancelen el contrato
+
+---
+
+# 20  (noul)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿El cliente pide la devolución del dinero cobrado indebidamente?
+noul:
+  false: No, no pide devolución de dinero
+  true: Sí, pide la devolución de los $98.700 cobrados indebidamente
+
+---
+
+# 21  (noul)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿La falla del servicio fue un hecho puntual de un solo día?
+noul:
+  false: No, la falla es reiterada e intermitente desde el 2 de febrero
+  true: Sí, fue un solo día y no volvió a ocurrir
+
+---
+
+# 22  (noul)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿El cliente recibió una solución efectiva a sus llamadas de soporte?
+noul:
+  false: No, tras seis llamadas la falla sigue sin resolverse
+  true: Sí, el soporte resolvió el problema
+
+---
+
+# 23  (noul)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿El servicio de internet seguía fallando en la fecha de radicación de la PQR?
+noul:
+  false: No, ya funcionaba con normalidad
+  true: Sí, a la fecha de la PQR el servicio continúa con cortes intermitentes
+
+---
+
+# 24  (score)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿Qué prioridad tiene esta PQR para la empresa?
+score:
+  value: 0 = puede esperar sin problema
+  value: 1 = prioridad baja
+  value: 2 = prioridad alta
+  value: 3 = prioridad crítica
+
+---
+
+# 25  (score)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿Qué tan grave es la falla del servicio de internet?
+score:
+  value: 0 = no hay falla
+  value: 1 = falla leve
+  value: 2 = falla grave
+  value: 3 = falla total y prolongada
+
+---
+
+# 26  (score)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿Qué tan recurrente fue la falla del servicio?
+score:
+  value: 0 = nunca ocurrió
+  value: 1 = ocurrió una sola vez
+  value: 2 = ocurrió varias veces
+  value: 3 = ocurre de forma permanente
+
+---
+
+# 27  (score)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿Qué tan insatisfecho está el cliente con la atención recibida?
+score:
+  value: 0 = muy satisfecho
+  value: 1 = algo satisfecho
+  value: 2 = insatisfecho
+  value: 3 = muy insatisfecho
+
+---
+
+# 28  (score)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿Qué urgencia tiene la devolución del dinero que reclama el cliente?
+score:
+  value: 0 = no corre prisa
+  value: 1 = puede esperar
+  value: 2 = urgente
+  value: 3 = muy urgente
+
+---
+
+# 29  (score)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿Qué riesgo hay de que el cliente cancele el contrato si no se le responde?
+score:
+  value: 0 = ningún riesgo
+  value: 1 = riesgo bajo
+  value: 2 = riesgo medio
+  value: 3 = riesgo alto
+
+---
+
+# 30  (score)
+input: {TEXTO_DEL_DOCUMENTO}
+
+ask: ¿Qué impacto tiene esta PQR en la relación con el cliente?
+score:
+  value: 0 = no afecta la relación
+  value: 1 = afecta poco
+  value: 2 = afecta bastante
+  value: 3 = daña seriamente la relación
